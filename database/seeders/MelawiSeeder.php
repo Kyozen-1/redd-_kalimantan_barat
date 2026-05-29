@@ -1,0 +1,239 @@
+<?php
+
+namespace Database\Seeders\Region;
+
+use App\Models\District;
+use App\Models\Regency;
+use App\Models\Village;
+use Carbon\Carbon;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class MelawiSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $now = Carbon::now();
+
+        $regency = Regency::create([
+            'name' => 'Kabupaten Melawai',
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        $data = [
+            'Belimbing' => [
+                'Balai Lagas',
+                'Batu Ampar',
+                'Batu Buil',
+                'Batu Nanta',
+                'Belonsat',
+                'Guhung',
+                'Labang',
+                'Laman Bukit',
+                'Langan',
+                'Nanga Entebah',
+                'Nanga Menunuk',
+                'Nanga Pau',
+                'Nusa Kenyikap',
+                'Pemuar',
+                'Sepan Tonak',
+                'Tekaban',
+                'Upit'
+            ],
+            'Belimbing Hulu' => [
+                'Beloyang',
+                'Junjung Permai',
+                'Kayu Bunga',
+                'Nanga Keberak',
+                'Nanga Raya',
+                'Nanga Tikan',
+                'Piawas',
+                'Tiong Keranji'
+            ],
+            'Ella Hilir' => [
+                'Bemban Permai',
+                'Domet Permai',
+                'Jabai',
+                'Kahiya',
+                'Kerangan Kora',
+                'Lengkong Nyadom',
+                'Nanga Ella Hilir',
+                'Nanga Kalan',
+                'Nanga Kempangai',
+                'Nanga Nuak',
+                'Nanga Nyuruh',
+                'Natai Compa',
+                'Nyanggau',
+                'Pelempai Jaya',
+                'Penyuguk',
+                'Perembang Nyuruh',
+                'Popai',
+                'Sungai Labuk',
+                'Sungai Mentoba'
+            ],
+            'Menukung' => [
+                'Batas Nangka',
+                'Batu Badak',
+                'Batu Onap',
+                'Belaban Ella',
+                'Laman Mumbung',
+                'Landau Leban',
+                'Lihai',
+                'Menukung Kota',
+                'Nanga Ella Hulu',
+                'Nanga Keruap',
+                'Nanga Mawang Mentatai',
+                'Nanga Melona Satu',
+                'Nanga Siyai',
+                'Nusa Poring',
+                'Oyah',
+                'Pelaik Keruap',
+                'Sampak',
+                'Sungai Sampuk',
+                'Tanjung Beringin'
+            ],
+            'Nanga Pinoh' => [
+                'Baru',
+                'Kelakik',
+                'Kenual',
+                'Labai Mandiri',
+                'Nanga Kayan',
+                'Nanga Kebebu',
+                'Nusa Pandau',
+                'Paal',
+                'Poring',
+                'Semadin Lengkong',
+                'Sidomulyo',
+                'Tanjung Lay',
+                'Tanjung Niaga',
+                'Tanjung Sari',
+                'Tanjung Tengang',
+                'Tebing Karangan',
+                'Tembawang Panjang'
+            ],
+            'Pinoh Selatan' => [
+                'Bayur Raya',
+                'Bina Jaya',
+                'Landau Garong',
+                'Landau Tubun',
+                'Mandau Baru',
+                'Manggala',
+                'Nanga Kelawai',
+                'Nanga Pintas',
+                'Nyanggai',
+                'Pelinggang',
+                'Senempak',
+                'Sungai Bakah'
+            ],
+            'Pinoh Utara' => [
+                'Engkurai',
+                'Kayan Semapau',
+                'Kompas Raya',
+                'Manding',
+                'Melamut Bersatu',
+                'Melawi Kiri Hilir',
+                'Merah Arai',
+                'Merpak',
+                'Nanga Belimbing',
+                'Nanga Man',
+                'Natai Panjang',
+                'Senibung',
+                'Suka Damai',
+                'Sungai Pinang',
+                'Sungai Raya',
+                'Tanjung Arak',
+                'Tanjung Paoh',
+                'Tekelak',
+                'Tengkajau'
+            ],
+            'Sayan' => [
+                'Berobai Permai',
+                'Bora',
+                'Karangan Purun',
+                'Landau Sandak',
+                'Lingkar Indah',
+                'Madya Raya',
+                'Mekar Pelita',
+                'Meta Bersatu',
+                'Nanga Kasai',
+                'Nanga Kompi',
+                'Nanga Mancur',
+                'Nanga Pak',
+                'Nanga Raku',
+                'Nanga Sayan',
+                'Pekawai',
+                'Sayan Jaya',
+                'Siling Permai',
+                'Tumbak Raya'
+            ],
+            'Sokan' => [
+                'Gelata',
+                'Keluing Taja',
+                'Landau Kabu',
+                'Melana',
+                'Muara Tanjung',
+                'Nanga Betangai',
+                'Nanga Libas',
+                'Nanga Ora',
+                'Nanga Potai',
+                'Nanga Sokan',
+                'Nanga Tangkit',
+                'Penyengkuang',
+                'Sepakat',
+                'Sijau',
+                'Tanjung Mahung',
+                'Tanjung Sokan',
+                'Telaga Raya',
+                'Teluk Pongkal'
+            ],
+            'Tanah Pinoh' => [
+                'Bata Luar',
+                'Batu Begigi',
+                'Bina Jaya',
+                'Bina Karya',
+                'Keranjik',
+                'Loka Jaya',
+                'Madong Jaya',
+                'Maris Permai',
+                'Pelita Kenaya',
+                'Suka Maju',
+                'Tanjung Beringin Raya',
+                'Tanjung Gunung'
+            ],
+            'Tanah Pinoh Barat' => [
+                'Bukit Raya',
+                'Durian Jaya',
+                'Ganjang',
+                'Harapan Jaya',
+                'Keluas Hulu',
+                'Laja',
+                'Lintah Taum',
+                'Pelita Jaya',
+                'Togan Baru',
+                'Ulak Muid'
+            ]
+        ];
+
+        foreach ($data as $districtName => $villages) {
+            $district = District::create([
+                'regency_id' => $regency->id,
+                'name' => $districtName,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+
+            foreach ($villages as $villageName) {
+                Village::create([
+                    'district_id' => $district->id,
+                    'name' => $villageName,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+            }
+        }
+    }
+}

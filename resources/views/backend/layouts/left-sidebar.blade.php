@@ -7,7 +7,7 @@
             <ul class="metismenu" id="side-menu">
 
                 <li>
-                    <a href="index.html">
+                    <a href="{{ route('cms.dashboard.index') }}">
                         <i class="mdi mdi-view-dashboard"></i>
                         <span> Dashboard </span>
                     </a>

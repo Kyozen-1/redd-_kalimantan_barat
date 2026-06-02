@@ -1,12 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 Route::get('/', function () {
     return view('backend.dashboard.index');
 });
 
-Route::get('/login', fn () => view('auth.login.index'))->name('login');
-// Auth::routes();
+Route::prefix('login')->group(function(){
+    Route::get('/', [LoginController::class, 'index'])->name('login');
+    Route::post('/', [LoginController::class, 'loginProcess'])->name('login-process');
+});
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+@include('backend.php');

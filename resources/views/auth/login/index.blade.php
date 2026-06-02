@@ -1,5 +1,5 @@
 @extends('auth.login.layouts.app')
-@section('title', 'Login')
+@section('title', 'Login | REDD++ Kalimantan Barat')
 
 @section('content')
     <div class="account-pages mt-5 mb-5">
@@ -18,26 +18,41 @@
                         <div class="card-body p-4">
 
                             <div class="text-center mb-4">
-                                <h4 class="text-uppercase mt-0">Sign In</h4>
+                                <h4 class="text-uppercase mt-0">Login</h4>
                             </div>
-
-                            <form action="#">
-
+                            @if (session('failed'))
+                                <div class="alert alert-danger">{{session('failed')}}</div>
+                            @endif
+                            <form action="{{ route('login-process') }}" method="POST">
+                                @csrf
                                 <div class="form-group mb-3">
                                     <label for="emailaddress">Email address</label>
-                                    <input class="form-control" type="email" id="emailaddress" required="" placeholder="Enter your email">
+                                    <input class="form-control" type="email" id="emailaddress" required="" placeholder="Enter your email" name="email">
+                                    @error('email')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="password">Password</label>
-                                    <input class="form-control" type="password" required="" id="password" placeholder="Enter your password">
-                                </div>
 
-                                <div class="form-group mb-3">
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="checkbox-signin" checked>
-                                        <label class="custom-control-label" for="checkbox-signin">Remember me</label>
+                                    <div class="input-group">
+                                        <input class="form-control"
+                                            type="password"
+                                            id="password"
+                                            placeholder="Enter your password"
+                                            name="password"
+                                            required>
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text toggle-password" style="cursor:pointer;">
+                                                <i class="fas fa-eye"></i>
+                                            </span>
+                                        </div>
                                     </div>
+                                    @error('password')
+                                        <small class="text-danger">{{$message}}</small>
+                                    @enderror
                                 </div>
 
                                 <div class="form-group mb-0 text-center">
@@ -50,18 +65,29 @@
                     </div>
                     <!-- end card -->
 
-                    <div class="row mt-3">
-                        <div class="col-12 text-center">
-                            <p> <a href="pages-recoverpw.html" class="text-muted ml-1"><i class="fa fa-lock mr-1"></i>Forgot your password?</a></p>
-                            <p class="text-muted">Don't have an account? <a href="pages-register.html" class="text-dark ml-1"><b>Sign Up</b></a></p>
-                        </div> <!-- end col -->
-                    </div>
-                    <!-- end row -->
-
                 </div> <!-- end col -->
             </div>
             <!-- end row -->
         </div>
         <!-- end container -->
     </div>
+@endsection
+
+@section('js')
+    <script>
+        $('.toggle-password').click(function () {
+
+            let passwordInput = $('#password');
+            let icon = $(this).find('i');
+
+            if (passwordInput.attr('type') === 'password') {
+                passwordInput.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                passwordInput.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+
+        });
+    </script>
 @endsection

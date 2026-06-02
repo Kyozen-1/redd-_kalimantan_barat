@@ -3,15 +3,15 @@
 
         <li class="dropdown notification-list">
             <a class="nav-link dropdown-toggle nav-user mr-0 waves-effect" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                <img src="{{ asset('backend_template/images/users/user-1.jpg') }}" alt="user-image" class="rounded-circle">
+                <img src="{{ asset('images/logo_pemprov_kalbar.webp') }}" alt="user-image" class="rounded-circle">
                 <span class="pro-user-name ml-1">
-                    Nowak <i class="mdi mdi-chevron-down"></i>
+                    {{auth()->user()->name}} <i class="mdi mdi-chevron-down"></i>
                 </span>
             </a>
             <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                 <!-- item-->
                 <div class="dropdown-header noti-title">
-                    <h6 class="text-overflow m-0">Welcome !</h6>
+                    <h6 class="text-overflow m-0">Selamat Datang !</h6>
                 </div>
 
                 <!-- item-->
@@ -23,7 +23,7 @@
                 <div class="dropdown-divider"></div>
 
                 <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
+                <a href="{{ route('logout') }}" class="dropdown-item notify-item">
                     <i class="fe-log-out"></i>
                     <span>Logout</span>
                 </a>
@@ -36,20 +36,20 @@
 
     <!-- LOGO -->
     <div class="logo-box">
-        <a href="index.html" class="logo logo-dark text-center">
+        <a href="{{ route('cms.dashboard.index') }}" class="logo logo-dark text-center">
             <span class="logo-lg">
-                <img src="{{ asset('backend_template/images/logo-dark.png') }}" alt="" height="16">
+                <img src="{{ asset('images/logo_pemprov_kalbar_text.webp') }}" alt="" height="80">
             </span>
             <span class="logo-sm">
-                <img src="{{ asset('backend_template/images/logo-sm.png') }}" alt="" height="24">
+                <img src="{{ asset('images/logo_pemprov_kalbar_text.webp') }}" alt="" height="80">
             </span>
         </a>
-        <a href="index.html" class="logo logo-light text-center">
+        <a href="{{ route('cms.dashboard.index') }}" class="logo logo-light text-center">
             <span class="logo-lg">
-                <img src="{{ asset('backend_template/images/logo-light.png') }}" alt="" height="16">
+                <img src="{{ asset('images/logo_pemprov_kalbar_text.webp') }}" alt="" height="80">
             </span>
             <span class="logo-sm">
-                <img src="{{ asset('backend_template/images/logo-sm.png') }}" alt="" height="24">
+                <img src="{{ asset('images/logo_pemprov_kalbar_text.webp') }}" alt="" height="80">
             </span>
         </a>
     </div>

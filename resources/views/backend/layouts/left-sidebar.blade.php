@@ -22,6 +22,7 @@
                             <span class="menu-arrow"></span>
                         </a>
                         <ul class="nav-second-level" aria-expanded="false">
+                            <li><a href="{{ route('cms.master-data.kategori-dokumen.index') }}">Kategori Dokumen</a></li>
                             <li><a href="{{ route('cms.master-data.wilayah-cakupan.index') }}">Wilayah Cakupan</a></li>
                             <li><a href="{{ route('cms.master-data.lsm.index') }}">LSM</a></li>
                         </ul>

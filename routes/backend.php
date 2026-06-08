@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\MasterData\LsmController;
 use App\Http\Controllers\Backend\MasterData\WilayahCakupanController;
+use App\Http\Controllers\Backend\MasterData\KategoriDokumenController;
 
 Route::middleware(['auth'])->prefix('cms')->group(function(){
     Route::middleware('check_role:superadmin,admin')->group(function(){
@@ -20,6 +21,16 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
                 Route::get('/edit/{id}',[WilayahCakupanController::class, 'edit'])->name('cms.master-data.wilayah-cakupan.edit');
                 Route::post('/update',[WilayahCakupanController::class, 'update'])->name('cms.master-data.wilayah-cakupan.update');
                 Route::get('/destroy/{id}',[WilayahCakupanController::class, 'destroy'])->name('cms.master-data.wilayah-cakupan.destroy');
+            });
+
+            Route::prefix('kategori-dokumen')->group(function(){
+                Route::get('/', [KategoriDokumenController::class, 'index'])->name('cms.master-data.kategori-dokumen.index');
+                Route::get('/datatable', [KategoriDokumenController::class, 'datatable'])->name('cms.master-data.kategori-dokumen.datatable');
+                Route::get('/detail/{id}', [KategoriDokumenController::class, 'show'])->name('cms.master-data.kategori-dokumen.show');
+                Route::post('/',[KategoriDokumenController::class, 'store'])->name('cms.master-data.kategori-dokumen.store');
+                Route::get('/edit/{id}',[KategoriDokumenController::class, 'edit'])->name('cms.master-data.kategori-dokumen.edit');
+                Route::post('/update',[KategoriDokumenController::class, 'update'])->name('cms.master-data.kategori-dokumen.update');
+                Route::get('/destroy/{id}',[KategoriDokumenController::class, 'destroy'])->name('cms.master-data.kategori-dokumen.destroy');
             });
 
             Route::prefix('lsm')->group(function(){

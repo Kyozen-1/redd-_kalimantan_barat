@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('kabupaten_kota_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama')->nullable();
             $table->date('tanggal')->nullable();
-            $table->enum('status_aktif', ['1', '0'])->nullable();
+            $table->enum('status_aktif', ['1', '0']);
             $table->enum('jenis_file', ['gambar', 'video'])->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();

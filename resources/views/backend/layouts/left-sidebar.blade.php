@@ -17,18 +17,13 @@
                 @if (auth()->user()->role == 'superadmin')
                     <li>
                         <a href="javascript: void(0);">
-                            <i class="mdi mdi-page-layout-sidebar-left"></i>
-                            <span> Layouts </span>
+                            <i class="mdi mdi-format-list-bulleted"></i>
+                            <span> Master Data </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <ul class="nav-second-level" aria-expanded="false">
-                            <li><a href="layouts-horizontal.html">Horizontal</a></li>
-                            <li><a href="layouts-sidebar-sm.html">Small Sidebar</a></li>
-                            <li><a href="layouts-dark-sidebar.html">Dark Sidebar</a></li>
-                            <li><a href="layouts-dark-topbar.html">Dark Topbar</a></li>
-                            <li><a href="layouts-preloader.html">Preloader</a></li>
-                            <li><a href="layouts-sidebar-collapsed.html">Sidebar Collapsed</a></li>
-                            <li><a href="layouts-boxed.html">Boxed</a></li>
+                            <li><a href="{{ route('cms.master-data.wilayah-cakupan.index') }}">Wilayah Cakupan</a></li>
+                            <li><a href="{{ route('cms.master-data.lsm.index') }}">LSM</a></li>
                         </ul>
                     </li>
                 @endif

@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
-class MdLsm extends Model
+class MdWilayahCakupan extends Model
 {
     public function scopeStatusAktif(Builder $query)
     {
         return $query->where('status_aktif', '1');
     }
 
-    public function md_wilayah_cakupan()
+    public function md_lsm()
     {
-        return $this->belongsTo('App\Models\MdWilayahCakupan', 'md_wilayah_cakupan_id');
+        return $this->hasMany('App\Models\MdLsm', 'md_wilayah_cakupan_id');
     }
 }

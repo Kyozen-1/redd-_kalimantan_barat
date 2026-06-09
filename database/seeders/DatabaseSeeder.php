@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             SekadauSeeder::class,
             SingkawangSeeder::class,
             SintangSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
+            KayongUtaraSeeder::class
         ]);
         // // User::factory(10)->create();
 

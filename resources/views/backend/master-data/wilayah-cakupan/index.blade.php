@@ -168,15 +168,7 @@
                 }
             });
         });
-        $('#create').click(function(){
-            $('#form_md_wilayah_cakupan')[0].reset();
-            $('#aksi_button').text('Save');
-            $('#aksi_button').prop('disabled', false);
-            $('.modal-title').text('Add Data');
-            $('#aksi_button').val('Save');
-            $('#aksi').val('Save');
-            $('#form_result').html('');
-        });
+
         $('#form_md_wilayah_cakupan').on('submit', function(e){
             e.preventDefault();
             if($('#aksi').val() == 'Save')
@@ -254,6 +246,7 @@
                 });
             }
         });
+
         $(document).on('click', '.edit', function(){
             var id = $(this).attr('id');
             var url = "{{ route('cms.master-data.wilayah-cakupan.edit', ['id' => ":id"]) }}";

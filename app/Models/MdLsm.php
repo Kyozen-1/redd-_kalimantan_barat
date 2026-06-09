@@ -16,4 +16,9 @@ class MdLsm extends Model
     {
         return $this->belongsTo('App\Models\MdWilayahCakupan', 'md_wilayah_cakupan_id');
     }
+
+    public function kabupaten_kota()
+    {
+        return $this->belongsTo('App\Models\Regency', 'kabupaten_kota_id');
+    }
 }

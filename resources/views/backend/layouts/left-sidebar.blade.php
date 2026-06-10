@@ -12,6 +12,12 @@
                             <span> Dashboard </span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('cms.dokumen-galeri.index') }}">
+                            <i class="mdi mdi-folder-open"></i>
+                            <span> Dokumen Galeri </span>
+                        </a>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'superadmin')

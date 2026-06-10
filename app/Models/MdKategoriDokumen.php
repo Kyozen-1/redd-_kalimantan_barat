@@ -11,4 +11,9 @@ class MdKategoriDokumen extends Model
     {
         return $query->where('status_aktif', '1');
     }
+
+    public function pivot_kategori_dokumen()
+    {
+        return $this->hasMany('App\Models\PivotKategoriDokumen', 'kategori_id');
+    }
 }

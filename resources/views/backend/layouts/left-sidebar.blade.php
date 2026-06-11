@@ -13,6 +13,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('cms.galeri.index') }}">
+                            <i class="mdi mdi-folder-multiple-image"></i>
+                            <span> Galeri </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('cms.dokumen-galeri.index') }}">
                             <i class="mdi mdi-folder-open"></i>
                             <span> Dokumen Galeri </span>

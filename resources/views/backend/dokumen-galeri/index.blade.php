@@ -63,7 +63,7 @@
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th>Aksi</th>
+                            <th width="10%">Aksi</th>
                             <th>Nama</th>
                             <th>Kategori</th>
                             <th>Excel</th>
@@ -263,10 +263,13 @@
             if($('#aksi').val() == 'Edit')
             {
                 $.ajax({
-                    url: "{{ route('cms.master-data.lsm.update') }}",
+                    url: "{{ route('cms.dokumen-galeri.update') }}",
                     method: "POST",
-                    data: $(this).serialize(),
+                    data: new FormData(this),
                     dataType: "json",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
                     beforeSend: function(){
                         $('#aksi_button').text('Mengubah...');
                         $('#aksi_button').prop('disabled', true);
@@ -298,6 +301,130 @@
                     }
                 });
             }
+        });
+
+        $(document).on('click', '.edit', function(){
+            var id = $(this).attr('id');
+            var url = "{{ route('cms.dokumen-galeri.edit', ['id' => ":id"]) }}";
+            url = url.replace(':id', id);
+            $('#form_result').html('');
+            $.ajax({
+                url: url,
+                dataType: "json",
+                success: function(data)
+                {
+                    $('#nama').val(data.result.nama);
+                    var labelKategoris = data.result.kategori;
+
+                    var values = $("#kategori_id option")
+                        .filter(function() {
+                            return labelKategoris.includes($(this).text());
+                        })
+                        .map(function() {
+                            return this.value;
+                        })
+                        .get();
+
+                    $("#kategori_id").val(values).trigger("change");
+                    if(data.result.excel != null)
+                    {
+                        var lokasiExcel = data.result.excel;
+                        var fileDropperLokasiExcel = $("#excel").dropify();
+
+                        fileDropperLokasiExcel = fileDropperLokasiExcel.data('dropify');
+                        fileDropperLokasiExcel.resetPreview();
+                        fileDropperLokasiExcel.clearElement();
+                        fileDropperLokasiExcel.settings['defaultFile'] = lokasiExcel;
+                        fileDropperLokasiExcel.destroy();
+                        fileDropperLokasiExcel.init();
+                    }
+
+                    if(data.result.pdf != null)
+                    {
+                        var lokasiPdf = data.result.pdf;
+                        var fileDropperLokasiPdf = $("#pdf").dropify();
+
+                        fileDropperLokasiPdf = fileDropperLokasiPdf.data('dropify');
+                        fileDropperLokasiPdf.resetPreview();
+                        fileDropperLokasiPdf.clearElement();
+                        fileDropperLokasiPdf.settings['defaultFile'] = lokasiPdf;
+                        fileDropperLokasiPdf.destroy();
+                        fileDropperLokasiPdf.init();
+                    }
+
+                    if(data.result.word != null)
+                    {
+                        var lokasiWord = data.result.word;
+                        var fileDropperLokasiWord = $("#word").dropify();
+
+                        fileDropperLokasiWord = fileDropperLokasiWord.data('dropify');
+                        fileDropperLokasiWord.resetPreview();
+                        fileDropperLokasiWord.clearElement();
+                        fileDropperLokasiWord.settings['defaultFile'] = lokasiWord;
+                        fileDropperLokasiWord.destroy();
+                        fileDropperLokasiWord.init();
+                    }
+
+                    $('#hidden_id').val(id);
+                    $('.modal-title').text('Edit Data');
+                    $('#aksi_button').text('Edit');
+                    $('#aksi_button').prop('disabled', false);
+                    $('#aksi_button').val('Edit');
+                    $('#aksi').val('Edit');
+                    $('#createModal').modal('show');
+                }
+            });
+        });
+
+        $(document).on('click', '.delete',function(){
+            var id = $(this).attr('id');
+            var url = "{{ route('cms.dokumen-galeri.destroy', ['id' => ":id"]) }}";
+            url = url.replace(":id", id);
+            return new swal({
+                title: "Apakah Anda Yakin Menghapus Ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1976D2",
+                confirmButtonText: "Ya"
+            }).then((result)=>{
+                if(result.value)
+                {
+                    $.ajax({
+                        url: url,
+                        dataType: "json",
+                        beforeSend: function()
+                        {
+                            return new swal({
+                                title: "Checking...",
+                                text: "Harap Menunggu",
+                                imageUrl: "{{ asset('/images/preloader.gif') }}",
+                                showConfirmButton: false,
+                                allowOutsideClick: false
+                            });
+                        },
+                        success: function(data)
+                        {
+                            if(data.errors)
+                            {
+                                Swal.fire({
+                                    icon: 'errors',
+                                    title: data.errors,
+                                    showConfirmButton: true
+                                });
+                            }
+                            if(data.success)
+                            {
+                                $('#table_dokumen_galeri').DataTable().ajax.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: data.success,
+                                    showConfirmButton: true
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endsection

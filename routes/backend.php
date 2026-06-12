@@ -48,6 +48,9 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/create',[BeritaController::class, 'create'])->name('cms.berita.create');
             Route::get('/datatable',[BeritaController::class, 'datatable'])->name('cms.berita.datatable');
             Route::post('/',[BeritaController::class, 'store'])->name('cms.berita.store');
+            Route::get('/edit/{id}',[BeritaController::class, 'edit'])->name('cms.berita.edit');
+            Route::post('/update/{id}',[BeritaController::class, 'update'])->name('cms.berita.update');
+            Route::get('/destroy/{id}',[BeritaController::class, 'destroy'])->name('cms.berita.destroy');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

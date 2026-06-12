@@ -14,6 +14,6 @@ class Berita extends Model
 
     public function pivot_gambar_berita()
     {
-        $this->hasMany('App\Models\PivotGambarBerita', 'berita_id');
+        return $this->hasMany('App\Models\PivotGambarBerita', 'berita_id');
     }
 }

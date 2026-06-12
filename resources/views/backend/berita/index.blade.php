@@ -128,5 +128,56 @@
                 }
             ]
         });
+
+        $(document).on('click', '.delete',function(){
+            var id = $(this).attr('id');
+            var url = "{{ route('cms.berita.destroy', ['id' => ":id"]) }}";
+            url = url.replace(":id", id);
+            return new swal({
+                title: "Apakah Anda Yakin Menghapus Ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1976D2",
+                confirmButtonText: "Ya"
+            }).then((result)=>{
+                if(result.value)
+                {
+                    $.ajax({
+                        url: url,
+                        dataType: "json",
+                        beforeSend: function()
+                        {
+                            return new swal({
+                                title: "Checking...",
+                                text: "Harap Menunggu",
+                                imageUrl: "{{ asset('/images/preloader.gif') }}",
+                                showConfirmButton: false,
+                                allowOutsideClick: false
+                            });
+                        },
+                        success: function(data)
+                        {
+                            if(data.errors)
+                            {
+                                Swal.fire({
+                                    icon: 'errors',
+                                    title: data.errors,
+                                    showConfirmButton: true
+                                });
+                            }
+                            if(data.success)
+                            {
+                                $('#table_berita').DataTable().ajax.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: data.success,
+                                    showConfirmButton: true
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @endsection

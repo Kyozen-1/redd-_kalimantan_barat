@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
-@section('title', 'Create | Berita | REDD++ Kalimantan Barat')
-@section('header', 'Create | Berita')
+@section('title', 'Edit | Berita | REDD++ Kalimantan Barat')
+@section('header', 'Edit | Berita')
 
 @section('css')
     <link href="{{ asset('/backend_template/libs/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css" />
@@ -51,14 +51,24 @@
 @endsection
 
 @section('content')
-    <form class="form-horizontal" id="form_dokumen_galeri" method="POST" action="{{ route('cms.berita.store') }}" enctype="multipart/form-data" data-parsley-validate novalidate>
+    <form class="form-horizontal" id="form_dokumen_galeri" method="POST" action="{{ route('cms.berita.update', ['id' => $id]) }}" enctype="multipart/form-data" data-parsley-validate novalidate>
         @csrf
+        <div id="existing-images-container">
+            @foreach($berita['gambar'] as $gambar)
+                <input
+                    type="hidden"
+                    name="existing_images[]"
+                    value="{{ $gambar['path'] }}"
+                    data-path="{{ $gambar['path'] }}">
+            @endforeach
+        </div>
+
         <div class="row">
             <div class="col-12">
                 <div class="card-box">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4 class="mt-0 header-title">Tambah Berita</h4>
+                            <h4 class="mt-0 header-title">Edit Berita</h4>
                         </div>
                         <div class="col-md-6 text-right">
                             <a class="btn btn-icon waves-effect waves-light btn-primary" href="{{ route('cms.berita.index') }}">
@@ -68,6 +78,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-12">
                 <div class="card-box">
                     <div class="row">
@@ -79,28 +90,26 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="judul" class="control-label">Judul</label>
-                                <input type="text" name="judul" id="judul" value="{{ old('judul') }}" parsley-trigger="change" required placeholder="Masukan judul..." class="form-control">
+                                <input type="text" name="judul" id="judul" value="{{ $berita['judul'] }}" parsley-trigger="change" required class="form-control">
                                 @error('judul')
                                     <small class="text-danger">{{$message}}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="deskripsi" class="control-label">Deskripsi</label>
-                                <textarea class="form-control" name="deskripsi" id="deskripsi" rows="8" required>{{ old('deskripsi') }}</textarea>
+                                <textarea class="form-control" name="deskripsi" id="deskripsi" rows="8" required>{{$berita['deskripsi']}}</textarea>
                                 @error('deskripsi')
                                     <small class="text-danger">{{$message}}</small>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label>Gambar Berita</label>
-
                                 <input
                                     type="file"
                                     class="filepond"
                                     name="gambar[]"
                                     multiple
                                     accept="image/png,image/jpeg,image/jpg">
-
                                 @error('gambar')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
@@ -119,7 +128,7 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- end row -->
+        </div>
     </form>
 @endsection
 
@@ -154,16 +163,57 @@
     <script src="https://unpkg.com/filepond@4/dist/filepond.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview@4/dist/filepond-plugin-image-preview.min.js"></script>
     <script>
+        const existingImages = @json($berita['gambar']);
         FilePond.registerPlugin(
             FilePondPluginImagePreview
         );
 
         const pond = FilePond.create(
-            document.querySelector('.filepond'),
-            {
-                storeAsFile: true
+                        document.querySelector('.filepond'),
+                        {
+                            storeAsFile: true,
+
+                            files: existingImages.map(item => ({
+                                source: item.source,
+                                options: {
+                                    type: 'local'
+                                }
+                            })),
+
+                            server: {
+                                load: (source, load, error, progress, abort) => {
+
+                                    fetch(source)
+                                        .then(response => response.blob())
+                                        .then(load)
+                                        .catch(error);
+
+                                    return {
+                                        abort
+                                    };
+                                }
+                            }
+                        }
+                    );
+        pond.on('removefile', (error, file) => {
+            if (!file.source) {
+                return;
             }
-        );
+            const imageUrl = file.source;
+            const hiddenInputs =
+                document.querySelectorAll(
+                    'input[name="existing_images[]"]'
+                );
+            hiddenInputs.forEach(input => {
+                const url =
+                    window.location.origin +
+                    '/' +
+                    input.value;
+                if (url === imageUrl) {
+                    input.remove();
+                }
+            });
+        });
 
         ClassicEditor
             .create(document.querySelector('#deskripsi'), {

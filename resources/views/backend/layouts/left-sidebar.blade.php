@@ -36,6 +36,12 @@
                             <span> Dokumen Galeri </span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('cms.laporan-emisi.index') }}">
+                            <i class="mdi mdi-molecule-co2"></i>
+                            <span> Laporan Emisi </span>
+                        </a>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'superadmin')

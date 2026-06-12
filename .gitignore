@@ -28,3 +28,6 @@ Thumbs.db
 /public/galeri/gambar
 /public/galeri/video
 /public/berita
+/public/laporan-emisi/excel
+/public/laporan-emisi/pdf
+/public/laporan-emisi/word

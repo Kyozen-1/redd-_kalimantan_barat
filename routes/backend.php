@@ -5,6 +5,7 @@ use App\Http\Controllers\Backend\BeritaController;
 use App\Http\Controllers\Backend\AgendaController;
 use App\Http\Controllers\Backend\DokumenGaleriController;
 use App\Http\Controllers\Backend\GaleriController;
+use App\Http\Controllers\Backend\LaporanEmisiController;
 use App\Http\Controllers\Backend\MasterData\LsmController;
 use App\Http\Controllers\Backend\MasterData\WilayahCakupanController;
 use App\Http\Controllers\Backend\MasterData\KategoriDokumenController;
@@ -51,6 +52,15 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}',[BeritaController::class, 'edit'])->name('cms.berita.edit');
             Route::post('/update/{id}',[BeritaController::class, 'update'])->name('cms.berita.update');
             Route::get('/destroy/{id}',[BeritaController::class, 'destroy'])->name('cms.berita.destroy');
+        });
+
+        Route::prefix('laporan-emisi')->group(function(){
+            Route::get('/', [LaporanEmisiController::class, 'index'])->name('cms.laporan-emisi.index');
+            Route::get('/datatable', [LaporanEmisiController::class, 'datatable'])->name('cms.laporan-emisi.datatable');
+            Route::post('/', [LaporanEmisiController::class, 'store'])->name('cms.laporan-emisi.store');
+            Route::get('/edit/{id}', [LaporanEmisiController::class, 'edit'])->name('cms.laporan-emisi.edit');
+            Route::post('/update', [LaporanEmisiController::class, 'update'])->name('cms.laporan-emisi.update');
+            Route::get('/destroy/{id}', [LaporanEmisiController::class, 'destroy'])->name('cms.laporan-emisi.destroy');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

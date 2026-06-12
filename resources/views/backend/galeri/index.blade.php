@@ -261,7 +261,7 @@
             if($('#aksi').val() == 'Edit')
             {
                 $.ajax({
-                    url: "{{ route('cms.dokumen-galeri.update') }}",
+                    url: "{{ route('cms.galeri.update') }}",
                     method: "POST",
                     data: new FormData(this),
                     dataType: "json",
@@ -278,7 +278,7 @@
                         if(data.errors)
                         {
                             html = '<div class="alert alert-danger">'+data.errors+'</div>';
-                            $('#aksi_button').prop('disabled', true);
+                            $('#aksi_button').prop('disabled', false);
                             $('#aksi_button').text('Edit');
                         }
                         if(data.success)
@@ -299,6 +299,97 @@
                     }
                 });
             }
+        });
+
+        $(document).on('click', '.edit', function(){
+            var id = $(this).attr('id');
+            var url = "{{ route('cms.galeri.edit', ['id' => ":id"]) }}";
+            url = url.replace(':id', id);
+            $('#form_result').html('');
+            $.ajax({
+                url: url,
+                dataType: "json",
+                success: function(data)
+                {
+                    $('#nama').val(data.result.nama);
+                    let targetKabupatenKota = data.result.kabupaten_kota;
+                    let valueKabupatenKota = $('#kabupaten_kota_id option').filter(function () {
+                        return $(this).text() === targetKabupatenKota;
+                    }).val();
+                    $("[name='kabupaten_kota_id']").val(valueKabupatenKota).trigger('change');
+                    $('#tanggal').val(data.result.tanggal);
+                    $("[name='jenis_file']").val(data.result.jenis_file).trigger('change');
+
+                    var lokasiFile = data.result.file_path;
+                    var fileDropperLokasiFile = $("#file").dropify();
+
+                    fileDropperLokasiFile = fileDropperLokasiFile.data('dropify');
+                    fileDropperLokasiFile.resetPreview();
+                    fileDropperLokasiFile.clearElement();
+                    fileDropperLokasiFile.settings['defaultFile'] = lokasiFile;
+                    fileDropperLokasiFile.destroy();
+                    fileDropperLokasiFile.init();
+
+                    $('#hidden_id').val(id);
+                    $('.modal-title').text('Edit Data');
+                    $('#aksi_button').text('Edit');
+                    $('#aksi_button').prop('disabled', false);
+                    $('#aksi_button').val('Edit');
+                    $('#aksi').val('Edit');
+                    $('#createModal').modal('show');
+                }
+            });
+        });
+
+        $(document).on('click', '.delete',function(){
+            var id = $(this).attr('id');
+            var url = "{{ route('cms.galeri.destroy', ['id' => ":id"]) }}";
+            url = url.replace(":id", id);
+            return new swal({
+                title: "Apakah Anda Yakin Menghapus Ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#1976D2",
+                confirmButtonText: "Ya"
+            }).then((result)=>{
+                if(result.value)
+                {
+                    $.ajax({
+                        url: url,
+                        dataType: "json",
+                        beforeSend: function()
+                        {
+                            return new swal({
+                                title: "Checking...",
+                                text: "Harap Menunggu",
+                                imageUrl: "{{ asset('/images/preloader.gif') }}",
+                                showConfirmButton: false,
+                                allowOutsideClick: false
+                            });
+                        },
+                        success: function(data)
+                        {
+                            if(data.errors)
+                            {
+                                Swal.fire({
+                                    icon: 'errors',
+                                    title: data.errors,
+                                    showConfirmButton: true
+                                });
+                            }
+                            if(data.success)
+                            {
+                                $('#table_galeri').DataTable().ajax.reload();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: data.success,
+                                    showConfirmButton: true
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         });
     </script>
 @endsection

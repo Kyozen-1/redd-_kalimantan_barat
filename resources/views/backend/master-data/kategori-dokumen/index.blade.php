@@ -224,7 +224,7 @@
                         if(data.errors)
                         {
                             html = '<div class="alert alert-danger">'+data.errors+'</div>';
-                            $('#aksi_button').prop('disabled', true);
+                            $('#aksi_button').prop('disabled', false);
                             $('#aksi_button').text('Edit');
                         }
                         if(data.success)

@@ -51,6 +51,9 @@ class GaleriController extends Controller
                 $button = $button_edit . ' ' . $button_delete;
                 return $button;
             })
+            ->editColumn('kabupaten_kota_id', function($data){
+                return $data->kabupaten_kota->name;
+            })
             ->editColumn('tanggal', function($data){
                 return Carbon::parse($data->tanggal)->format('d-m-Y');
             })
@@ -156,6 +159,151 @@ class GaleriController extends Controller
             return response()->json(['success' => 'Berhasil menambahkan file di galeri']);
         } catch (\Throwable $th) {
             return response()->json(['errors' => $th->getMessage()]);
+        }
+    }
+
+    public function edit($id)
+    {
+        $id = Crypt::decryptString($id);
+        $getData = Galeri::find($id);
+        $data = [
+            'nama' => $getData->nama,
+            'kabupaten_kota' => $getData->kabupaten_kota->name,
+            'tanggal' => $getData->tanggal,
+            'jenis_file' => $getData->jenis_file,
+            'file_path' => asset($getData->file_path)
+        ];
+
+        return response()->json(['result' => $data]);
+    }
+
+    public function update(Request $request)
+    {
+        $errors = Validator::make($request->all(), [
+            'nama' => 'required',
+            'kabupaten_kota_id' => 'required',
+            'tanggal' => 'required',
+            'jenis_file' => 'required',
+            'hidden_id' => 'required'
+        ]);
+
+        if($errors -> fails())
+        {
+            return response()->json(['errors' => $errors->errors()->all()]);
+        }
+
+        if($request->file)
+        {
+            $errors = Validator::make($request->all(), [
+                'file' => 'mimes:jpg,jpeg,png,webp,mkv,mp4'
+            ]);
+
+            if($errors -> fails())
+            {
+                return response()->json(['errors' => $errors->errors()->all()]);
+            }
+        }
+
+        try {
+            $hiddenId = Crypt::decryptString($request->hidden_id);
+
+            $galeri = Galeri::find($hiddenId);
+            $galeri->kabupaten_kota_id = Crypt::decryptString($request->kabupaten_kota_id);
+            $galeri->nama = $request->nama;
+            $galeri->tanggal = $request->tanggal;
+            $galeri->save();
+
+            if($request->file)
+            {
+                $galeri->jenis_file = $request->jenis_file;
+                if($request->jenis_file == 'gambar')
+                {
+                    if (!in_array(
+                        strtolower($request->file('file')->getClientOriginalExtension()),
+                        ['jpg', 'jpeg', 'png', 'webp']
+                    )) {
+                        return response()->json(['errors' => 'Jenis file tidak sama dengan file yang diupload']);
+                    }
+
+                    $filePathOld = public_path($galeri->file_path);
+                    if (file_exists($filePathOld)) {
+                        unlink($filePathOld);
+                    }
+
+                    $destinationPath = public_path('galeri/gambar');
+
+                    if (!File::exists($destinationPath)) {
+                        File::makeDirectory(
+                            $destinationPath,
+                            0755,
+                            true,
+                            true
+                        );
+                    }
+
+                    $fileExtension = $request->file('file')->getClientOriginalExtension();
+                    $fileName = time().'_'.uniqid().'.'.$fileExtension;
+                    $file = Image::read($request->file);
+                    $cropSize = $destinationPath.'/'.$fileName;
+                    $file->save($cropSize, 60);
+
+                    $galeri->file_path = 'galeri/gambar/'.$fileName;
+                }
+
+                if($request->jenis_file == 'video')
+                {
+                    if (!in_array(
+                        strtolower($request->file('file')->getClientOriginalExtension()),
+                        ['mkv', 'mp4']
+                    )) {
+                        return response()->json(['errors' => 'Jenis file tidak sama dengan file yang diupload']);
+                    }
+
+                    $filePathOld = public_path($galeri->file_path);
+                    if (file_exists($filePathOld)) {
+                        unlink($filePathOld);
+                    }
+
+                    $destinationPath = public_path('galeri/video');
+
+                    if (!File::exists($destinationPath)) {
+                        File::makeDirectory(
+                            $destinationPath,
+                            0755,
+                            true,
+                            true
+                        );
+                    }
+
+                    $file = $request->file('file');
+                    // Nama file unik
+                    $filename = time() . '_' . uniqid() . '.' .
+                                $file->getClientOriginalExtension();
+
+                    $file->move($destinationPath, $filename);
+
+                    $galeri->file_path = 'galeri/video/' . $filename;
+                }
+
+                $galeri->save();
+            }
+
+            return response()->json(['success' => 'Berhasil merubah data']);
+        } catch (\Throwable $th) {
+            return response()->json(['errors' => $th->getMessage()]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $id = Crypt::decryptString($id);
+            $galeri = Galeri::find($id);
+            $galeri->status_aktif = '0';
+            $galeri->save();
+            return response()->json(['success' => 'Berhasil menghapus data']);
+        } catch (\Throwable $th) {
+            return response()->json(['result' => $th->getMessage()]);
         }
     }
 }

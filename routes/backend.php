@@ -17,6 +17,9 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/',[GaleriController::class, 'index'])->name('cms.galeri.index');
             Route::get('/datatable',[GaleriController::class, 'datatable'])->name('cms.galeri.datatable');
             Route::post('/',[GaleriController::class, 'store'])->name('cms.galeri.store');
+            Route::get('/edit/{id}',[GaleriController::class, 'edit'])->name('cms.galeri.edit');
+            Route::post('/update',[GaleriController::class, 'update'])->name('cms.galeri.update');
+            Route::get('/destroy/{id}',[GaleriController::class, 'destroy'])->name('cms.galeri.destroy');
         });
 
         Route::prefix('dokumen-galeri')->group(function(){

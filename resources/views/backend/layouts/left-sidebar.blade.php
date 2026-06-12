@@ -13,6 +13,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('cms.agenda.index') }}">
+                            <i class="mdi mdi-calendar-check"></i>
+                            <span> Agenda </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('cms.galeri.index') }}">
                             <i class="mdi mdi-folder-multiple-image"></i>
                             <span> Galeri </span>

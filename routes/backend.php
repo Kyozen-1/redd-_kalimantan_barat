@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\AgendaController;
 use App\Http\Controllers\Backend\DokumenGaleriController;
 use App\Http\Controllers\Backend\GaleriController;
 use App\Http\Controllers\Backend\MasterData\LsmController;
@@ -29,6 +30,16 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}', [DokumenGaleriController::class, 'edit'])->name('cms.dokumen-galeri.edit');
             Route::post('/update', [DokumenGaleriController::class, 'update'])->name('cms.dokumen-galeri.update');
             Route::get('/destroy/{id}', [DokumenGaleriController::class, 'destroy'])->name('cms.dokumen-galeri.destroy');
+        });
+
+        Route::prefix('agenda')->group(function(){
+            Route::get('/', [AgendaController::class, 'index'])->name('cms.agenda.index');
+            Route::get('/datatable', [AgendaController::class, 'datatable'])->name('cms.agenda.datatable');
+            Route::get('/detail/{id}', [AgendaController::class, 'show'])->name('cms.agenda.show');
+            Route::post('/',[AgendaController::class, 'store'])->name('cms.agenda.store');
+            Route::get('/edit/{id}',[AgendaController::class, 'edit'])->name('cms.agenda.edit');
+            Route::post('/update',[AgendaController::class, 'update'])->name('cms.agenda.update');
+            Route::get('/destroy/{id}',[AgendaController::class, 'destroy'])->name('cms.agenda.destroy');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\BeritaController;
 use App\Http\Controllers\Backend\AgendaController;
 use App\Http\Controllers\Backend\DokumenGaleriController;
 use App\Http\Controllers\Backend\GaleriController;
@@ -40,6 +41,13 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}',[AgendaController::class, 'edit'])->name('cms.agenda.edit');
             Route::post('/update',[AgendaController::class, 'update'])->name('cms.agenda.update');
             Route::get('/destroy/{id}',[AgendaController::class, 'destroy'])->name('cms.agenda.destroy');
+        });
+
+        Route::prefix('berita')->group(function(){
+            Route::get('/',[BeritaController::class, 'index'])->name('cms.berita.index');
+            Route::get('/create',[BeritaController::class, 'create'])->name('cms.berita.create');
+            Route::get('/datatable',[BeritaController::class, 'datatable'])->name('cms.berita.datatable');
+            Route::post('/',[BeritaController::class, 'store'])->name('cms.berita.store');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

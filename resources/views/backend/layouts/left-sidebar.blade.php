@@ -13,6 +13,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('cms.berita.index') }}">
+                            <i class="mdi mdi-newspaper"></i>
+                            <span> Berita </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('cms.agenda.index') }}">
                             <i class="mdi mdi-calendar-check"></i>
                             <span> Agenda </span>

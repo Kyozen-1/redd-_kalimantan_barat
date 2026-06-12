@@ -45,6 +45,6 @@
         <!-- END wrapper -->
 
         @include('backend.layouts.js')
-
+        @include('sweetalert::alert')
     </body>
 </html>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Backend\AgendaController;
 use App\Http\Controllers\Backend\DokumenGaleriController;
 use App\Http\Controllers\Backend\GaleriController;
 use App\Http\Controllers\Backend\LaporanEmisiController;
+use App\Http\Controllers\Backend\DokumenRadController;
 use App\Http\Controllers\Backend\MasterData\LsmController;
 use App\Http\Controllers\Backend\MasterData\WilayahCakupanController;
 use App\Http\Controllers\Backend\MasterData\KategoriDokumenController;
@@ -61,6 +62,15 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}', [LaporanEmisiController::class, 'edit'])->name('cms.laporan-emisi.edit');
             Route::post('/update', [LaporanEmisiController::class, 'update'])->name('cms.laporan-emisi.update');
             Route::get('/destroy/{id}', [LaporanEmisiController::class, 'destroy'])->name('cms.laporan-emisi.destroy');
+        });
+
+        Route::prefix('dokumen-rad')->group(function(){
+            Route::get('/', [DokumenRadController::class, 'index'])->name('cms.dokumen-rad.index');
+            Route::get('/datatable', [DokumenRadController::class, 'datatable'])->name('cms.dokumen-rad.datatable');
+            Route::post('/', [DokumenRadController::class, 'store'])->name('cms.dokumen-rad.store');
+            Route::get('/edit/{id}', [DokumenRadController::class, 'edit'])->name('cms.dokumen-rad.edit');
+            Route::post('/update', [DokumenRadController::class, 'update'])->name('cms.dokumen-rad.update');
+            Route::get('/destroy/{id}', [DokumenRadController::class, 'destroy'])->name('cms.dokumen-rad.destroy');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

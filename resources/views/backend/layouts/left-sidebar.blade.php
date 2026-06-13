@@ -42,6 +42,12 @@
                             <span> Laporan Emisi </span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('cms.dokumen-rad.index') }}">
+                            <i class="mdi mdi-file-document-outline"></i>
+                            <span> Dokumen RAD </span>
+                        </a>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'superadmin')

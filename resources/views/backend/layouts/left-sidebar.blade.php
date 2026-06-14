@@ -52,6 +52,12 @@
 
                 @if (auth()->user()->role == 'superadmin')
                     <li>
+                        <a href="{{ route('cms.landing-page.index') }}">
+                            <i class="mdi mdi-view-dashboard-outline"></i>
+                            <span> Landing Page </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="javascript: void(0);">
                             <i class="mdi mdi-format-list-bulleted"></i>
                             <span> Master Data </span>
@@ -61,6 +67,7 @@
                             <li><a href="{{ route('cms.master-data.kategori-dokumen.index') }}">Kategori Dokumen</a></li>
                             <li><a href="{{ route('cms.master-data.wilayah-cakupan.index') }}">Wilayah Cakupan</a></li>
                             <li><a href="{{ route('cms.master-data.lsm.index') }}">LSM</a></li>
+                            <li><a href="{{ route('cms.master-data.section-landing-page.index') }}">Section Landing Page</a></li>
                         </ul>
                     </li>
                 @endif

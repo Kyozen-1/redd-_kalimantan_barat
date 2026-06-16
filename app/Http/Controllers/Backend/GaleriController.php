@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
+use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;
 use Auth;
 use Validator;
@@ -60,18 +61,18 @@ class GaleriController extends Controller
             ->addColumn('file', function($data){
                 if($data->jenis_file == 'gambar')
                 {
-                    return '<img src="'.asset($data->file_path).'" alt="" style="width: 5rem;">';
+                    return '<img src="'.$data->file_url.'" alt="" style="width: 5rem;">';
                 }
                 if($data->jenis_file == 'video')
                 {
-                    return '<video style="width:15rem" controls> <source src="'.asset($data->file_path).'" type="video/mp4">Browser Anda tidak mendukung video.</video>';
+                    return '<video style="width:15rem" controls> <source src="'.$data->file_url.'" type="video/mp4">Browser Anda tidak mendukung video.</video>';
                 }
             })
             ->rawColumns(['aksi', 'file'])
         ->make(true);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -104,24 +105,14 @@ class GaleriController extends Controller
                     return response()->json(['errors' => 'Jenis file tidak sama dengan file yang diupload']);
                 }
 
-                $destinationPath = public_path('galeri/gambar');
+                $destinationPath = 'galeri/gambar';
 
-                if (!File::exists($destinationPath)) {
-                    File::makeDirectory(
-                        $destinationPath,
-                        0755,
-                        true,
-                        true
-                    );
-                }
+                $path = $storage->upload(
+                    $request->file('file'),
+                    $destinationPath
+                );
 
-                $fileExtension = $request->file('file')->getClientOriginalExtension();
-                $fileName = time().'_'.uniqid().'.'.$fileExtension;
-                $file = Image::read($request->file);
-                $cropSize = $destinationPath.'/'.$fileName;
-                $file->save($cropSize, 60);
-
-                $galeri->file_path = 'galeri/gambar/'.$fileName;
+                $galeri->file_path = $path;
             }
 
             if($request->jenis_file == 'video')
@@ -133,25 +124,14 @@ class GaleriController extends Controller
                     return response()->json(['errors' => 'Jenis file tidak sama dengan file yang diupload']);
                 }
 
-                $destinationPath = public_path('galeri/video');
+                $destinationPath = 'galeri/video';
 
-                if (!File::exists($destinationPath)) {
-                    File::makeDirectory(
-                        $destinationPath,
-                        0755,
-                        true,
-                        true
-                    );
-                }
+                $path = $storage->upload(
+                    $request->file('file'),
+                    $destinationPath
+                );
 
-                $file = $request->file('file');
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
-
-                $file->move($destinationPath, $filename);
-
-                $galeri->file_path = 'galeri/video/' . $filename;
+                $galeri->file_path = $path;
             }
 
             $galeri->save();
@@ -171,13 +151,13 @@ class GaleriController extends Controller
             'kabupaten_kota' => $getData->kabupaten_kota->name,
             'tanggal' => $getData->tanggal,
             'jenis_file' => $getData->jenis_file,
-            'file_path' => asset($getData->file_path)
+            'file_path' => $getData->file_url
         ];
 
         return response()->json(['result' => $data]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -225,29 +205,16 @@ class GaleriController extends Controller
                         return response()->json(['errors' => 'Jenis file tidak sama dengan file yang diupload']);
                     }
 
-                    $filePathOld = public_path($galeri->file_path);
-                    if (file_exists($filePathOld)) {
-                        unlink($filePathOld);
-                    }
+                    $storage->delete(
+                        $galeri->file_path
+                    );
 
-                    $destinationPath = public_path('galeri/gambar');
+                    $destinationPath = 'galeri/gambar';
 
-                    if (!File::exists($destinationPath)) {
-                        File::makeDirectory(
-                            $destinationPath,
-                            0755,
-                            true,
-                            true
-                        );
-                    }
-
-                    $fileExtension = $request->file('file')->getClientOriginalExtension();
-                    $fileName = time().'_'.uniqid().'.'.$fileExtension;
-                    $file = Image::read($request->file);
-                    $cropSize = $destinationPath.'/'.$fileName;
-                    $file->save($cropSize, 60);
-
-                    $galeri->file_path = 'galeri/gambar/'.$fileName;
+                    $galeri->file_path = $storage->upload(
+                                            $request->file('file'),
+                                            $destinationPath
+                                        );
                 }
 
                 if($request->jenis_file == 'video')
@@ -259,30 +226,16 @@ class GaleriController extends Controller
                         return response()->json(['errors' => 'Jenis file tidak sama dengan file yang diupload']);
                     }
 
-                    $filePathOld = public_path($galeri->file_path);
-                    if (file_exists($filePathOld)) {
-                        unlink($filePathOld);
-                    }
+                    $storage->delete(
+                        $galeri->file_path
+                    );
 
-                    $destinationPath = public_path('galeri/video');
+                    $destinationPath = 'galeri/video';
 
-                    if (!File::exists($destinationPath)) {
-                        File::makeDirectory(
-                            $destinationPath,
-                            0755,
-                            true,
-                            true
-                        );
-                    }
-
-                    $file = $request->file('file');
-                    // Nama file unik
-                    $filename = time() . '_' . uniqid() . '.' .
-                                $file->getClientOriginalExtension();
-
-                    $file->move($destinationPath, $filename);
-
-                    $galeri->file_path = 'galeri/video/' . $filename;
+                    $galeri->file_path = $storage->upload(
+                                            $request->file('file'),
+                                            $destinationPath
+                                        );
                 }
 
                 $galeri->save();

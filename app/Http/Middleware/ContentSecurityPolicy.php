@@ -12,6 +12,22 @@ class ContentSecurityPolicy
     {
         $response = $next($request);
 
+        $imgSources = [
+            "'self'",
+            "data:",
+            "blob:",
+            "https:",
+            env('AWS_ENDPOINT')
+        ];
+
+        $mediaSources = [
+            "'self'",
+            "data:",
+            "blob:",
+            "https:",
+            env('AWS_ENDPOINT')
+        ];
+
         $csp = implode('; ', [
             "default-src 'self'",
 
@@ -21,7 +37,8 @@ class ContentSecurityPolicy
 
             "font-src 'self' data: https://fonts.gstatic.com https://unpkg.com",
 
-            "img-src 'self' data: blob: https:",
+            "img-src ".implode(' ', $imgSources),
+            "media-src ".implode(' ', $mediaSources),
 
             "connect-src 'self' https://cdn.ckeditor.com https://unpkg.com",
         ]);

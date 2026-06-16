@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class Galeri extends Model
 {
@@ -15,5 +16,10 @@ class Galeri extends Model
     public function kabupaten_kota()
     {
         return $this->belongsTo('App\Models\Regency');
+    }
+
+    public function getFileUrlAttribute()
+    {
+        return Storage::disk('s3')->url($this->file_path);
     }
 }

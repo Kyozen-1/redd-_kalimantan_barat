@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
 use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;

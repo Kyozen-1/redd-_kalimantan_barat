@@ -28,6 +28,13 @@ class ContentSecurityPolicy
             env('AWS_ENDPOINT')
         ];
 
+        $connectSource = [
+            "'self'",
+            "https://cdn.ckeditor.com",
+            "https://unpkg.com",
+            env('AWS_ENDPOINT')
+        ];
+
         $csp = implode('; ', [
             "default-src 'self'",
 
@@ -40,7 +47,7 @@ class ContentSecurityPolicy
             "img-src ".implode(' ', $imgSources),
             "media-src ".implode(' ', $mediaSources),
 
-            "connect-src 'self' https://cdn.ckeditor.com https://unpkg.com",
+            "connect-src ".implode(' ', $connectSource),
         ]);
         $response->headers->set(
             'Content-Security-Policy',

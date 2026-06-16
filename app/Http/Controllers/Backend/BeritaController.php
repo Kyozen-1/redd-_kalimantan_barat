@@ -9,6 +9,7 @@ use Mews\Purifier\Facades\Purifier;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
+use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;
 use Auth;
 use DataTables;
@@ -48,7 +49,7 @@ class BeritaController extends Controller
         ->make(true);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FileStorageInterface $storage)
     {
         $request->validate([
             'judul' => 'required',
@@ -64,29 +65,19 @@ class BeritaController extends Controller
 
             if ($request->hasFile('gambar')) {
 
-                $destinationPath = public_path('berita');
-
-                if (!File::exists($destinationPath)) {
-                    File::makeDirectory(
-                        $destinationPath,
-                        0755,
-                        true,
-                        true
-                    );
-                }
+                $destinationPath = 'berita';
 
                 foreach ($request->file('gambar') as $file) {
 
-                    $fileExtension = $file->getClientOriginalExtension();
-                    $fileName = time().'_'.uniqid().'.'.$fileExtension;
-                    $file = Image::read($file);
-                    $cropSize = $destinationPath.'/'.$fileName;
-                    $file->save($cropSize, 60);
+                    $path = $storage->upload(
+                        $file,
+                        $destinationPath
+                    );
 
                     $pivot = new PivotGambarBerita;
                     $pivot->berita_id = $berita->id;
-                    $pivot->nama = $fileName;
-                    $pivot->image_path = 'berita/'.$fileName;
+                    $pivot->nama = basename($file);
+                    $pivot->image_path = $path;
                     $pivot->save();
                 }
             }
@@ -106,8 +97,8 @@ class BeritaController extends Controller
         $gambar = $getData->pivot_gambar_berita
                     ->map(function ($item) {
                         return [
-                            'source' => asset($item->image_path),
-                            'path'   => $item->image_path
+                            'source' => $item->gambar_url,
+                            'path'   => $item->gambar_url
                         ];
                     });
         $data = [
@@ -121,7 +112,7 @@ class BeritaController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, FileStorageInterface $storage)
     {
         $request->validate([
             'judul' => 'required',
@@ -143,19 +134,12 @@ class BeritaController extends Controller
             if ($request->hasFile('gambar')) {
 
                 foreach ($request->file('gambar') as $file) {
-
-                    $filename =
-                        time().'_'.
-                        uniqid().
-                        '.'.$file->extension();
-
-                    $file->move(
-                        public_path('berita'),
-                        $filename
+                    $path = $storage->upload(
+                        $file,
+                        'berita'
                     );
 
-                    $newImages[] =
-                        'berita/'.$filename;
+                    $newImages[] = $path;
                 }
             }
 
@@ -188,10 +172,9 @@ class BeritaController extends Controller
             }
 
             foreach ($deletedImages as $image) {
-                $path = public_path($image);
-                if (file_exists($path)) {
-                    unlink($path);
-                }
+                $storage->delete(
+                    $image
+                );
             }
 
             Alert::success('Berhasil', 'Berita berhasil diubah');

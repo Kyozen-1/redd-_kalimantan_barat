@@ -98,7 +98,8 @@ class BeritaController extends Controller
                     ->map(function ($item) {
                         return [
                             'source' => $item->gambar_url,
-                            'path'   => $item->gambar_url
+                            'path'   => $item->gambar_url,
+                            'just_path' => $item->image_path
                         ];
                     });
         $data = [

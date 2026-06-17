@@ -58,7 +58,7 @@
                 <input
                     type="hidden"
                     name="existing_images[]"
-                    value="{{ $gambar['path'] }}"
+                    value="{{ $gambar['just_path'] }}"
                     data-path="{{ $gambar['path'] }}">
             @endforeach
         </div>
@@ -205,7 +205,7 @@
                     'input[name="existing_images[]"]'
                 );
             hiddenInputs.forEach(input => {
-                const url = input.value;
+                const url = input.dataset.path;
                 if (url === imageUrl) {
                     input.remove();
                 }

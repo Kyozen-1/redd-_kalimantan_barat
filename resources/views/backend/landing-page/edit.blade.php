@@ -196,6 +196,7 @@
     <script src="https://unpkg.com/filepond@4/dist/filepond.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-image-preview@4/dist/filepond-plugin-image-preview.min.js"></script>
     <script>
+        const AWS_URL = "{{ env('AWS_URL') }}";
         $('#section_id').select2();
         let targetSection = "{{$landingPageSection->section->nama}}";
         let valueSection = $('#section_id option').filter(function () {
@@ -325,8 +326,8 @@
             }
 
             const imageUrl = value
-                ? '/' + value
-                : null;
+                                ? AWS_URL + '/' + value
+                                : null;
 
             const input = $('#fieldContainer')
                 .find('.filepond')

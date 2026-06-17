@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use RealRashid\SweetAlert\Facades\Alert;
 use Intervention\Image\Laravel\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;
 use Auth;
 use DataTables;
@@ -52,7 +54,21 @@ class LandingPageController extends Controller
             ->editColumn('section_id', function($data){
                 return $data->section?->nama;
             })
-            ->rawColumns(['aksi'])
+            ->editColumn('content', function($data){
+                $html = '<ul>';
+                    foreach ($data->content as $key => $value) {
+                        if($key == 'image')
+                        {
+                            $url = Storage::disk('s3')->url($value);
+                            $html .= '<li><img src="'.$url.'" alt="" style="width: 5rem;"></li>';
+                        } else {
+                            $html .= '<li>'.$key.' =  '.$value.'</li>';
+                        }
+                    }
+                $html .='</ul>';
+                return $html;
+            })
+            ->rawColumns(['aksi', 'content'])
         ->make(true);
     }
 
@@ -65,7 +81,7 @@ class LandingPageController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FileStorageInterface $storage)
     {
         $request->validate([
             'sort_order' => 'required',
@@ -79,23 +95,13 @@ class LandingPageController extends Controller
                     if ($value !== null && $value !== '') {
                         if($key == 'image')
                         {
-                            $destinationPath = public_path('landing-page/images');
+                            $destinationPath = 'landing-page/images';
 
-                            if (!File::exists($destinationPath)) {
-                                File::makeDirectory(
-                                    $destinationPath,
-                                    0755,
-                                    true,
-                                    true
-                                );
-                            }
-
-                            $fileExtension = $value->getClientOriginalExtension();
-                            $fileName = time().'_'.uniqid().'.'.$fileExtension;
-                            $file = Image::read($value);
-                            $cropSize = $destinationPath.'/'.$fileName;
-                            $file->save($cropSize, 60);
-                            $content[$key] = 'landing-page/images/'.$fileName;
+                            $path = $storage->upload(
+                                $value,
+                                $destinationPath
+                            );
+                            $content[$key] = $path;
                         } else {
                             $content[$key] = $value;
                         }
@@ -134,7 +140,7 @@ class LandingPageController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, FileStorageInterface $storage)
     {
         $request->validate([
             'sort_order' => 'required',
@@ -172,45 +178,22 @@ class LandingPageController extends Controller
                         */
                         if ($request->hasFile('fields.image')) {
                             $imageFile = $request->file('fields.image');
-                            $destinationPath = public_path('landing-page/images');
-                            if (!File::exists($destinationPath)) {
-                                File::makeDirectory(
-                                    $destinationPath,
-                                    0755,
-                                    true,
-                                    true
-                                );
-                            }
-                            $fileExtension =
-                                $imageFile->getClientOriginalExtension();
-                            $fileName =
-                                time() .
-                                '_' .
-                                uniqid() .
-                                '.' .
-                                $fileExtension;
-                            $image = Image::read($imageFile);
-                            $image->save(
-                                $destinationPath . '/' . $fileName,
-                                60
+                            $destinationPath = 'landing-page/images';
+
+                            $newImagePath = $storage->upload(
+                                $imageFile,
+                                $destinationPath
                             );
-                            $newImagePath =
-                                'landing-page/images/' .
-                                $fileName;
                             $content['image'] = $newImagePath;
                             /*
                             |--------------------------------------------------------------------------
                             | Hapus image lama
                             |--------------------------------------------------------------------------
                             */
-                            if (
-                                $oldImage &&
-                                file_exists(
-                                    public_path($oldImage)
-                                )
-                            ) {
-                                unlink(
-                                    public_path($oldImage)
+                            if ($oldImage && Storage::disk('s3')->exists($oldImage))
+                            {
+                                $storage->delete(
+                                    $oldImage
                                 );
                             }
                             continue;
@@ -254,12 +237,10 @@ class LandingPageController extends Controller
                 $oldImage = $oldContent['image'] ?? null;
                 if (
                     $oldImage &&
-                    file_exists(
-                        public_path($oldImage)
-                    )
+                    Storage::disk('s3')->exists($oldImage)
                 ) {
-                    unlink(
-                        public_path($oldImage)
+                    $storage->delete(
+                        $oldImage
                     );
                 }
             }

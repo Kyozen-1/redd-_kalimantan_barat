@@ -65,6 +65,7 @@
                             <th width="5%">No</th>
                             <th width="10%">Aksi</th>
                             <th>Nama</th>
+                            <th>Konten</th>
                         </tr>
                     </thead>
                 </table>
@@ -119,6 +120,11 @@
                 {
                     data: 'section_id',
                     name: 'section_id'
+                },
+                {
+                    data: 'content',
+                    name: 'content',
+                    className: 'text-left'
                 }
             ]
         });

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
+use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;
 use Validator;
 use DataTables;
@@ -37,7 +37,7 @@ class LaporanEmisiController extends Controller
                 if($data->document_file_excel_path)
                 {
                     return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.asset($data->document_file_excel_path).'"
+                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->excel_url.'"
                         width="100%"
                         height="300px">
                     </iframe>';
@@ -48,7 +48,7 @@ class LaporanEmisiController extends Controller
             ->addColumn('pdf', function($data){
                 if($data->document_file_pdf_path)
                 {
-                    return '<iframe src="'.asset($data->document_file_pdf_path).'" width="100%" height="300px" style="border:1px solid #ccc;">
+                    return '<iframe src="'.$data->pdf_url.'" width="100%" height="300px" style="border:1px solid #ccc;">
                                 Browser Anda tidak mendukung iframe.
                             </iframe>';
                 } else {
@@ -59,7 +59,7 @@ class LaporanEmisiController extends Controller
                 if($data->document_file_word_path)
                 {
                     return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.asset($data->document_file_word_path).'"
+                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->word_url.'"
                         width="100%"
                         height="300px">
                     </iframe>';
@@ -143,28 +143,15 @@ class LaporanEmisiController extends Controller
 
                 if ($request->hasFile($requestKey)) {
 
-                    $destinationPath = public_path($config['folder']);
-
-                    // Buat folder jika belum ada
-                    if (!File::exists($destinationPath)) {
-                        File::makeDirectory(
-                            $destinationPath,
-                            0755,
-                            true,
-                            true
-                        );
-                    }
+                    $destinationPath = $config['folder'];
 
                     $file = $request->file($requestKey);
+                    $path = $storage->upload(
+                                $file,
+                                $destinationPath
+                            );
 
-                    // Nama file unik
-                    $filename = time() . '_' . uniqid() . '.' .
-                                $file->getClientOriginalExtension();
-
-                    $file->move($destinationPath, $filename);
-
-                    $laporanEmisi->{$config['field']} =
-                        $config['folder'] . '/' . $filename;
+                    $laporanEmisi->{$config['field']} = $path;
                 }
             }
 
@@ -184,9 +171,9 @@ class LaporanEmisiController extends Controller
 
         $data = [
             'nama' => $getData->nama,
-            'excel' => $getData->document_file_excel_path ? asset($getData->document_file_excel_path):null,
-            'pdf' => $getData->document_file_pdf_path ? asset($getData->document_file_pdf_path) : null,
-            'word' => $getData->document_file_word_path ? asset($getData->document_file_word_path) : null
+            'excel' => $getData->document_file_excel_path ? $getData->excel_url:null,
+            'pdf' => $getData->document_file_pdf_path ? $getData->pdf_url : null,
+            'word' => $getData->document_file_word_path ? $getData->word_url : null
         ];
 
         return response()->json(['result' => $data]);
@@ -249,61 +236,52 @@ class LaporanEmisiController extends Controller
 
             if($request->excel)
             {
-                $filePathOld = public_path($laporanEmisi->document_file_excel_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
+                $storage->delete(
+                    $laporanEmisi->document_file_excel_path
+                );
 
                 $file = $request->file('excel');
+                $destinationPath = 'laporan-emisi/excel';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('laporan-emisi/excel');
-                $file->move($destinationPath, $filename);
-
-                $laporanEmisi->document_file_excel_path =
-                    'laporan-emisi/excel' . '/' . $filename;
+                $laporanEmisi->document_file_excel_path = $path;
             }
             if($request->pdf)
             {
-                $filePathOld = public_path($laporanEmisi->document_file_pdf_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
+                $storage->delete(
+                    $laporanEmisi->document_file_pdf_path
+                );
 
                 $file = $request->file('pdf');
+                $destinationPath = 'laporan-emisi/pdf';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('laporan-emisi/pdf');
-                $file->move($destinationPath, $filename);
-
-                $laporanEmisi->document_file_pdf_path =
-                    'laporan-emisi/pdf' . '/' . $filename;
+                $laporanEmisi->document_file_pdf_path = $path;
             }
 
             if($request->word)
             {
-                $filePathOld = public_path($laporanEmisi->document_file_word_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
+                $storage->delete(
+                    $laporanEmisi->document_file_word_path
+                );
 
                 $file = $request->file('word');
+                $destinationPath = 'laporan-emisi/word';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('laporan-emisi/word');
-                $file->move($destinationPath, $filename);
-
-                $laporanEmisi->document_file_word_path =
-                    'laporan-emisi/word' . '/' . $filename;
+                $laporanEmisi->document_file_word_path = $path;
             }
             $laporanEmisi->save();
 

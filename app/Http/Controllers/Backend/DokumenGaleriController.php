@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
+use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;
 use Auth;
 use Validator;
@@ -64,7 +64,7 @@ class DokumenGaleriController extends Controller
                 if($data->document_file_excel_path)
                 {
                     return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.asset($data->document_file_excel_path).'"
+                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->excel_url.'"
                         width="100%"
                         height="300px">
                     </iframe>';
@@ -75,7 +75,7 @@ class DokumenGaleriController extends Controller
             ->addColumn('pdf', function($data){
                 if($data->document_file_pdf_path)
                 {
-                    return '<iframe src="'.asset($data->document_file_pdf_path).'" width="100%" height="300px" style="border:1px solid #ccc;">
+                    return '<iframe src="'.$data->pdf_url.'" width="100%" height="300px" style="border:1px solid #ccc;">
                                 Browser Anda tidak mendukung iframe.
                             </iframe>';
                 } else {
@@ -86,7 +86,7 @@ class DokumenGaleriController extends Controller
                 if($data->document_file_word_path)
                 {
                     return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.asset($data->document_file_word_path).'"
+                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->word_url.'"
                         width="100%"
                         height="300px">
                     </iframe>';
@@ -98,7 +98,7 @@ class DokumenGaleriController extends Controller
         ->make(true);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -182,28 +182,14 @@ class DokumenGaleriController extends Controller
 
                 if ($request->hasFile($requestKey)) {
 
-                    $destinationPath = public_path($config['folder']);
-
-                    // Buat folder jika belum ada
-                    if (!File::exists($destinationPath)) {
-                        File::makeDirectory(
-                            $destinationPath,
-                            0755,
-                            true,
-                            true
-                        );
-                    }
-
+                    $destinationPath = $config['folder'];
                     $file = $request->file($requestKey);
+                    $path = $storage->upload(
+                                $file,
+                                $destinationPath
+                            );
 
-                    // Nama file unik
-                    $filename = time() . '_' . uniqid() . '.' .
-                                $file->getClientOriginalExtension();
-
-                    $file->move($destinationPath, $filename);
-
-                    $dokumenGaleri->{$config['field']} =
-                        $config['folder'] . '/' . $filename;
+                    $dokumenGaleri->{$config['field']} = $path;
                 }
             }
 
@@ -227,16 +213,16 @@ class DokumenGaleriController extends Controller
 
         $data = [
             'nama' => $getData->nama,
-            'excel' => $getData->document_file_excel_path ? asset($getData->document_file_excel_path):null,
-            'pdf' => $getData->document_file_pdf_path ? asset($getData->document_file_pdf_path) : null,
-            'word' => $getData->document_file_word_path ? asset($getData->document_file_word_path) : null,
+            'excel' => $getData->document_file_excel_path ? $getData->excel_url:null,
+            'pdf' => $getData->document_file_pdf_path ? $getData->pdf_url : null,
+            'word' => $getData->document_file_word_path ? $getData->word_url : null,
             'kategori' => $kategoris
         ];
 
         return response()->json(['result' => $data]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -308,64 +294,54 @@ class DokumenGaleriController extends Controller
                     $pivot->save();
                 }
             // Kategori Baru End
-
             if($request->excel)
             {
-                $filePathOld = public_path($dokumenGaleri->document_file_excel_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
+                $storage->delete(
+                    $dokumenGaleri->document_file_excel_path
+                );
 
                 $file = $request->file('excel');
+                $destinationPath = 'dokumen/excel';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('dokumen/excel');
-                $file->move($destinationPath, $filename);
-
-                $dokumenGaleri->document_file_excel_path =
-                    'dokumen/excel' . '/' . $filename;
+                $dokumenGaleri->document_file_excel_path = $path;
             }
             if($request->pdf)
             {
-                $filePathOld = public_path($dokumenGaleri->document_file_pdf_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
+                $storage->delete(
+                    $dokumenGaleri->document_file_pdf_path
+                );
 
                 $file = $request->file('pdf');
+                $destinationPath = 'dokumen/pdf';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('dokumen/pdf');
-                $file->move($destinationPath, $filename);
-
-                $dokumenGaleri->document_file_pdf_path =
-                    'dokumen/pdf' . '/' . $filename;
+                $dokumenGaleri->document_file_pdf_path = $path;
             }
 
             if($request->word)
             {
-                $filePathOld = public_path($dokumenGaleri->document_file_word_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
+                $storage->delete(
+                    $dokumenGaleri->document_file_word_path
+                );
 
                 $file = $request->file('word');
+                $destinationPath = 'dokumen/word';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('dokumen/word');
-                $file->move($destinationPath, $filename);
-
-                $dokumenGaleri->document_file_word_path =
-                    'dokumen/word' . '/' . $filename;
+                $dokumenGaleri->document_file_word_path = $path;
             }
             $dokumenGaleri->save();
 

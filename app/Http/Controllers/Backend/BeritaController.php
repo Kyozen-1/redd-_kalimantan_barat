@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Mews\Purifier\Facades\Purifier;
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\File;
 use Intervention\Image\Laravel\Facades\Image;
 use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;

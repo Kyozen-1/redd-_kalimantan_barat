@@ -71,7 +71,7 @@ class LaporanEmisiController extends Controller
         ->make(true);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -179,7 +179,7 @@ class LaporanEmisiController extends Controller
         return response()->json(['result' => $data]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
+use App\Contracts\FileStorageInterface;
 use Carbon\Carbon;
 use Validator;
 use DataTables;
@@ -34,7 +34,7 @@ class DokumenRadController extends Controller
                 return $button;
             })
             ->addColumn('dokumen', function($data){
-                return '<iframe src="'.asset($data->document_path).'" width="100%" height="300px" style="border:1px solid #ccc;">
+                return '<iframe src="'.asset($data->document_url).'" width="100%" height="300px" style="border:1px solid #ccc;">
                                 Browser Anda tidak mendukung iframe.
                             </iframe>';
             })
@@ -42,7 +42,7 @@ class DokumenRadController extends Controller
         ->make(true);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -70,24 +70,15 @@ class DokumenRadController extends Controller
             $dokumenRad->nama = $request->nama;
             $dokumenRad->save();
 
-            $destinationPath = public_path('dokumen-rad');
-
-            // Buat folder jika belum ada
-            if (!File::exists($destinationPath)) {
-                File::makeDirectory(
-                    $destinationPath,
-                    0755,
-                    true,
-                    true
-                );
-            }
+            $destinationPath = 'dokumen-rad';
 
             $file = $request->file('document');
-            $filename = $file->getClientOriginalName();
-            $file->move($destinationPath, $filename);
-            $filePath = 'dokumen-rad/' . $filename;
+            $path = $storage->upload(
+                        $file,
+                        $destinationPath
+                    );
 
-            $dokumenRad->document_path = $filePath;
+            $dokumenRad->document_path = $path;
             $dokumenRad->save();
 
             return response()->json(['success' => 'Berhasil menambahkan dokumen rad']);
@@ -104,13 +95,13 @@ class DokumenRadController extends Controller
 
         $data = [
             'nama' => $getData->nama,
-            'document' => $getData->document_path ? asset($getData->document_path) : null,
+            'document' => $getData->document_path ? $getData->document_url : null,
         ];
 
         return response()->json(['result' => $data]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, FileStorageInterface $storage)
     {
         $errors = Validator::make($request->all(), [
             'nama' => 'required',
@@ -143,22 +134,18 @@ class DokumenRadController extends Controller
 
             if($request->document)
             {
-                $filePathOld = public_path($dokumenRad->document_path);
-                if (file_exists($filePathOld)) {
-                    unlink($filePathOld);
-                }
-
+                $storage->delete(
+                    $laporanEmisi->document_path
+                );
                 $file = $request->file('document');
+                $destinationPath = 'dokumen-rad';
 
-                // Nama file unik
-                $filename = time() . '_' . uniqid() . '.' .
-                            $file->getClientOriginalExtension();
+                $path = $storage->upload(
+                            $file,
+                            $destinationPath
+                        );
 
-                $destinationPath = public_path('dokumen-rad');
-                $file->move($destinationPath, $filename);
-
-                $dokumenRad->document_path =
-                    'dokumen-rad' . '/' . $filename;
+                $dokumenRad->document_path = $path;
             }
 
             $dokumenRad->save();

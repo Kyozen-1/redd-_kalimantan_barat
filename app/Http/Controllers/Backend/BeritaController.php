@@ -160,7 +160,7 @@ class BeritaController extends Controller
 
             PivotGambarBerita::where(
                 'berita_id',
-                $berita->id
+                $id
             )->delete();
 
             foreach ($finalImages as $image) {

@@ -205,10 +205,7 @@
                     'input[name="existing_images[]"]'
                 );
             hiddenInputs.forEach(input => {
-                const url =
-                    window.location.origin +
-                    '/' +
-                    input.value;
+                const url = input.value;
                 if (url === imageUrl) {
                     input.remove();
                 }

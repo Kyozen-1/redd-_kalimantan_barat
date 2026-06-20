@@ -19,6 +19,18 @@ Route::get('/berita-agenda', function () {
     return view('frontend.berita-agenda');
 })->name('frontend.berita-agenda');
 
+Route::get('/perpustakaan-publikasi', function () {
+    return view('frontend.perpustakaan-publikasi');
+})->name('frontend.perpustakaan-publikasi');
+
+Route::get('/sis-redd', function () {
+    return view('frontend.sis-redd');
+})->name('frontend.sis-redd');
+
+Route::get('/peta', function () {
+    return view('frontend.peta');
+})->name('frontend.peta');
+
 Route::prefix('login')->group(function(){
     Route::get('/', function () {
         return view('frontend.login');

@@ -6,7 +6,7 @@
     <meta content="Kita Serba Digital" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('backend_template/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ asset('images/logo_pemprov_kalbar.webp') }}">
 
     <!-- Bootstrap Css -->
     <link href="{{ asset('backend_template/css/bootstrap.min.css') }}" id="bootstrap-stylesheet" rel="stylesheet" type="text/css" />

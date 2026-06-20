@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreignId('kabupaten_kota_id')->nullable();
-            $table->foreign('kabupaten_kota_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('kabupaten_kota_id')->references('id')->on('regencies')->onDelete('cascade');
             $table->string('nama')->nullable();
             $table->date('tanggal')->nullable();
-            $table->enum('status_aktif', ['1', '0'])->nullable();
+            $table->enum('status_aktif', ['1', '0']);
             $table->enum('jenis_file', ['gambar', 'video'])->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();

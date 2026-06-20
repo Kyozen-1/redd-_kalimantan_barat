@@ -12,23 +12,62 @@
                             <span> Dashboard </span>
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('cms.berita.index') }}">
+                            <i class="mdi mdi-newspaper"></i>
+                            <span> Berita </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.agenda.index') }}">
+                            <i class="mdi mdi-calendar-check"></i>
+                            <span> Agenda </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.galeri.index') }}">
+                            <i class="mdi mdi-folder-multiple-image"></i>
+                            <span> Galeri </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.dokumen-galeri.index') }}">
+                            <i class="mdi mdi-folder-open"></i>
+                            <span> Dokumen Galeri </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.laporan-emisi.index') }}">
+                            <i class="mdi mdi-molecule-co2"></i>
+                            <span> Laporan Emisi </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.dokumen-rad.index') }}">
+                            <i class="mdi mdi-file-document-outline"></i>
+                            <span> Dokumen RAD </span>
+                        </a>
+                    </li>
                 @endif
 
                 @if (auth()->user()->role == 'superadmin')
                     <li>
+                        <a href="{{ route('cms.landing-page.index') }}">
+                            <i class="mdi mdi-view-dashboard-outline"></i>
+                            <span> Landing Page </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="javascript: void(0);">
-                            <i class="mdi mdi-page-layout-sidebar-left"></i>
-                            <span> Layouts </span>
+                            <i class="mdi mdi-format-list-bulleted"></i>
+                            <span> Master Data </span>
                             <span class="menu-arrow"></span>
                         </a>
                         <ul class="nav-second-level" aria-expanded="false">
-                            <li><a href="layouts-horizontal.html">Horizontal</a></li>
-                            <li><a href="layouts-sidebar-sm.html">Small Sidebar</a></li>
-                            <li><a href="layouts-dark-sidebar.html">Dark Sidebar</a></li>
-                            <li><a href="layouts-dark-topbar.html">Dark Topbar</a></li>
-                            <li><a href="layouts-preloader.html">Preloader</a></li>
-                            <li><a href="layouts-sidebar-collapsed.html">Sidebar Collapsed</a></li>
-                            <li><a href="layouts-boxed.html">Boxed</a></li>
+                            <li><a href="{{ route('cms.master-data.kategori-dokumen.index') }}">Kategori Dokumen</a></li>
+                            <li><a href="{{ route('cms.master-data.wilayah-cakupan.index') }}">Wilayah Cakupan</a></li>
+                            <li><a href="{{ route('cms.master-data.lsm.index') }}">LSM</a></li>
+                            <li><a href="{{ route('cms.master-data.section-landing-page.index') }}">Section Landing Page</a></li>
                         </ul>
                     </li>
                 @endif

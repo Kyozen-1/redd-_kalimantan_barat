@@ -22,3 +22,14 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/public/dokumen/excel
+/public/dokumen/pdf
+/public/dokumen/word
+/public/galeri/gambar
+/public/galeri/video
+/public/berita
+/public/laporan-emisi/excel
+/public/laporan-emisi/pdf
+/public/laporan-emisi/word
+/public/dokumen-rad
+/public/landing-page/images

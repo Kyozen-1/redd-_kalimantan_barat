@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama')->nullable();
-            $table->enum('status_aktif', ['1', '0'])->nullable();
+            $table->enum('status_aktif', ['1', '0']);
             $table->timestamps();
         });
     }

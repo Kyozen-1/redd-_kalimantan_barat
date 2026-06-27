@@ -13,5 +13,11 @@
         <a class="{{ request()->routeIs('frontend.perpustakaan-publikasi') ? 'active' : '' }}" href="{{ route('frontend.perpustakaan-publikasi') }}">Perpustakaan & Publikasi</a>
         <a class="{{ request()->routeIs('frontend.sis-redd') ? 'active' : '' }}" href="{{ route('frontend.sis-redd') }}">SIS-REDD+</a>
         <a class="site-map-btn {{ request()->routeIs('frontend.peta') ? 'active' : '' }}" href="{{ route('frontend.peta') }}"><span><i class="mdi mdi-arrow-top-right" aria-hidden="true"></i></span>Lihat Peta</a>
+        @auth
+            <a class="{{ request()->routeIs('cms.dashboard.index') ? 'active' : '' }}" href="{{ route('cms.dashboard.index') }}">Dashboard</a>
+            <a href="{{ route('logout') }}">Keluar</a>
+        @else
+            <a class="{{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">Login</a>
+        @endauth
     </div>
 </nav>

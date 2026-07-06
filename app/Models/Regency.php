@@ -18,4 +18,9 @@ class Regency extends Model
     {
         return $this->hasMany('App\Models\Galeri', 'kabupaten_kota_id');
     }
+
+    public function data_deforestasi()
+    {
+        return $this->hasMany('App\Models\DataDeforestasi', 'kabupaten_kota_id');
+    }
 }

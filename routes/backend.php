@@ -8,10 +8,15 @@ use App\Http\Controllers\Backend\GaleriController;
 use App\Http\Controllers\Backend\LaporanEmisiController;
 use App\Http\Controllers\Backend\DokumenRadController;
 use App\Http\Controllers\Backend\LandingPageController;
+use App\Http\Controllers\Backend\DataEmisiController;
 use App\Http\Controllers\Backend\MasterData\LsmController;
 use App\Http\Controllers\Backend\MasterData\WilayahCakupanController;
 use App\Http\Controllers\Backend\MasterData\KategoriDokumenController;
 use App\Http\Controllers\Backend\MasterData\SectionLandingPageController;
+use App\Http\Controllers\Backend\MasterData\EmisiController;
+use App\Http\Controllers\Backend\MasterData\SektorEmisiController;
+use App\Http\Controllers\Backend\MasterData\KawasanHutanController;
+use App\Http\Controllers\Backend\MasterData\PenyebabDeforestasiController;
 
 Route::middleware(['auth'])->prefix('cms')->group(function(){
     Route::middleware('check_role:superadmin,admin')->group(function(){
@@ -74,6 +79,10 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::post('/update', [DokumenRadController::class, 'update'])->name('cms.dokumen-rad.update');
             Route::get('/destroy/{id}', [DokumenRadController::class, 'destroy'])->name('cms.dokumen-rad.destroy');
         });
+
+        Route::prefix('data-emisi')->group(function(){
+            Route::get('/', [DataEmisiController::class, 'index'])->name('cms.data-emisi.index');
+        });
     });
     Route::middleware('check_role:superadmin')->group(function(){
         Route::prefix('landing-page')->group(function(){
@@ -125,6 +134,56 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
                 Route::get('/edit/{id}',[SectionLandingPageController::class, 'edit'])->name('cms.master-data.section-landing-page.edit');
                 Route::post('/update',[SectionLandingPageController::class, 'update'])->name('cms.master-data.section-landing-page.update');
                 Route::get('/destroy/{id}',[SectionLandingPageController::class, 'destroy'])->name('cms.master-data.section-landing-page.destroy');
+            });
+
+            Route::prefix('emisi')->group(function(){
+                Route::get('/', [EmisiController::class, 'index'])->name('cms.master-data.emisi.index');
+                Route::get('/datatable', [EmisiController::class, 'datatable'])->name('cms.master-data.emisi.datatable');
+                Route::get('/detail/{id}', [EmisiController::class, 'show'])->name('cms.master-data.emisi.show');
+                Route::post('/',[EmisiController::class, 'store'])->name('cms.master-data.emisi.store');
+                Route::get('/edit/{id}',[EmisiController::class, 'edit'])->name('cms.master-data.emisi.edit');
+                Route::post('/update',[EmisiController::class, 'update'])->name('cms.master-data.emisi.update');
+                Route::get('/destroy/{id}',[EmisiController::class, 'destroy'])->name('cms.master-data.emisi.destroy');
+            });
+
+            Route::prefix('sektor-emisi')->group(function(){
+                Route::get('/', [SektorEmisiController::class, 'index'])->name('cms.master-data.sektor-emisi.index');
+                Route::get('/datatable', [SektorEmisiController::class, 'datatable'])->name('cms.master-data.sektor-emisi.datatable');
+                Route::get('/detail/{id}', [SektorEmisiController::class, 'show'])->name('cms.master-data.sektor-emisi.show');
+                Route::post('/',[SektorEmisiController::class, 'store'])->name('cms.master-data.sektor-emisi.store');
+                Route::get('/edit/{id}',[SektorEmisiController::class, 'edit'])->name('cms.master-data.sektor-emisi.edit');
+                Route::post('/update',[SektorEmisiController::class, 'update'])->name('cms.master-data.sektor-emisi.update');
+                Route::get('/destroy/{id}',[SektorEmisiController::class, 'destroy'])->name('cms.master-data.sektor-emisi.destroy');
+            });
+
+            Route::prefix('kawasan-hutan')->group(function(){
+                Route::get('/', [KawasanHutanController::class, 'index'])->name('cms.master-data.kawasan-hutan.index');
+                Route::get('/datatable', [KawasanHutanController::class, 'datatable'])->name('cms.master-data.kawasan-hutan.datatable');
+                Route::get('/detail/{id}', [KawasanHutanController::class, 'show'])->name('cms.master-data.kawasan-hutan.show');
+                Route::post('/',[KawasanHutanController::class, 'store'])->name('cms.master-data.kawasan-hutan.store');
+                Route::get('/edit/{id}',[KawasanHutanController::class, 'edit'])->name('cms.master-data.kawasan-hutan.edit');
+                Route::post('/update',[KawasanHutanController::class, 'update'])->name('cms.master-data.kawasan-hutan.update');
+                Route::get('/destroy/{id}',[KawasanHutanController::class, 'destroy'])->name('cms.master-data.kawasan-hutan.destroy');
+            });
+
+            Route::prefix('kawasan-hutan')->group(function(){
+                Route::get('/', [KawasanHutanController::class, 'index'])->name('cms.master-data.kawasan-hutan.index');
+                Route::get('/datatable', [KawasanHutanController::class, 'datatable'])->name('cms.master-data.kawasan-hutan.datatable');
+                Route::get('/detail/{id}', [KawasanHutanController::class, 'show'])->name('cms.master-data.kawasan-hutan.show');
+                Route::post('/',[KawasanHutanController::class, 'store'])->name('cms.master-data.kawasan-hutan.store');
+                Route::get('/edit/{id}',[KawasanHutanController::class, 'edit'])->name('cms.master-data.kawasan-hutan.edit');
+                Route::post('/update',[KawasanHutanController::class, 'update'])->name('cms.master-data.kawasan-hutan.update');
+                Route::get('/destroy/{id}',[KawasanHutanController::class, 'destroy'])->name('cms.master-data.kawasan-hutan.destroy');
+            });
+
+            Route::prefix('penyebab-deforestasi')->group(function(){
+                Route::get('/', [PenyebabDeforestasiController::class, 'index'])->name('cms.master-data.penyebab-deforestasi.index');
+                Route::get('/datatable', [PenyebabDeforestasiController::class, 'datatable'])->name('cms.master-data.penyebab-deforestasi.datatable');
+                Route::get('/detail/{id}', [PenyebabDeforestasiController::class, 'show'])->name('cms.master-data.penyebab-deforestasi.show');
+                Route::post('/',[PenyebabDeforestasiController::class, 'store'])->name('cms.master-data.penyebab-deforestasi.store');
+                Route::get('/edit/{id}',[PenyebabDeforestasiController::class, 'edit'])->name('cms.master-data.penyebab-deforestasi.edit');
+                Route::post('/update',[PenyebabDeforestasiController::class, 'update'])->name('cms.master-data.penyebab-deforestasi.update');
+                Route::get('/destroy/{id}',[PenyebabDeforestasiController::class, 'destroy'])->name('cms.master-data.penyebab-deforestasi.destroy');
             });
         });
     });

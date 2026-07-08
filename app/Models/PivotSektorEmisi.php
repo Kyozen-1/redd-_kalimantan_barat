@@ -24,6 +24,6 @@ class PivotSektorEmisi extends Model
 
     public function data_emisi()
     {
-        return $this->hasOne('App\Models\DataEmisi', 'pivot_sektor_emisi_id');
+        return $this->hasMany('App\Models\DataEmisi', 'pivot_sektor_emisi_id');
     }
 }

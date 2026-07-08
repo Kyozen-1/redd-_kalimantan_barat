@@ -82,6 +82,11 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
 
         Route::prefix('data-emisi')->group(function(){
             Route::get('/', [DataEmisiController::class, 'index'])->name('cms.data-emisi.index');
+            Route::post('/', [DataEmisiController::class, 'store'])->name('cms.data-emisi.store');
+            Route::get('/datatable', [DataEmisiController::class, 'datatable'])->name('cms.data-emisi.datatable');
+            Route::get('/destroy/data/{id}',[DataEmisiController::class, 'destroyData'])->name('cms.data-emisi.destroy.data');
+            Route::post('/update/nilai', [DataEmisiController::class, 'updateNilai'])->name('cms.data-emisi.update.nilai');
+            Route::get('/destroy/nilai/{id}',[DataEmisiController::class, 'destroyNilai'])->name('cms.data-emisi.destroy.nilai');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

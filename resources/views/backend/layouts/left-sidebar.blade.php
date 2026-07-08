@@ -19,6 +19,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('cms.data-kawasan.index') }}">
+                            <i class="mdi mdi-tree"></i>
+                            <span> Data Kawasan </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('cms.berita.index') }}">
                             <i class="mdi mdi-newspaper"></i>
                             <span> Berita </span>

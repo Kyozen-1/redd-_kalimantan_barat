@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
-use Auth;
 use Validator;
 use DataTables;
 use App\Models\MdEmisi;

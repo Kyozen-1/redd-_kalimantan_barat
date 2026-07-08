@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
-@section('title', 'Data Emisi | REDD++ Kalimantan Barat')
-@section('header', 'Data Emisi')
+@section('title', 'Data Kawasan | REDD++ Kalimantan Barat')
+@section('header', 'Data Kawasan')
 
 @section('css')
     <link href="{{ asset('/backend_template/libs/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css" />
@@ -59,14 +59,12 @@
                         </button>
                     </div>
                 </div>
-                <table id="table_data_emisi" class="table table-bordered nowrap">
+                <table id="table_data_kawasan" class="table table-bordered table-bordered dt-responsive nowrap">
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th width="5%">Aksi</th>
-                            <th width="15%">Emisi</th>
-                            <th width="10%">Sektor</th>
-                            <th width="50%">Nilai</th>
+                            <th>Kawasan Hutan</th>
+                            <th>Nilai</th>
                         </tr>
                     </thead>
                 </table>
@@ -83,27 +81,16 @@
                 </div>
                 <div class="modal-body">
                     <span id="form_result"></span>
-                    <form class="form-horizontal" id="form_data_emisi" method="POST" data-parsley-validate novalidate>
+                    <form class="form-horizontal" id="form_kawasan_hutan" method="POST" data-parsley-validate novalidate>
                         @csrf
                         <div class="row">
-                            <div class="col-12 col-md-6">
+                            <div class="col-12">
                                 <div class="form-group">
-                                    <label for="emisiId" class="control-label">Emisi</label>
-                                    <select name="emisi_id" id="emisiId" class="form-control" required>
-                                        <option value="">Pilih</option>
-                                        @foreach ($emisis as $emisi)
-                                            <option value="{{$emisi['id']}}">{{$emisi['nama']}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="sektorEmisiId" class="control-label">Sektor</label>
-                                    <select name="sektor_emisi_id" id="sektorEmisiId" class="form-control" required>
-                                        <option value="">Pilih</option>
-                                        @foreach ($sektors as $sektor)
-                                            <option value="{{$sektor['id']}}">{{$sektor['nama']}}</option>
+                                    <label for="kawasanHutanId" class="control-label">Kawasan Hutan</label>
+                                    <select name="kawasan_hutan_id" id="kawasanHutanId" class="form-control" required>
+                                        <option value="">Pilih Hutan</option>
+                                        @foreach ($kawasanHutans as $kawasanHutan)
+                                            <option value="{{$kawasanHutan['id']}}">{{$kawasanHutan['nama']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -182,35 +169,25 @@
     <script src="{{ asset('/backend_template/libs/dropify/dropify.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.js') }}"></script>
     <script src="{{ asset('js/select2.min.js') }}"></script>
-
     <script>
-        $('#emisiId, #sektorEmisiId, #tahunDari, #tahunSampai').select2();
+        $('#kawasanHutanId, #tahunDari, #tahunSampai').select2();
 
         const currentYear = new Date().getFullYear();
         const startYear = 2000;
 
-        var dataTables = $('#table_data_emisi').DataTable({
+        var dataTables = $('#table_data_kawasan').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: "{{ route('cms.data-emisi.datatable') }}",
+                url: "{{ route('cms.data-kawasan.datatable') }}",
             },
             columns:[
                 {
                     data: 'DT_RowIndex'
                 },
                 {
-                    data: 'aksi',
-                    name: 'aksi',
-                    orderable: false
-                },
-                {
-                    data: 'emisi',
-                    name: 'emisi'
-                },
-                {
-                    data: 'sektor',
-                    name: 'sektor'
+                    data: 'kawasan',
+                    name: 'kawasan'
                 },
                 {
                     data: 'nilai',
@@ -259,26 +236,6 @@
             }
         });
 
-        function reset()
-        {
-            $('#form_data_emisi')[0].reset();
-            $('#tahunDari').val(currentYear).trigger('change');
-            $('#tahunSampai').val(currentYear).trigger('change');
-            $('#emisiId').val('').trigger('change');
-            $('#sektorEmisiId').val('').trigger('change');
-            generateTable();
-        }
-
-        $('#create').click(function(){
-            reset();
-            $('#form_result').html('');
-            $('#aksi_button').text('Save');
-            $('#aksi_button').prop('disabled', false);
-            $('.modal-title').text('Tambah Data');
-            $('#aksi_button').val('Save');
-            $('#aksi').val('Save');
-        });
-
         $('#tahunDari, #tahunSampai').on('change', function () {
             generateTable();
         });
@@ -302,14 +259,14 @@
                         <td>
                             ${tahun}
                             <input type="hidden"
-                                name="data_emisi[${index}][tahun]"
+                                name="data_kawasan[${index}][tahun]"
                                 value="${tahun}">
                         </td>
                         <td>
                             <input
                                 type="text"
                                 class="form-control"
-                                name="data_emisi[${index}][nilai]">
+                                name="data_kawasan[${index}][nilai]">
                         </td>
                     </tr>
                 `;
@@ -320,12 +277,31 @@
             $('#tbodyEmisi').html(html);
         }
 
-        $('#form_data_emisi').on('submit', function(e){
+        function reset()
+        {
+            $('#form_kawasan_hutan')[0].reset();
+            $('#tahunDari').val(currentYear).trigger('change');
+            $('#tahunSampai').val(currentYear).trigger('change');
+            $('#kawasanHutanId').val('').trigger('change');
+            generateTable();
+        }
+
+        $('#create').click(function(){
+            reset();
+            $('#form_result').html('');
+            $('#aksi_button').text('Save');
+            $('#aksi_button').prop('disabled', false);
+            $('.modal-title').text('Tambah Data');
+            $('#aksi_button').val('Save');
+            $('#aksi').val('Save');
+        });
+
+        $('#form_kawasan_hutan').on('submit', function(e){
             e.preventDefault();
             if($('#aksi').val() == 'Save')
             {
                 $.ajax({
-                    url: "{{ route('cms.data-emisi.store') }}",
+                    url: "{{ route('cms.data-kawasan.store') }}",
                     method: "POST",
                     data: $(this).serialize(),
                     dataType: "json",
@@ -343,7 +319,7 @@
                             $('#aksi_button').prop('disabled', false);
                             reset();
                             $('#aksi_button').text('Save');
-                            $('#table_data_emisi').DataTable().ajax.reload();
+                            $('#data-kawasan').DataTable().ajax.reload();
                         }
                         if(data.success)
                         {
@@ -351,7 +327,7 @@
                             $('#aksi_button').prop('disabled', false);
                             reset();
                             $('#aksi_button').text('Save');
-                            $('#table_data_emisi').DataTable().ajax.reload();
+                            $('#data-kawasan').DataTable().ajax.reload();
                         }
 
                         $('#form_result').html(html);
@@ -362,7 +338,7 @@
 
         $(document).on('click', '.deleteData',function(){
             var id = $(this).attr('id');
-            var url = "{{ route('cms.data-emisi.destroy.data', ['id' => ":id"]) }}";
+            var url = "{{ route('cms.data-kawasan.destroy.data', ['id' => ":id"]) }}";
             url = url.replace(":id", id);
             return new swal({
                 title: "Apakah Anda Yakin Menghapus Ini?",
@@ -398,7 +374,7 @@
                             }
                             if(data.success)
                             {
-                                $('#table_data_emisi').DataTable().ajax.reload();
+                                $('#table_data_kawasan').DataTable().ajax.reload();
                                 Swal.fire({
                                     icon: 'success',
                                     title: data.success,
@@ -454,7 +430,7 @@
                 if(result.value)
                 {
                     $.ajax({
-                        url: "{{ route('cms.data-emisi.update.nilai') }}",
+                        url: "{{ route('cms.data-kawasan.update.nilai') }}",
                         type: 'POST',
                         data: {
                             _token: "{{ csrf_token() }}",
@@ -511,7 +487,7 @@
 
         $(document).on('click', '.deleteNilai',function(){
             var id = $(this).attr('id');
-            var url = "{{ route('cms.data-emisi.destroy.nilai', ['id' => ":id"]) }}";
+            var url = "{{ route('cms.data-kawasan.destroy.nilai', ['id' => ":id"]) }}";
             url = url.replace(":id", id);
             return new swal({
                 title: "Apakah Anda Yakin Menghapus Ini?",
@@ -547,7 +523,7 @@
                             }
                             if(data.success)
                             {
-                                $('#table_data_emisi').DataTable().ajax.reload();
+                                $('#table_data_kawasan').DataTable().ajax.reload();
                                 Swal.fire({
                                     icon: 'success',
                                     title: data.success,

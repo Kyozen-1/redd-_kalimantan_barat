@@ -25,6 +25,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('cms.data-deforestasi.index') }}">
+                            <i class="mdi mdi-trending-down"></i>
+                            <span> Data Deforestasi </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('cms.berita.index') }}">
                             <i class="mdi mdi-newspaper"></i>
                             <span> Berita </span>

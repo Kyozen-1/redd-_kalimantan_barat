@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
-@section('title', 'Data Kawasan | REDD++ Kalimantan Barat')
-@section('header', 'Data Kawasan')
+@section('title', 'Data Deforestasi | REDD++ Kalimantan Barat')
+@section('header', 'Data Deforestasi')
 
 @section('css')
     <link href="{{ asset('/backend_template/libs/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css" />
@@ -59,14 +59,42 @@
                         </button>
                     </div>
                 </div>
-                <table id="table_data_kawasan" class="table table-bordered table-bordered dt-responsive nowrap">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th width="5%">No</th>
-                            <th>Kawasan Hutan</th>
-                            <th>Nilai</th>
+                            <th>Penyebab Deforestasi</th>
                         </tr>
                     </thead>
+                    <tbody>
+                    @foreach ($penyebabDeforestasis as $penyebabDeforestasi)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td style="text-align: left">
+                                <a href="#"
+                                class="btn-collapse"
+                                data-id="{{ $penyebabDeforestasi['real_id'] }}"
+                                data-target="#collapse{{ $penyebabDeforestasi['real_id'] }}">
+                                    <i class="fa fa-chevron-right"></i>
+                                    {{ $penyebabDeforestasi['nama'] }}
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding:30">
+                                <div
+                                    id="collapse{{ $penyebabDeforestasi['real_id'] }}"
+                                    class="collapse"
+                                    data-loaded="false"
+                                    data-penyebab="{{ $penyebabDeforestasi['real_id'] }}">
+                                    <div class="p-3 text-center">
+                                        Loading...
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -81,16 +109,27 @@
                 </div>
                 <div class="modal-body">
                     <span id="form_result"></span>
-                    <form class="form-horizontal" id="form_kawasan_hutan" method="POST" data-parsley-validate novalidate>
+                    <form class="form-horizontal" id="form_deforestasi" method="POST" data-parsley-validate novalidate>
                         @csrf
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12 col-md-6">
                                 <div class="form-group">
-                                    <label for="kawasanHutanId" class="control-label">Kawasan Hutan</label>
-                                    <select name="kawasan_hutan_id" id="kawasanHutanId" class="form-control" required>
-                                        <option value="">Pilih Hutan</option>
-                                        @foreach ($kawasanHutans as $kawasanHutan)
-                                            <option value="{{$kawasanHutan['id']}}">{{$kawasanHutan['nama']}}</option>
+                                    <label for="penyebabDeforestasiId" class="control-label">Penyebab Deforestasi</label>
+                                    <select name="penyebab_deforestasi_id" id="penyebabDeforestasiId" class="form-control" required>
+                                        <option value="">Pilih</option>
+                                        @foreach ($penyebabDeforestasis as $penyebabDeforestasi)
+                                            <option value="{{$penyebabDeforestasi['id']}}">{{$penyebabDeforestasi['nama']}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="kabupatenKotaId" class="control-label">Kabupaten / Kota</label>
+                                    <select name="kabupaten_kota_id" id="kabupatenKotaId" class="form-control" required>
+                                        <option value="">Pilih</option>
+                                        @foreach ($kabupatenKotas as $kabupatenKota)
+                                            <option value="{{$kabupatenKota['id']}}">{{$kabupatenKota['nama']}}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -170,33 +209,10 @@
     <script src="{{ asset('js/sweetalert.js') }}"></script>
     <script src="{{ asset('js/select2.min.js') }}"></script>
     <script>
-        $('#kawasanHutanId, #tahunDari, #tahunSampai').select2();
+        $('#penyebabDeforestasiId, #kabupatenKotaId, #tahunDari, #tahunSampai').select2();
 
         const currentYear = new Date().getFullYear();
         const startYear = 2000;
-
-        var dataTables = $('#table_data_kawasan').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('cms.data-kawasan.datatable') }}",
-            },
-            columns:[
-                {
-                    data: 'DT_RowIndex'
-                },
-                {
-                    data: 'kawasan',
-                    name: 'kawasan'
-                },
-                {
-                    data: 'nilai',
-                    name: 'nilai',
-                    orderable:false,
-                    searchable:false
-                }
-            ]
-        });
 
         for (let year = currentYear; year >= startYear; year--) {
             $('#tahunDari, #tahunSampai').append(
@@ -259,14 +275,14 @@
                         <td>
                             ${tahun}
                             <input type="hidden"
-                                name="data_kawasan[${index}][tahun]"
+                                name="data_deforestasi[${index}][tahun]"
                                 value="${tahun}">
                         </td>
                         <td>
                             <input
                                 type="text"
                                 class="form-control"
-                                name="data_kawasan[${index}][nilai]">
+                                name="data_deforestasi[${index}][nilai]">
                         </td>
                     </tr>
                 `;
@@ -279,10 +295,11 @@
 
         function reset()
         {
-            $('#form_kawasan_hutan')[0].reset();
+            $('#form_deforestasi')[0].reset();
             $('#tahunDari').val(currentYear).trigger('change');
             $('#tahunSampai').val(currentYear).trigger('change');
-            $('#kawasanHutanId').val('').trigger('change');
+            $('#penyebabDeforestasiId').val('').trigger('change');
+            $('#kabupatenKotaId').val('').trigger('change');
             generateTable();
         }
 
@@ -296,12 +313,12 @@
             $('#aksi').val('Save');
         });
 
-        $('#form_kawasan_hutan').on('submit', function(e){
+        $('#form_deforestasi').on('submit', function(e){
             e.preventDefault();
             if($('#aksi').val() == 'Save')
             {
                 $.ajax({
-                    url: "{{ route('cms.data-kawasan.store') }}",
+                    url: "{{ route('cms.data-deforestasi.store') }}",
                     method: "POST",
                     data: $(this).serialize(),
                     dataType: "json",
@@ -319,7 +336,6 @@
                             $('#aksi_button').prop('disabled', false);
                             reset();
                             $('#aksi_button').text('Save');
-                            $('#data-kawasan').DataTable().ajax.reload();
                         }
                         if(data.success)
                         {
@@ -327,7 +343,6 @@
                             $('#aksi_button').prop('disabled', false);
                             reset();
                             $('#aksi_button').text('Save');
-                            $('#data-kawasan').DataTable().ajax.reload();
                         }
 
                         $('#form_result').html(html);
@@ -336,55 +351,95 @@
             }
         });
 
-        $(document).on('click', '.deleteData',function(){
-            var id = $(this).attr('id');
-            var url = "{{ route('cms.data-kawasan.destroy.data', ['id' => ":id"]) }}";
-            url = url.replace(":id", id);
-            return new swal({
-                title: "Apakah Anda Yakin Menghapus Ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#1976D2",
-                confirmButtonText: "Ya"
-            }).then((result)=>{
-                if(result.value)
-                {
-                    $.ajax({
-                        url: url,
-                        dataType: "json",
-                        beforeSend: function()
-                        {
-                            return new swal({
-                                title: "Checking...",
-                                text: "Harap Menunggu",
-                                imageUrl: "{{ asset('/images/preloader.gif') }}",
-                                showConfirmButton: false,
-                                allowOutsideClick: false
-                            });
-                        },
-                        success: function(data)
-                        {
-                            if(data.errors)
-                            {
-                                Swal.fire({
-                                    icon: 'errors',
-                                    title: data.errors,
-                                    showConfirmButton: true
-                                });
-                            }
-                            if(data.success)
-                            {
-                                $('#table_data_kawasan').DataTable().ajax.reload();
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: data.success,
-                                    showConfirmButton: true
-                                });
-                            }
-                        }
-                    });
+        function loadDetail(penyebabId, target)
+        {
+            let url = "{{ route('cms.data-deforestasi.data', ['penyebab_deforestasi_id' => ':id']) }}";
+            url = url.replace(':id', penyebabId);
+            $.ajax({
+                url: url,
+                type: 'GET',
+                beforeSend:function(){
+                    target.html(`
+                        <div class="text-center p-3">
+                            <i class="fa fa-spinner fa-spin"></i>
+                            Loading...
+                        </div>
+                    `);
+                },
+                success:function(res){
+                    target.html(res);
+                    target.data('loaded',true);
+                },
+                error:function(){
+                    target.html(`
+                        <div class="alert alert-danger">
+                            Gagal memuat data.
+                        </div>
+                    `);
                 }
             });
+        }
+
+        $(function(){
+            $('.btn-collapse').click(function(e){
+                e.preventDefault();
+                let id=$(this).data('id');
+                let target=$(this).data('target');
+                let icon=$(this).find('i');
+
+                if($(target).hasClass('show'))
+                {
+                    $(target).collapse('hide');
+                    icon.removeClass('fa-chevron-down')
+                        .addClass('fa-chevron-right');
+                    return;
+                }
+
+                $('.collapse').collapse('hide');
+
+                $('.btn-collapse i')
+                    .removeClass('fa-chevron-down')
+                    .addClass('fa-chevron-right');
+
+                icon.removeClass('fa-chevron-right')
+                    .addClass('fa-chevron-down');
+
+                $(target).collapse('show');
+
+                if($(target).data('loaded'))
+                    return;
+
+                loadDetail(id,$(target));
+            });
+
+        });
+
+        $(document).on('click','.btn-kabupaten',function(e){
+            e.preventDefault();
+
+            let target=$(this).data('target');
+            let icon=$(this).find('i');
+
+            if($(target).hasClass('show'))
+            {
+                $(target).collapse('hide');
+                icon.removeClass('fa-chevron-down')
+                    .addClass('fa-chevron-right');
+                return;
+            }
+
+            icon.removeClass('fa-chevron-right')
+                .addClass('fa-chevron-down');
+
+            $(target).collapse('show');
+        });
+
+        $(document).on('hidden.bs.collapse','.collapse',function(){
+            let id=$(this).attr('id');
+
+            $('a[data-target="#'+id+'"] i')
+                .removeClass('fa-chevron-down')
+                .addClass('fa-chevron-right');
         });
 
         let editing = false;
@@ -430,7 +485,7 @@
                 if(result.value)
                 {
                     $.ajax({
-                        url: "{{ route('cms.data-kawasan.update.nilai') }}",
+                        url: "{{ route('cms.data-deforestasi.update.nilai') }}",
                         type: 'POST',
                         data: {
                             _token: "{{ csrf_token() }}",
@@ -485,54 +540,58 @@
             });
         });
 
-        $(document).on('click', '.deleteNilai',function(){
-            var id = $(this).attr('id');
-            var url = "{{ route('cms.data-kawasan.destroy.nilai', ['id' => ":id"]) }}";
-            url = url.replace(":id", id);
-            return new swal({
-                title: "Apakah Anda Yakin Menghapus Ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#1976D2",
-                confirmButtonText: "Ya"
+        $(document).on('click','.deleteNilai',function(){
+            let button=$(this);
+            let id=button.data('id');
+            let penyebabId=button.data('penyebab');
+            let url="{{ route('cms.data-deforestasi.destroy.nilai',['id'=>':id']) }}";
+            url=url.replace(':id',id);
+            Swal.fire({
+                title:'Apakah Anda yakin?',
+                icon:'warning',
+                showCancelButton:true,
+                confirmButtonText:'Ya'
             }).then((result)=>{
-                if(result.value)
-                {
-                    $.ajax({
-                        url: url,
-                        dataType: "json",
-                        beforeSend: function()
+                if(!result.isConfirmed)
+                    return;
+                $.ajax({
+                    url:url,
+                    dataType:'json',
+                    beforeSend:function(){
+                        Swal.fire({
+                            title:'Loading...',
+                            allowOutsideClick:false,
+                            didOpen:()=>{
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success:function(data){
+                        if(data.errors)
                         {
-                            return new swal({
-                                title: "Checking...",
-                                text: "Harap Menunggu",
-                                imageUrl: "{{ asset('/images/preloader.gif') }}",
-                                showConfirmButton: false,
-                                allowOutsideClick: false
+                            Swal.fire({
+                                icon:'error',
+                                title:data.errors
                             });
-                        },
-                        success: function(data)
-                        {
-                            if(data.errors)
-                            {
-                                Swal.fire({
-                                    icon: 'errors',
-                                    title: data.errors,
-                                    showConfirmButton: true
-                                });
-                            }
-                            if(data.success)
-                            {
-                                $('#table_data_kawasan').DataTable().ajax.reload();
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: data.success,
-                                    showConfirmButton: true
-                                });
-                            }
+                            return;
                         }
-                    });
-                }
+                        if(data.success)
+                        {
+                            Swal.fire({
+                                icon:'success',
+                                title:data.success
+                            });
+                            let target=$("#collapse"+penyebabId);
+                            loadDetail(penyebabId,target);
+                        }
+                    },
+                    error:function(){
+                        Swal.fire({
+                            icon:'error',
+                            title:'Terjadi kesalahan server.'
+                        });
+                    }
+                });
             });
         });
     </script>

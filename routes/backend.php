@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\DokumenRadController;
 use App\Http\Controllers\Backend\LandingPageController;
 use App\Http\Controllers\Backend\DataEmisiController;
 use App\Http\Controllers\Backend\DataKawasanController;
+use App\Http\Controllers\Backend\DataDeforestasiController;
 use App\Http\Controllers\Backend\MasterData\LsmController;
 use App\Http\Controllers\Backend\MasterData\WilayahCakupanController;
 use App\Http\Controllers\Backend\MasterData\KategoriDokumenController;
@@ -97,6 +98,14 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/destroy/data/{id}',[DataKawasanController::class, 'destroyData'])->name('cms.data-kawasan.destroy.data');
             Route::post('/update/nilai', [DataKawasanController::class, 'updateNilai'])->name('cms.data-kawasan.update.nilai');
             Route::get('/destroy/nilai/{id}',[DataKawasanController::class, 'destroyNilai'])->name('cms.data-kawasan.destroy.nilai');
+        });
+
+        Route::prefix('data-deforestasi')->group(function(){
+            Route::get('/', [DataDeforestasiController::class, 'index'])->name('cms.data-deforestasi.index');
+            Route::post('/', [DataDeforestasiController::class, 'store'])->name('cms.data-deforestasi.store');
+            Route::get('/{penyebab_deforestasi_id}/data', [DataDeforestasiController::class, 'data'])->name('cms.data-deforestasi.data');
+            Route::post('/update/nilai', [DataDeforestasiController::class, 'updateNilai'])->name('cms.data-deforestasi.update.nilai');
+            Route::get('/destroy/nilai/{id}',[DataDeforestasiController::class, 'destroyNilai'])->name('cms.data-deforestasi.destroy.nilai');
         });
     });
     Route::middleware('check_role:superadmin')->group(function(){

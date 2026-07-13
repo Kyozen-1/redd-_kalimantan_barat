@@ -13,6 +13,24 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('cms.data-emisi.index') }}">
+                            <i class="mdi mdi-molecule-co2"></i>
+                            <span> Data Emisi </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.data-kawasan.index') }}">
+                            <i class="mdi mdi-tree"></i>
+                            <span> Data Kawasan </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('cms.data-deforestasi.index') }}">
+                            <i class="mdi mdi-trending-down"></i>
+                            <span> Data Deforestasi </span>
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('cms.berita.index') }}">
                             <i class="mdi mdi-newspaper"></i>
                             <span> Berita </span>
@@ -38,7 +56,7 @@
                     </li>
                     <li>
                         <a href="{{ route('cms.laporan-emisi.index') }}">
-                            <i class="mdi mdi-molecule-co2"></i>
+                            <i class="mdi mdi-file-chart"></i>
                             <span> Laporan Emisi </span>
                         </a>
                     </li>
@@ -64,6 +82,10 @@
                             <span class="menu-arrow"></span>
                         </a>
                         <ul class="nav-second-level" aria-expanded="false">
+                            <li><a href="{{ route('cms.master-data.emisi.index') }}">Emisi</a></li>
+                            <li><a href="{{ route('cms.master-data.sektor-emisi.index') }}">Sektor Emisi</a></li>
+                            <li><a href="{{ route('cms.master-data.kawasan-hutan.index') }}">Kawasan Hutan</a></li>
+                            <li><a href="{{ route('cms.master-data.penyebab-deforestasi.index') }}">Penyebab Deforestasi</a></li>
                             <li><a href="{{ route('cms.master-data.kategori-dokumen.index') }}">Kategori Dokumen</a></li>
                             <li><a href="{{ route('cms.master-data.wilayah-cakupan.index') }}">Wilayah Cakupan</a></li>
                             <li><a href="{{ route('cms.master-data.lsm.index') }}">LSM</a></li>

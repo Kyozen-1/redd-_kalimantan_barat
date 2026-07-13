@@ -2,10 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FrontendHomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontendHomeController::class, 'index'])->name('home');
 
 Route::get('/data-pemetaan', function () {
     return view('frontend.data-pemetaan');

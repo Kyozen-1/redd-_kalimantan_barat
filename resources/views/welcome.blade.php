@@ -486,7 +486,7 @@
             color: #485147;
             font-size: 11px;
             line-height: 1.25;
-            font-weight: 800;
+            font-weight: 600;
         }
 
         .dashboard {
@@ -520,7 +520,7 @@
             box-shadow: 0 14px 28px rgba(0, 0, 0, .16);
             color: #677067;
             font-size: 12px;
-            font-weight: 800;
+            font-weight: 600;
         }
 
         .badge strong {
@@ -529,6 +529,7 @@
             color: var(--green);
             font-size: 30px;
             line-height: 1;
+            font-weight: 700;
         }
 
         .badge.bottom {
@@ -849,8 +850,8 @@
 @section('body')
     <main class="page">
         <section class="hero">
+            @include('frontend.layouts.site-header')
             <div class="container">
-                @include('frontend.layouts.site-header')
 
                 <div class="hero-grid">
                     <div class="hero-content">
@@ -902,14 +903,14 @@
                 <div class="mechanism">
                     <div>
                         <p class="section-kicker">+ Mekanisme REDD+</p>
-                        <p>Mekanisme insentif global untuk menurunkan emisi melalui Pengurangan Emisi dari Deforestasi dan Degradasi Hutan (REDD+).</p>
-                        <p>Di Kalimantan Barat, program ini mengintegrasikan konservasi biodiversitas dengan peningkatan kesejahteraan masyarakat lokal.</p>
+                        <p>{{ $mekanisme['description_1'] ?? 'Mekanisme insentif global untuk menurunkan emisi melalui Pengurangan Emisi dari Deforestasi dan Degradasi Hutan (REDD+).' }}</p>
+                        <p>{{ $mekanisme['description_2'] ?? 'Di Kalimantan Barat, program ini mengintegrasikan konservasi biodiversitas dengan peningkatan kesejahteraan masyarakat lokal.' }}</p>
                     </div>
 
                     <div class="carousel-mask" aria-label="Galeri mekanisme REDD+">
                         <div class="carousel-track">
-                            <img src="{{ asset('images/redd-home/mechanism-strip.png') }}" alt="Komoditas dan hutan Kalimantan Barat">
-                            <img src="{{ asset('images/redd-home/mechanism-strip.png') }}" alt="">
+                            <img src="{{ $mekanisme['image'] ?? asset('images/redd-home/mechanism-strip.png') }}" alt="Komoditas dan hutan Kalimantan Barat">
+                            <img src="{{ $mekanisme['image'] ?? asset('images/redd-home/mechanism-strip.png') }}" alt="">
                         </div>
                     </div>
                 </div>
@@ -929,11 +930,22 @@
             <div class="container">
                 <p class="section-kicker">+ Inisiatif Unggulan</p>
                 <div class="cards">
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tree"></i></span><b>Forest Carbon Partnership Facility (FCPF) Carbon Fund</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><span class="icon-stack"><i class="fas fa-folder"></i></span></span><b>Pengelolaan Hutan Desa (Social Forestry / Perhutanan Sosial)</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tint"></i></span><b>Restorasi dan Perlindungan Lanskap Gambut</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-desktop"></i></span><b>Sistem Pemantauan Berbasis Masyarakat dan Geotagging</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-seedling"></i></span><b>Pengembangan Komoditas Hijau (Green Commodities)</b></div>
+                    @if($initiatives->isNotEmpty())
+                        @foreach($initiatives as $initiative)
+                            <div class="initiative-card">
+                                <span class="circle-icon" aria-hidden="true">
+                                    <i class="{{ $initiative['icon'] }}"></i>
+                                </span>
+                                <b>{{ $initiative['title'] }}</b>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tree"></i></span><b>Forest Carbon Partnership Facility (FCPF) Carbon Fund</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><span class="icon-stack"><i class="fas fa-folder"></i></span></span><b>Pengelolaan Hutan Desa (Social Forestry / Perhutanan Sosial)</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tint"></i></span><b>Restorasi dan Perlindungan Lanskap Gambut</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-desktop"></i></span><b>Sistem Pemantauan Berbasis Masyarakat dan Geotagging</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-seedling"></i></span><b>Pengembangan Komoditas Hijau (Green Commodities)</b></div>
+                    @endif
                 </div>
 
                 <div class="dashboard">

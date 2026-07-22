@@ -35,8 +35,8 @@
 
     <main class="site-page sis-page">
         <section class="sis-hero">
+            @include('frontend.layouts.site-header')
             <div class="site-shell">
-                @include('frontend.layouts.site-header')
 
                 <div class="sis-hero__content">
                     <p>SIS-REDD+</p>

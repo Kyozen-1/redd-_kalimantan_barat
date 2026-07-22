@@ -36,7 +36,8 @@ class DatabaseSeeder extends Seeder
             MdPenyebabDeforestasiSeeder::class,
             MdSectionLandingPageSeeder::class,
             MdSektorEmisiSeeder::class,
-            MdWilayahCakupanSeeder::class
+            MdWilayahCakupanSeeder::class,
+            DataPemetaanSeeder::class
         ]);
         // // User::factory(10)->create();
 

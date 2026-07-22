@@ -113,6 +113,51 @@ class FrontendHomeController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | Inisiatif Unggulan
+        | Expects multiple sections named "inisiatif-unggulan" with content keys:
+        |   title, icon
+        |--------------------------------------------------------------------------
+        */
+        $inisiatifList = $sectionMap->get('inisiatif-unggulan') ?? collect();
+        $initiatives = $inisiatifList->map(function ($item) {
+            return [
+                'title' => $item->content['title'] ?? null,
+                'icon'  => $item->content['icon'] ?? 'fas fa-tree',
+            ];
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Mekanisme
+        | Expects a section named "mekanisme" with content keys:
+        |   description_1, description_2, image
+        |--------------------------------------------------------------------------
+        */
+        $mekanismeSection = $sectionMap->get('mekanisme')?->first();
+        $mekanismeContent = $mekanismeSection?->content ?? [];
+        $mekanisme = [
+            'description_1' => $mekanismeContent['description_1'] ?? $mekanismeContent['description'] ?? null,
+            'description_2' => $mekanismeContent['description_2'] ?? null,
+            'image'         => isset($mekanismeContent['image'])
+                                ? Storage::disk('s3')->url($mekanismeContent['image'])
+                                : null,
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Footer
+        | Expects a section named "footer" with content keys: title, description
+        |--------------------------------------------------------------------------
+        */
+        $footerSection = $sectionMap->get('footer')?->first();
+        $footerContent = $footerSection?->content ?? [];
+        $footerData = [
+            'title'       => $footerContent['title'] ?? null,
+            'description' => $footerContent['description'] ?? null,
+        ];
+
+        /*
+        |--------------------------------------------------------------------------
         | Berita Terbaru (Latest News)
         | Fetch the 3 latest active news articles with their images.
         |--------------------------------------------------------------------------
@@ -145,6 +190,9 @@ class FrontendHomeController extends Controller
             'statistik',
             'forestBand',
             'floatingCard',
+            'initiatives',
+            'mekanisme',
+            'footerData',
             'featuredBerita',
             'sideBerita'
         ));

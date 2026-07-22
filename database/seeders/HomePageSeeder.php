@@ -32,11 +32,14 @@ class HomePageSeeder extends Seeder
         |--------------------------------------------------------------------------
         */
         $sections = [
-            ['nama' => 'Hero',         'slug_key' => 'hero'],
-            ['nama' => 'Sambutan',     'slug_key' => 'sambutan'],
-            ['nama' => 'Statistik',    'slug_key' => 'statistik'],
-            ['nama' => 'Forest Band',  'slug_key' => 'forest-band'],
-            ['nama' => 'Floating Card','slug_key' => 'floating-card'],
+            ['nama' => 'Hero',               'slug_key' => 'hero'],
+            ['nama' => 'Sambutan',           'slug_key' => 'sambutan'],
+            ['nama' => 'Statistik',          'slug_key' => 'statistik'],
+            ['nama' => 'Forest Band',        'slug_key' => 'forest-band'],
+            ['nama' => 'Floating Card',      'slug_key' => 'floating-card'],
+            ['nama' => 'Inisiatif Unggulan', 'slug_key' => 'inisiatif-unggulan'],
+            ['nama' => 'Mekanisme',          'slug_key' => 'mekanisme'],
+            ['nama' => 'Footer',             'slug_key' => 'footer'],
         ];
 
         $sectionModels = [];
@@ -122,6 +125,90 @@ class HomePageSeeder extends Seeder
                 'status_aktif'=> '1',
                 'content'     => [
                     'description' => 'Dikelola melalui kolaborasi multipihak di bawah koordinasi Pemerintah Provinsi Kalimantan Barat, melibatkan instansi kehutanan, lembaga adat, serta mitra pembangunan internasional untuk memastikan transparansi dan akuntabilitas data emisi.',
+                ],
+            ]
+        );
+
+        // --- Inisiatif Unggulan ---
+        $inisiatifs = [
+            [
+                'sort' => 1,
+                'key' => 'inisiatif-1',
+                'content' => [
+                    'title' => 'Forest Carbon Partnership Facility (FCPF) Carbon Fund',
+                    'icon' => 'fas fa-tree',
+                ]
+            ],
+            [
+                'sort' => 2,
+                'key' => 'inisiatif-2',
+                'content' => [
+                    'title' => 'Pengelolaan Hutan Desa (Social Forestry / Perhutanan Sosial)',
+                    'icon' => 'fas fa-folder',
+                ]
+            ],
+            [
+                'sort' => 3,
+                'key' => 'inisiatif-3',
+                'content' => [
+                    'title' => 'Restorasi dan Perlindungan Lanskap Gambut',
+                    'icon' => 'fas fa-tint',
+                ]
+            ],
+            [
+                'sort' => 4,
+                'key' => 'inisiatif-4',
+                'content' => [
+                    'title' => 'Sistem Pemantauan Berbasis Masyarakat dan Geotagging',
+                    'icon' => 'fas fa-desktop',
+                ]
+            ],
+            [
+                'sort' => 5,
+                'key' => 'inisiatif-5',
+                'content' => [
+                    'title' => 'Pengembangan Komoditas Hijau (Green Commodities)',
+                    'icon' => 'fas fa-seedling',
+                ]
+            ],
+        ];
+
+        foreach ($inisiatifs as $ini) {
+            LandingPageSection::updateOrCreate(
+                ['section_id' => $sectionModels['inisiatif-unggulan']->id, 'section_key' => $ini['key']],
+                [
+                    'user_id'     => $userId,
+                    'sort_order'  => $ini['sort'],
+                    'status_aktif'=> '1',
+                    'content'     => $ini['content'],
+                ]
+            );
+        }
+
+        // --- Mekanisme ---
+        LandingPageSection::updateOrCreate(
+            ['section_id' => $sectionModels['mekanisme']->id, 'section_key' => 'mekanisme-1'],
+            [
+                'user_id'     => $userId,
+                'sort_order'  => 1,
+                'status_aktif'=> '1',
+                'content'     => [
+                    'description_1' => 'Mekanisme insentif global untuk menurunkan emisi melalui Pengurangan Emisi dari Deforestasi dan Degradasi Hutan (REDD+).',
+                    'description_2' => 'Di Kalimantan Barat, program ini mengintegrasikan konservasi biodiversitas dengan peningkatan kesejahteraan masyarakat lokal.',
+                ],
+            ]
+        );
+
+        // --- Footer ---
+        LandingPageSection::updateOrCreate(
+            ['section_id' => $sectionModels['footer']->id, 'section_key' => 'footer-1'],
+            [
+                'user_id'     => $userId,
+                'sort_order'  => 1,
+                'status_aktif'=> '1',
+                'content'     => [
+                    'title'       => 'Berkomitmen Menjaga Kelestarian Hutan Kalimantan Barat untuk Generasi Mendatang',
+                    'description' => 'Implementasi strategi REDD+ bukan sekadar angka pengurangan emisi, melainkan janji kita untuk menjaga keanekaragaman hayati dan kesejahteraan masyarakat lokal di jantung Kalimantan.',
                 ],
             ]
         );

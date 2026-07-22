@@ -36,9 +36,7 @@
     @endphp
 
     <main class="site-page library-page">
-        <div class="site-shell">
-            @include('frontend.layouts.site-header')
-        </div>
+        @include('frontend.layouts.site-header')
 
         <section class="site-shell library-hero">
             <p>Perpustakaan & Publikasi</p>

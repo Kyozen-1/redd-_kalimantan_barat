@@ -1032,11 +1032,32 @@
             </div>
         </section>
 
+
+        <section style="width:100%; padding:0 0 80px 0; margin:0; line-height:0; text-align:center;">
+            <img src="{{ asset('frontend/images/upscaled_4x (2).png') }}" alt="REDD+ Kalimantan Barat" style="width:75%; height:auto; display:inline-block; object-fit:cover;">
+        </section>
+
         @include('frontend.layouts.site-footer')
     </main>
 @endsection
 
 @push('scripts')
+    <script>
+        // Global image fallback: replace broken images with a placeholder icon
+        (() => {
+            const fallbackSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3Csvg xmlns='http://www.w3.org/2000/svg' x='175' y='125' width='50' height='50' viewBox='0 0 24 24' fill='none' stroke='%23bbb' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' ry='2'/%3E%3Cpolyline points='21 15 16 10 5 21'/%3E%3C/svg%3E%3C/svg%3E";
+
+            document.querySelectorAll('.page img').forEach(img => {
+                img.addEventListener('error', function() {
+                    if (!this.dataset.fallback) {
+                        this.dataset.fallback = 'true';
+                        this.src = fallbackSvg;
+                        this.style.objectFit = 'contain';
+                    }
+                });
+            });
+        })();
+    </script>
     <script>
         (() => {
             const translations = {

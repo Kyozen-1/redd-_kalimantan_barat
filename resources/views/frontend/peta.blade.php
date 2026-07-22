@@ -116,7 +116,7 @@
                 </div>
                 <div class="peta-stat-card__body">
                     <span class="peta-stat-card__label">Hutan Lindung</span>
-                    <strong class="peta-stat-card__value">271.000</strong>
+                    <strong class="peta-stat-card__value">{{ $stats['hutan_lindung'] ?? '271.000' }}</strong>
                     <small class="peta-stat-card__unit">Ha</small>
                 </div>
             </article>
@@ -127,7 +127,7 @@
                 </div>
                 <div class="peta-stat-card__body">
                     <span class="peta-stat-card__label">Ekosistem Gambut</span>
-                    <strong class="peta-stat-card__value">1.2 jt</strong>
+                    <strong class="peta-stat-card__value">{{ $stats['ekosistem_gambut'] ?? '1.2 jt' }}</strong>
                     <small class="peta-stat-card__unit">Ha</small>
                 </div>
             </article>
@@ -138,7 +138,7 @@
                 </div>
                 <div class="peta-stat-card__body">
                     <span class="peta-stat-card__label">TITIK PANAS</span>
-                    <strong class="peta-stat-card__value">47</strong>
+                    <strong class="peta-stat-card__value">{{ $stats['titik_panas'] ?? '47' }}</strong>
                     <small class="peta-stat-card__unit">Titik (Bulan ini)</small>
                 </div>
             </article>
@@ -149,7 +149,7 @@
                 </div>
                 <div class="peta-stat-card__body">
                     <span class="peta-stat-card__label">PROYEK AKTIF</span>
-                    <strong class="peta-stat-card__value">12</strong>
+                    <strong class="peta-stat-card__value">{{ $stats['proyek_aktif'] ?? '12' }}</strong>
                     <small class="peta-stat-card__unit">Lokasi</small>
                 </div>
             </article>

@@ -32,45 +32,46 @@
 
             {{-- Search --}}
             <div class="peta-search">
-                <input type="text" placeholder="Cari Lokasi / Kawasan" aria-label="Cari Lokasi" id="peta-search-input">
+                <input type="text" placeholder="Cari Lokasi / Kawasan" aria-label="Cari Lokasi" id="peta-search-input" autocomplete="off">
                 <i class="mdi mdi-magnify" aria-hidden="true"></i>
+                <div class="peta-search-results" id="peta-search-results"></div>
             </div>
 
             {{-- Layer Peta --}}
             <div class="peta-layers">
                 <h2 class="peta-section-title">• LAYER PETA</h2>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="batas-wilayah" id="layer-batas-wilayah">
+                    <input type="checkbox" name="layer" value="batas-wilayah" id="layer-batas-wilayah" checked>
                     <span class="peta-layer-item__check"></span>
                     Batas Wilayah
                 </label>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="tutupan-lahan" id="layer-tutupan-lahan">
+                    <input type="checkbox" name="layer" value="tutupan-lahan" id="layer-tutupan-lahan" checked>
                     <span class="peta-layer-item__check"></span>
                     Tutupan Lahan
                 </label>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="hutan-lindung" id="layer-hutan-lindung">
+                    <input type="checkbox" name="layer" value="hutan-lindung" id="layer-hutan-lindung" checked>
                     <span class="peta-layer-item__check"></span>
                     Hutan Lindung
                 </label>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="ekosistem-gambut" id="layer-ekosistem-gambut">
+                    <input type="checkbox" name="layer" value="ekosistem-gambut" id="layer-ekosistem-gambut" checked>
                     <span class="peta-layer-item__check"></span>
                     Ekosistem Gambut
                 </label>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="titik-panas" id="layer-titik-panas">
+                    <input type="checkbox" name="layer" value="titik-panas" id="layer-titik-panas" checked>
                     <span class="peta-layer-item__check"></span>
                     Titik Panas
                 </label>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="proyek-percontohan" id="layer-proyek-percontohan">
+                    <input type="checkbox" name="layer" value="proyek-percontohan" id="layer-proyek-percontohan" checked>
                     <span class="peta-layer-item__check"></span>
                     Proyek Percontohan
                 </label>
                 <label class="peta-layer-item">
-                    <input type="checkbox" name="layer" value="perhutanan-sosial" id="layer-perhutanan-sosial">
+                    <input type="checkbox" name="layer" value="perhutanan-sosial" id="layer-perhutanan-sosial" checked>
                     <span class="peta-layer-item__check"></span>
                     Perhutanan Sosial
                 </label>

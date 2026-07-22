@@ -13,7 +13,7 @@
 
     var map = L.map('peta-map', {
         center: [0.05, 109.34],          // Center of Kalimantan Barat
-        zoom: 8,
+        zoom: 9,
         zoomControl: false,              // We place our own zoom control via CSS
         attributionControl: true
     });
@@ -319,6 +319,11 @@
     var checkboxes = document.querySelectorAll('.peta-layers input[type="checkbox"]');
 
     checkboxes.forEach(function (cb) {
+        var layer = layerMap[cb.value];
+        if (layer && cb.checked) {
+            layer.addTo(map);
+        }
+
         cb.addEventListener('change', function () {
             var layer = layerMap[this.value];
             if (!layer) return;
@@ -344,5 +349,102 @@
     setTimeout(function () {
         map.invalidateSize();
     }, 300);
+
+
+    /* ═══════════════════════════════════════════════════
+       6. LIVE LOCATION & KAWASAN SEARCH
+       ═══════════════════════════════════════════════════ */
+    var searchLocations = [
+        // Cities & Regencies
+        { name: 'Pontianak', category: 'Kota', lat: -0.02, lng: 109.34, zoom: 12 },
+        { name: 'Singkawang', category: 'Kota', lat: 0.91, lng: 108.98, zoom: 12 },
+        { name: 'Sambas', category: 'Kabupaten', lat: 1.36, lng: 109.31, zoom: 11 },
+        { name: 'Sintang', category: 'Kabupaten', lat: 0.08, lng: 111.50, zoom: 11 },
+        { name: 'Meliau', category: 'Kawasan', lat: 0.02, lng: 110.35, zoom: 11 },
+        { name: 'Kubu Raya', category: 'Kabupaten', lat: -0.45, lng: 109.55, zoom: 10 },
+        { name: 'Ketapang', category: 'Kabupaten', lat: -1.83, lng: 109.98, zoom: 10 },
+        { name: 'Mempawah', category: 'Kabupaten', lat: 0.34, lng: 108.96, zoom: 11 },
+        { name: 'Ngabang', category: 'Kabupaten', lat: 0.35, lng: 109.98, zoom: 11 },
+        { name: 'Sanggau', category: 'Kabupaten', lat: 0.13, lng: 110.59, zoom: 11 },
+        { name: 'Sekadau', category: 'Kabupaten', lat: 0.02, lng: 110.99, zoom: 11 },
+        { name: 'Putussibau', category: 'Kapuas Hulu', lat: 0.83, lng: 112.93, zoom: 11 },
+        { name: 'Nanga Pinoh', category: 'Melawi', lat: -0.35, lng: 111.75, zoom: 11 },
+        { name: 'Sukadana', category: 'Kayong Utara', lat: -1.25, lng: 109.98, zoom: 11 },
+
+        // Kawasan & Projects
+        { name: 'Karangan (Hutan Primer)', category: 'Kawasan Hutan', lat: 0.60, lng: 109.28, zoom: 11 },
+        { name: 'Darit (Perkebunan)', category: 'Perkebunan', lat: 0.42, lng: 109.68, zoom: 11 },
+        { name: 'Sungaiduri - Karangan (Hutan Lindung)', category: 'Hutan Lindung', lat: 1.02, lng: 109.28, zoom: 11 },
+        { name: 'Kawasan Kubu (Hutan Lindung)', category: 'Hutan Lindung', lat: -0.60, lng: 109.80, zoom: 11 },
+        { name: 'Gambut Pesisir Pontianak', category: 'Ekosistem Gambut', lat: -0.50, lng: 109.05, zoom: 11 },
+        { name: 'Gambut Sungai Kapuas Hilir', category: 'Ekosistem Gambut', lat: -1.00, lng: 109.65, zoom: 11 },
+        { name: 'Proyek Restorasi Gambut Kubu', category: 'Proyek Aktif', lat: -0.50, lng: 109.80, zoom: 12 },
+        { name: 'Proyek Karangan REDD+', category: 'Proyek Aktif', lat: 0.65, lng: 109.20, zoom: 12 },
+        { name: 'Hutan Desa Kembayan', category: 'Perhutanan Sosial', lat: 0.75, lng: 109.80, zoom: 11 },
+        { name: 'Hutan Kemasyarakatan Sintang', category: 'Perhutanan Sosial', lat: -0.65, lng: 110.30, zoom: 11 }
+    ];
+
+    var searchInput = document.getElementById('peta-search-input');
+    var searchResults = document.getElementById('peta-search-results');
+
+    if (searchInput && searchResults) {
+        searchInput.addEventListener('input', function () {
+            var query = this.value.toLowerCase().trim();
+            searchResults.innerHTML = '';
+
+            if (query.length === 0) {
+                searchResults.classList.remove('active');
+                return;
+            }
+
+            var matches = searchLocations.filter(function (loc) {
+                return loc.name.toLowerCase().includes(query) || loc.category.toLowerCase().includes(query);
+            });
+
+            if (matches.length === 0) {
+                searchResults.innerHTML = '<div class="peta-search-item" style="cursor:default; color:#999;">Tidak ditemukan lokasi</div>';
+                searchResults.classList.add('active');
+                return;
+            }
+
+            matches.forEach(function (loc) {
+                var item = document.createElement('div');
+                item.className = 'peta-search-item';
+                item.innerHTML = '<span>' + loc.name + '</span><small>' + loc.category + '</small>';
+
+                item.addEventListener('click', function () {
+                    map.flyTo([loc.lat, loc.lng], loc.zoom, { duration: 1.5 });
+                    searchInput.value = loc.name;
+                    searchResults.classList.remove('active');
+                });
+
+                searchResults.appendChild(item);
+            });
+
+            searchResults.classList.add('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
+
+        // Fly to first match on Enter keypress
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                var query = this.value.toLowerCase().trim();
+                var firstMatch = searchLocations.find(function (loc) {
+                    return loc.name.toLowerCase().includes(query) || loc.category.toLowerCase().includes(query);
+                });
+
+                if (firstMatch) {
+                    map.flyTo([firstMatch.lat, firstMatch.lng], firstMatch.zoom, { duration: 1.5 });
+                    searchResults.classList.remove('active');
+                }
+            }
+        });
+    }
 
 })();

@@ -18,21 +18,21 @@ class FrontendPetaController extends Controller
     public function index()
     {
         // 1. Total Kawasan Hutan / Hutan Lindung
-        $hutanLindungData = DataKawasan::whereHas('md_kawasan_hutan', function($q) {
+        $hutanLindungData = DataKawasan::whereHas('kawasan_hutan', function($q) {
             $q->where('nama', 'like', '%lindung%');
         })->sum('nilai');
         
         $hutanLindungFormatted = $hutanLindungData > 0 ? number_format($hutanLindungData, 0, ',', '.') : '271.000';
 
         // 2. Ekosistem Gambut
-        $gambutData = DataKawasan::whereHas('md_kawasan_hutan', function($q) {
+        $gambutData = DataKawasan::whereHas('kawasan_hutan', function($q) {
             $q->where('nama', 'like', '%gambut%');
         })->sum('nilai');
 
         $gambutFormatted = $gambutData > 0 ? number_format($gambutData, 0, ',', '.') . ' Ha' : '1.2 jt';
 
         // 3. Titik Panas / Karhutla
-        $titikPanasData = DataDeforestasi::whereHas('md_penyebab_deforestasi', function($q) {
+        $titikPanasData = DataDeforestasi::whereHas('penyebab_deforestasi', function($q) {
             $q->where('nama', 'like', '%karhutla%')->orWhere('nama', 'like', '%titik%');
         })->sum('nilai');
 

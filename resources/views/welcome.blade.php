@@ -486,7 +486,7 @@
             color: #485147;
             font-size: 11px;
             line-height: 1.25;
-            font-weight: 800;
+            font-weight: 600;
         }
 
         .dashboard {
@@ -520,7 +520,7 @@
             box-shadow: 0 14px 28px rgba(0, 0, 0, .16);
             color: #677067;
             font-size: 12px;
-            font-weight: 800;
+            font-weight: 600;
         }
 
         .badge strong {
@@ -529,6 +529,7 @@
             color: var(--green);
             font-size: 30px;
             line-height: 1;
+            font-weight: 700;
         }
 
         .badge.bottom {
@@ -849,8 +850,8 @@
 @section('body')
     <main class="page">
         <section class="hero">
+            @include('frontend.layouts.site-header')
             <div class="container">
-                @include('frontend.layouts.site-header')
 
                 <div class="hero-grid">
                     <div class="hero-content">
@@ -875,16 +876,16 @@
                             <div class="stats">
                                 <div class="stat">
                                     <label data-i18n="stats.forest.label">Luas Hutan</label>
-                                    <strong data-i18n="stats.forest.value">8.2jt Ha</strong>
-                                    <small data-i18n="stats.forest.update">* Update 24 Mei 2024</small>
+                                    <strong data-i18n="stats.forest.value">{{ $heroStats['luas_hutan'] ?? '8.2jt Ha' }}</strong>
+                                    <small data-i18n="stats.forest.update">{{ $heroStats['update_date'] ?? '* Update 24 Mei 2024' }}</small>
                                 </div>
                                 <div class="stat">
                                     <label data-i18n="stats.emission.label">Penurunan Emisi</label>
-                                    <strong>12.5 %</strong>
+                                    <strong>{{ $heroStats['penurunan_emisi'] ?? '12.5 %' }}</strong>
                                 </div>
                                 <div class="stat">
                                     <label data-i18n="stats.carbon.label">Stok Karbon</label>
-                                    <strong>450 Mt</strong>
+                                    <strong>{{ $heroStats['stok_karbon'] ?? '450 Mt' }}</strong>
                                 </div>
                             </div>
                         </div>
@@ -897,19 +898,19 @@
             <div class="container">
                 <img class="official-logo" src="{{ asset('frontend/images/logo-pemprov-kalbar.webp') }}" alt="Provinsi Kalimantan Barat">
                 <p class="green-title">Sambutan Resmi<br>Pemerintah Provinsi Kalimantan Barat</p>
-                <blockquote>"Melalui portal ini, kami mengundang seluruh elemen masyarakat untuk mengawal transparansi data emisi dan pelestarian hutan Kalimantan Barat demi masa depan generasi mendatang"</blockquote>
+                <blockquote>"{{ $sambutan['description'] ?? 'Melalui portal ini, kami mengundang seluruh elemen masyarakat untuk mengawal transparansi data emisi dan pelestarian hutan Kalimantan Barat demi masa depan generasi mendatang' }}"</blockquote>
 
                 <div class="mechanism">
                     <div>
                         <p class="section-kicker">+ Mekanisme REDD+</p>
-                        <p>Mekanisme insentif global untuk menurunkan emisi melalui Pengurangan Emisi dari Deforestasi dan Degradasi Hutan (REDD+).</p>
-                        <p>Di Kalimantan Barat, program ini mengintegrasikan konservasi biodiversitas dengan peningkatan kesejahteraan masyarakat lokal.</p>
+                        <p>{{ $mekanisme['description_1'] ?? 'Mekanisme insentif global untuk menurunkan emisi melalui Pengurangan Emisi dari Deforestasi dan Degradasi Hutan (REDD+).' }}</p>
+                        <p>{{ $mekanisme['description_2'] ?? 'Di Kalimantan Barat, program ini mengintegrasikan konservasi biodiversitas dengan peningkatan kesejahteraan masyarakat lokal.' }}</p>
                     </div>
 
                     <div class="carousel-mask" aria-label="Galeri mekanisme REDD+">
                         <div class="carousel-track">
-                            <img src="{{ asset('images/redd-home/mechanism-strip.png') }}" alt="Komoditas dan hutan Kalimantan Barat">
-                            <img src="{{ asset('images/redd-home/mechanism-strip.png') }}" alt="">
+                            <img src="{{ $mekanisme['image'] ?? asset('images/redd-home/mechanism-strip.png') }}" alt="Komoditas dan hutan Kalimantan Barat">
+                            <img src="{{ $mekanisme['image'] ?? asset('images/redd-home/mechanism-strip.png') }}" alt="">
                         </div>
                     </div>
                 </div>
@@ -917,30 +918,41 @@
         </section>
 
         <section class="forest-band">
-            <p>Sebagai salah satu "Paru-paru Dunia", Kalimantan Barat memiliki ekosistem hutan tropis dan Lahan Gambut Strategis seluas jutaan hektar yang berfungsi sebagai penyerap karbon raksasa bagi stabilitas iklim global</p>
+            <p>{{ $forestBand['description'] ?? 'Sebagai salah satu "Paru-paru Dunia", Kalimantan Barat memiliki ekosistem hutan tropis dan Lahan Gambut Strategis seluas jutaan hektar yang berfungsi sebagai penyerap karbon raksasa bagi stabilitas iklim global' }}</p>
         </section>
 
         <div class="floating-card">
             <div class="circle-icon" aria-hidden="true"><i class="fas fa-user-shield"></i></div>
-            <p>Dikelola melalui kolaborasi multipihak di bawah koordinasi Pemerintah Provinsi Kalimantan Barat, melibatkan instansi kehutanan, lembaga adat, serta mitra pembangunan internasional untuk memastikan transparansi dan akuntabilitas data emisi.</p>
+            <p>{{ $floatingCard['description'] ?? 'Dikelola melalui kolaborasi multipihak di bawah koordinasi Pemerintah Provinsi Kalimantan Barat, melibatkan instansi kehutanan, lembaga adat, serta mitra pembangunan internasional untuk memastikan transparansi dan akuntabilitas data emisi.' }}</p>
         </div>
 
         <section class="section initiatives">
             <div class="container">
                 <p class="section-kicker">+ Inisiatif Unggulan</p>
                 <div class="cards">
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tree"></i></span><b>Forest Carbon Partnership Facility (FCPF) Carbon Fund</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><span class="icon-stack"><i class="fas fa-folder"></i></span></span><b>Pengelolaan Hutan Desa (Social Forestry / Perhutanan Sosial)</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tint"></i></span><b>Restorasi dan Perlindungan Lanskap Gambut</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-desktop"></i></span><b>Sistem Pemantauan Berbasis Masyarakat dan Geotagging</b></div>
-                    <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-seedling"></i></span><b>Pengembangan Komoditas Hijau (Green Commodities)</b></div>
+                    @if($initiatives->isNotEmpty())
+                        @foreach($initiatives as $initiative)
+                            <div class="initiative-card">
+                                <span class="circle-icon" aria-hidden="true">
+                                    <i class="{{ $initiative['icon'] }}"></i>
+                                </span>
+                                <b>{{ $initiative['title'] }}</b>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tree"></i></span><b>Forest Carbon Partnership Facility (FCPF) Carbon Fund</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><span class="icon-stack"><i class="fas fa-folder"></i></span></span><b>Pengelolaan Hutan Desa (Social Forestry / Perhutanan Sosial)</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-tint"></i></span><b>Restorasi dan Perlindungan Lanskap Gambut</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-desktop"></i></span><b>Sistem Pemantauan Berbasis Masyarakat dan Geotagging</b></div>
+                        <div class="initiative-card"><span class="circle-icon" aria-hidden="true"><i class="fas fa-seedling"></i></span><b>Pengembangan Komoditas Hijau (Green Commodities)</b></div>
+                    @endif
                 </div>
 
                 <div class="dashboard">
                     <div class="image-stat">
-                        <img src="{{ asset('images/redd-home/mangrove-stat.png') }}" alt="Kanal mangrove Kalimantan Barat">
-                        <div class="badge bottom">Luas Hutan Tersisa 2025<strong>6.4 jt ha</strong></div>
-                        <div class="badge top">Emisi 2025<strong>187 Mt</strong></div>
+                        <img src="{{ $statistik['image'] ?? asset('images/redd-home/mangrove-stat.png') }}" alt="Kanal mangrove Kalimantan Barat">
+                        <div class="badge bottom">Luas Hutan Tersisa {{ $statistik['tahun'] ?? '2025' }}<strong>{{ $statistik['luas_hutan_tersisa'] ?? '6.4 jt ha' }}</strong></div>
+                        <div class="badge top">Emisi {{ $statistik['tahun'] ?? '2025' }}<strong>{{ $statistik['emisi'] ?? '187 Mt' }}</strong></div>
                     </div>
                     <div class="dashboard-copy">
                         <p class="section-kicker">+ Dashboard Statistik</p>
@@ -952,25 +964,57 @@
         </section>
 
         <section class="container news">
+            {{-- Featured News --}}
+            @if($featuredBerita)
+            <article>
+                <p class="section-kicker">+ Berita Terbaru</p>
+                <h2>{{ $featuredBerita['judul'] }}</h2>
+                <img class="featured-image"
+                     src="{{ $featuredBerita['gambar_url'] ?? asset('images/redd-home/community-news.png') }}"
+                     alt="{{ $featuredBerita['judul'] }}">
+                <div class="meta">
+                    <span class="tag">Berita</span>
+                    <span>{{ $featuredBerita['tanggal'] }}</span>
+                    <span>|</span>
+                    <span>{{ $featuredBerita['penulis'] }}</span>
+                </div>
+            </article>
+            @else
             <article>
                 <p class="section-kicker">+ Berita Terbaru</p>
                 <h2>Komitmen Hijau Kalbar: Jutaan Hektar Hutan Berhasil Dilindungi Lewat Skema REDD+</h2>
                 <img class="featured-image" src="{{ asset('images/redd-home/community-news.png') }}" alt="Kegiatan konservasi masyarakat">
                 <div class="meta"><span class="tag">Berita</span><span>1 hari yang lalu</span><span>|</span><span>Admin</span></div>
             </article>
+            @endif
 
+            {{-- Side News --}}
             <aside class="side-news">
-                <div class="side-item">
-                    <img src="{{ asset('images/redd-home/community-news.png') }}" alt="Penanaman bibit bersama">
-                    <h3>Dinas Intensif REDD+ Mengajak Pemprov Kalbar Prioritaskan Kelestarian Hutan Desa</h3>
-                    <div class="meta"><span class="tag">Pengumuman</span><span>2 hari yang lalu</span></div>
-                </div>
-                <div class="side-item">
-                    <img src="{{ asset('images/redd-home/mangrove-stat.png') }}" alt="Kanal hutan mangrove">
-                    <h3>Geliat Ekonomi Hijau Masyarakat Lokal Kalbar Manfaatkan Hasil Hutan Bukan Kayu Skema REDD+</h3>
-                    <div class="meta"><span class="tag">Berita</span><span>5 hari yang lalu</span><span>|</span><span>Admin</span></div>
-                </div>
-                <a class="small-btn" href="#"><span class="dot-icon">+</span>Lihat Berita Lainnya</a>
+                @if($sideBerita->isNotEmpty())
+                    @foreach($sideBerita as $berita)
+                    <div class="side-item">
+                        <img src="{{ $berita['gambar_url'] ?? asset('images/redd-home/community-news.png') }}"
+                             alt="{{ $berita['judul'] }}">
+                        <h3>{{ $berita['judul'] }}</h3>
+                        <div class="meta">
+                            <span class="tag">Berita</span>
+                            <span>{{ $berita['tanggal'] }}</span>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <div class="side-item">
+                        <img src="{{ asset('images/redd-home/community-news.png') }}" alt="Penanaman bibit bersama">
+                        <h3>Dinas Intensif REDD+ Mengajak Pemprov Kalbar Prioritaskan Kelestarian Hutan Desa</h3>
+                        <div class="meta"><span class="tag">Pengumuman</span><span>2 hari yang lalu</span></div>
+                    </div>
+                    <div class="side-item">
+                        <img src="{{ asset('images/redd-home/mangrove-stat.png') }}" alt="Kanal hutan mangrove">
+                        <h3>Geliat Ekonomi Hijau Masyarakat Lokal Kalbar Manfaatkan Hasil Hutan Bukan Kayu Skema REDD+</h3>
+                        <div class="meta"><span class="tag">Berita</span><span>5 hari yang lalu</span><span>|</span><span>Admin</span></div>
+                    </div>
+                @endif
+                <a class="small-btn" href="{{ route('frontend.berita-agenda') }}"><span class="dot-icon">+</span>Lihat Berita Lainnya</a>
             </aside>
         </section>
 
@@ -1001,8 +1045,8 @@
                     'hero.title': 'Masa Depan Hijau Kalimantan Barat',
                     'hero.cta': 'Jelajahi Peta Interaktif',
                     'stats.forest.label': 'Luas Hutan',
-                    'stats.forest.value': '8.2jt Ha',
-                    'stats.forest.update': '* Update 24 Mei 2024',
+                    'stats.forest.value': '{{ $heroStats["luas_hutan"] ?? "8.2jt Ha" }}',
+                    'stats.forest.update': '{{ $heroStats["update_date"] ?? "* Update 24 Mei 2024" }}',
                     'stats.emission.label': 'Penurunan Emisi',
                     'stats.carbon.label': 'Stok Karbon',
                 },
@@ -1011,8 +1055,8 @@
                     'hero.title': 'A Greener Future for West Kalimantan',
                     'hero.cta': 'Explore Interactive Map',
                     'stats.forest.label': 'Forest Area',
-                    'stats.forest.value': '8.2m ha',
-                    'stats.forest.update': '* Updated May 24, 2024',
+                    'stats.forest.value': '{{ $heroStats["luas_hutan"] ?? "8.2m ha" }}',
+                    'stats.forest.update': '{{ $heroStats["update_date"] ?? "* Updated May 24, 2024" }}',
                     'stats.emission.label': 'Emission Reduction',
                     'stats.carbon.label': 'Carbon Stock',
                 },

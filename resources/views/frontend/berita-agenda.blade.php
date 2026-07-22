@@ -4,108 +4,145 @@
 @section('meta_description', 'Berita terbaru dan agenda kegiatan REDD+ Kalimantan Barat')
 
 @section('body')
-    @php
-        $sideStories = [
-            [
-                'title' => 'Dana Insentif REDD+ Mengalir, Pemprov Kalbar Prioritaskan Kelestarian Hutan Desa',
-                'image' => 'frontend/images/news-agenda/planting-news.png',
-                'category' => 'Pengumuman',
-                'time' => '2 hari yang lalu',
-            ],
-            [
-                'title' => 'Geliat Ekonomi Hijau: Masyarakat Lokal Kalbar Manfaatkan Hasil Hutan Bukan Kayu Skema REDD+',
-                'image' => 'frontend/images/news-agenda/mangrove-news.png',
-                'category' => 'Berita',
-                'time' => '5 hari yang lalu',
-            ],
-        ];
-
-        $otherStories = [
-            $sideStories[0],
-            $sideStories[1],
-            $sideStories[0],
-            $sideStories[1],
-        ];
-
-        $events = [
-            ['date' => '21', 'month' => 'Mei', 'title' => 'Loka Karya Data Emisi Karbon Tingkat Provinsi Kalimantan Barat'],
-            ['date' => '25', 'month' => 'Mei', 'title' => 'Peluncuran Inisiatif Restorasi Gambut Berbasis Masyarakat di Kubu Raya'],
-            ['date' => '25', 'month' => 'Mei', 'title' => 'Pertemuan Tahunan Mitra Pembangunan REDD+: Capaian & Target 2027'],
-        ];
-    @endphp
+    <script>
+        function handleImageError(img) {
+            img.onerror = null; 
+            const placeholder = document.createElement('div');
+            placeholder.className = 'news-placeholder';
+            const isFeatured = img.closest('.featured-article') !== null;
+            const aspectRatio = isFeatured ? '1182 / 495' : '452 / 249';
+            const borderRadius = isFeatured ? '0.6rem' : '0.55rem';
+            const iconSize = isFeatured ? '4rem' : '2.2rem';
+            
+            placeholder.style.cssText = `aspect-ratio: ${aspectRatio}; border-radius: ${borderRadius}; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9; width: 100%;`;
+            placeholder.innerHTML = `<i class="mdi mdi-image-outline" style="font-size: ${iconSize};"></i>`;
+            
+            img.parentNode.replaceChild(placeholder, img);
+        }
+    </script>
 
     <main class="site-page news-page">
-        <div class="site-shell">
-            @include('frontend.layouts.site-header')
-        </div>
+        @include('frontend.layouts.site-header')
 
         <section class="site-shell news-featured" aria-labelledby="featured-news-heading">
-            <div class="news-featured__main">
-                <p class="news-eyebrow">&bull; Berita Terbaru</p>
-                <h1 id="featured-news-heading">Komitmen Hijau Kalbar: Jutaan Hektar Hutan Berhasil Dilindungi Lewat Skema REDD+</h1>
+            @if ($featuredNews)
+                <div class="news-featured__main">
+                    <p class="news-eyebrow">&bull; Berita Terbaru</p>
+                    <a href="{{ route('frontend.berita.detail', $featuredNews->id) }}" style="text-decoration: none; color: inherit;">
+                        <h1 id="featured-news-heading">{{ $featuredNews->judul }}</h1>
+                    </a>
 
-                <article class="featured-article">
-                    <img src="{{ asset('frontend/images/news-agenda/featured-news.png') }}" alt="Penyerahan dokumen kerja sama mitigasi perubahan iklim Kalimantan Barat">
-                    <div class="article-meta">
-                        <span>Berita</span>
-                        <small>| 1 Hari yang lalu | Admin</small>
-                    </div>
-                </article>
-            </div>
+                    <a href="{{ route('frontend.berita.detail', $featuredNews->id) }}" style="text-decoration: none; color: inherit; display: block;">
+                        <article class="featured-article">
+                            @php
+                                $firstGambar = $featuredNews->pivot_gambar_berita->first();
+                            @endphp
+                            @if($firstGambar && $firstGambar->image_path)
+                                <img src="{{ Storage::disk('s3')->url($firstGambar->image_path) }}" alt="{{ $featuredNews->judul }}" loading="lazy" onerror="handleImageError(this)">
+                            @else
+                                <div class="news-placeholder" style="aspect-ratio: 1182 / 495; border-radius: 0.6rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
+                                    <i class="mdi mdi-image-outline" style="font-size: 4rem;"></i>
+                                </div>
+                            @endif
+                            <div class="article-meta">
+                                <span>Berita</span>
+                                <small>| {{ $featuredNews->created_at ? $featuredNews->created_at->diffForHumans() : '-' }} | Admin</small>
+                            </div>
+                        </article>
+                    </a>
+                </div>
+            @else
+                <div class="news-featured__main">
+                    <p class="news-eyebrow">&bull; Berita Terbaru</p>
+                    <p>Belum ada berita terbaru.</p>
+                </div>
+            @endif
 
             <aside class="news-featured__side" aria-label="Berita pilihan">
                 @foreach ($sideStories as $story)
-                    <article class="story-card story-card--side">
-                        <img src="{{ asset($story['image']) }}" alt="{{ $story['title'] }}">
-                        <h2>{{ $story['title'] }}</h2>
-                        <div class="article-meta">
-                            <span>{{ $story['category'] }}</span>
-                            <small>| {{ $story['time'] }} | Admin</small>
-                        </div>
-                    </article>
+                    @php
+                        $storyGambar = $story->pivot_gambar_berita->first();
+                    @endphp
+                    <a href="{{ route('frontend.berita.detail', $story->id) }}" style="text-decoration: none; color: inherit; display: block;">
+                        <article class="story-card story-card--side">
+                            @if($storyGambar && $storyGambar->image_path)
+                                <img src="{{ Storage::disk('s3')->url($storyGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                            @else
+                                <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
+                                    <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>
+                                </div>
+                            @endif
+                            <h2>{{ $story->judul }}</h2>
+                            <div class="article-meta">
+                                <span>Berita</span>
+                                <small>| {{ $story->created_at ? $story->created_at->diffForHumans() : '-' }} | Admin</small>
+                            </div>
+                        </article>
+                    </a>
                 @endforeach
             </aside>
         </section>
 
-        <section class="site-shell other-news" aria-labelledby="other-news-heading">
-            <h2 id="other-news-heading">&bull; Berita Lainnya</h2>
-            <div class="story-grid">
-                @foreach ($otherStories as $story)
-                    <article class="story-card">
-                        <img src="{{ asset($story['image']) }}" alt="{{ $story['title'] }}">
-                        <h3>{{ $story['title'] }}</h3>
-                        <div class="article-meta">
-                            <span>{{ $story['category'] }}</span>
-                            <small>| {{ $story['time'] }} | Admin</small>
-                        </div>
-                    </article>
-                @endforeach
-            </div>
-        </section>
+        @if($otherStories->count() > 0)
+            <section class="site-shell other-news" aria-labelledby="other-news-heading">
+                <h2 id="other-news-heading">&bull; Berita Lainnya</h2>
+                <div class="story-grid">
+                    @foreach ($otherStories as $story)
+                        @php
+                            $otherGambar = $story->pivot_gambar_berita->first();
+                        @endphp
+                        <a href="{{ route('frontend.berita.detail', $story->id) }}" style="text-decoration: none; color: inherit; display: block;">
+                            <article class="story-card">
+                                @if($otherGambar && $otherGambar->image_path)
+                                    <img src="{{ Storage::disk('s3')->url($otherGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                @else
+                                    <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
+                                        <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>
+                                    </div>
+                                @endif
+                                <h3>{{ $story->judul }}</h3>
+                                <div class="article-meta">
+                                    <span>Berita</span>
+                                    <small>| {{ $story->created_at ? $story->created_at->diffForHumans() : '-' }} | Admin</small>
+                                </div>
+                            </article>
+                        </a>
+                    @endforeach
+                </div>
+            </section>
+        @endif
 
         <section class="site-shell agenda-lsm">
             <section class="agenda-panel" aria-labelledby="agenda-heading">
                 <h2 id="agenda-heading">&bull; Update & Kalender Kegiatan</h2>
-                <p class="agenda-year">2026</p>
+                <p class="agenda-year">{{ now()->year }}</p>
 
                 <div class="agenda-list">
-                    @foreach ($events as $event)
+                    @forelse ($agendas as $event)
+                        @php
+                            $carbonDate = $event->tanggal ? \Carbon\Carbon::parse($event->tanggal) : null;
+                            $day = $carbonDate ? $carbonDate->format('d') : '-';
+                            $month = $carbonDate ? $carbonDate->format('M') : '-';
+                            $datetime = $carbonDate ? $carbonDate->format('Y-m-d') : '';
+                        @endphp
                         <article class="agenda-item">
-                            <time datetime="2026-05-{{ $event['date'] }}">
-                                <strong>{{ $event['date'] }}</strong>
-                                <span>{{ $event['month'] }}</span>
+                            <time datetime="{{ $datetime }}">
+                                <strong>{{ $day }}</strong>
+                                <span>{{ $month }}</span>
                             </time>
                             <div>
-                                <h3>{{ $event['title'] }}</h3>
+                                <h3>{{ $event->nama }}</h3>
                                 <p>Dinas Lingkungan Hidup dan Kehutanan Provinsi Kalimantan Barat</p>
                             </div>
                         </article>
-                    @endforeach
+                    @empty
+                        <p>Belum ada agenda kegiatan.</p>
+                    @endforelse
                 </div>
             </section>
 
             <section class="lsm-banner" aria-labelledby="lsm-heading">
-                <img src="{{ asset('frontend/images/news-agenda/lsm-collab.png') }}" alt="Ruang kolaborasi LSM REDD+ Kalimantan Barat">
+                <img src="{{ asset('frontend/images/news-agenda/lsm-collab.png') }}" alt="Ruang kolaborasi LSM REDD+ Kalimantan Barat" loading="lazy">
                 <div class="lsm-banner__content">
                     <h2 id="lsm-heading">&bull; Ruang Kolaborasi LSM</h2>
                     <p>Platform khusus bagi Lembaga Swadaya Masyarakat untuk berbagi laporan lapangan, memantau transparansi data, dan mengajukan inisiatif pelestarian lokal</p>

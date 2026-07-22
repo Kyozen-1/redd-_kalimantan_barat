@@ -2,22 +2,35 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FrontendHomeController;
+use App\Http\Controllers\FrontendDataPemetaanController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [FrontendHomeController::class, 'index'])->name('home');
 
-Route::get('/data-pemetaan', function () {
-    return view('frontend.data-pemetaan');
-})->name('frontend.data-pemetaan');
+Route::get('/data-pemetaan', [FrontendDataPemetaanController::class, 'index'])->name('frontend.data-pemetaan');
+Route::get('/api/deforestasi-karhutla', [FrontendDataPemetaanController::class, 'getDeforestasiKarhutla'])->name('api.deforestasi-karhutla');
 
-Route::get('/program-strategi-redd', function () {
-    return view('frontend.program-strategi-redd');
-})->name('frontend.program-strategi');
+use App\Http\Controllers\FrontendProgramController;
 
-Route::get('/berita-agenda', function () {
-    return view('frontend.berita-agenda');
-})->name('frontend.berita-agenda');
+Route::get('/program-strategi-redd', [FrontendProgramController::class, 'index'])->name('frontend.program-strategi');
+
+use App\Http\Controllers\FrontendNewsController;
+
+Route::get('/berita-agenda', [FrontendNewsController::class, 'index'])->name('frontend.berita-agenda');
+
+Route::get('/berita-agenda/{id}', [FrontendNewsController::class, 'show'])->name('frontend.berita.detail');
+
+Route::get('/perpustakaan-publikasi', function () {
+    return view('frontend.perpustakaan-publikasi');
+})->name('frontend.perpustakaan-publikasi');
+
+Route::get('/sis-redd', function () {
+    return view('frontend.sis-redd');
+})->name('frontend.sis-redd');
+
+Route::get('/peta', function () {
+    return view('frontend.peta');
+})->name('frontend.peta');
 
 Route::prefix('login')->group(function(){
     Route::get('/', function () {

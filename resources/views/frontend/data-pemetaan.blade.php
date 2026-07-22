@@ -6,9 +6,8 @@
 @section('body')
     <main class="site-page data-map-page">
         <section class="map-hero">
+            @include('frontend.layouts.site-header')
             <div class="site-shell">
-                @include('frontend.layouts.site-header')
-
                 <div class="map-hero__content">
                     <p>Data dan Pemetaan</p>
                     <h1>Akses Penuh Peta Interaktif</h1>
@@ -22,31 +21,31 @@
                 <div class="metric-grid metric-grid--top">
                     <article class="metric-card metric-card--wide">
                         <span>Luas Hutan</span>
-                        <strong>8.2 jt ha</strong>
+                        <strong>{{ $luasHutan }}</strong>
                     </article>
                     <article class="metric-card metric-card--wide">
                         <span>Stok Karbon</span>
-                        <strong>450 Mt</strong>
-                        <small class="down">▼ 18 %</small>
+                        <strong>{{ $stokKarbon }}</strong>
+                        <small class="down">{{ $stokKarbonDiff }}</small>
                     </article>
                     <article class="metric-card">
                         <span>Emisi 2025</span>
-                        <strong>187 Mt</strong>
+                        <strong>{{ $emisi2025 }}</strong>
                         <small class="up">▲ 12.5 %</small>
                     </article>
                     <article class="metric-card">
                         <span>Deforestasi 2025</span>
-                        <strong>312 rb ha</strong>
+                        <strong>{{ $deforestasi2025 }}</strong>
                         <small class="up">▲ 28 %</small>
                     </article>
                     <article class="metric-card">
                         <span>Serapan Hutan 2025</span>
-                        <strong>-62 Mt</strong>
+                        <strong>{{ $serapan2025 }}</strong>
                         <small class="down">▼ 11 %</small>
                     </article>
                     <article class="metric-card">
                         <span>Luas Hutan Tersisa 2025</span>
-                        <strong>6.4 jt ha</strong>
+                        <strong>{{ $luasHutanTersisa }}</strong>
                         <small class="up">▲ 18 %</small>
                     </article>
                 </div>
@@ -78,7 +77,7 @@
                 <div class="metric-stack">
                     <article class="metric-card">
                         <span>Total Lahan Gambut</span>
-                        <strong>1.73 jt ha</strong>
+                        <strong>{{ $totalGambut }}</strong>
                         <em>Berdasarkan total wilayah Kalbar</em>
                     </article>
                     <article class="metric-card">
@@ -101,8 +100,17 @@
                 <div class="data-panel">
                     <div class="panel-title">
                         <h2>• Kondisi Lahan Gambut Kalimantan Barat</h2>
-                        <select aria-label="Tahun kondisi gambut">
-                            <option>2016</option>
+                        <select id="peatYearSelect" aria-label="Tahun kondisi gambut">
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
                         </select>
                     </div>
                     <div id="peatDonutChart" class="chart-box chart-box--donut"></div>
@@ -144,6 +152,32 @@
                 </div>
                 <div id="conservationChart" class="chart-box chart-box--bar"></div>
             </div>
+
+            <div class="data-panel">
+                <div class="panel-title panel-title--spaced">
+                    <h2>• Luas Deforestasi akibat Karhutla Kalimantan Barat (rb ha)</h2>
+                    <div class="chart-filters">
+                        <select id="deforestasiRegencySelect" aria-label="Pilih Kabupaten/Kota">
+                            @foreach($regencies as $reg)
+                                <option value="{{ $reg->id }}" {{ str_contains(strtolower($reg->name), 'bengkayang') ? 'selected' : '' }}>{{ $reg->name }}</option>
+                            @endforeach
+                        </select>
+                        <select id="deforestasiStartYear" aria-label="Tahun mulai">
+                            @foreach($years as $yr)
+                                <option value="{{ $yr }}" {{ $yr == '2019' ? 'selected' : '' }}>{{ $yr }}</option>
+                            @endforeach
+                        </select>
+                        <span>Sampai</span>
+                        <select id="deforestasiEndYear" aria-label="Tahun selesai">
+                            @foreach($years as $yr)
+                                <option value="{{ $yr }}" {{ $yr == '2026' ? 'selected' : '' }}>{{ $yr }}</option>
+                            @endforeach
+                        </select>
+                        <small>Maks. 10 Tahun</small>
+                    </div>
+                </div>
+                <div id="karhutlaDeforestasiChart" class="chart-box"></div>
+            </div>
         </section>
 
         @include('frontend.layouts.site-footer')
@@ -151,6 +185,21 @@
 @endsection
 
 @push('scripts')
+    <script>
+        window.dbChartData = {
+            emisiCo2: @json($emisiCo2List),
+            serapanKarbon: @json($serapanList),
+            deforestasi: @json($deforestasiList),
+            peatDonut: @json($peatDonutList),
+            peatDonutYears: @json($peatDonutYearly),
+            restorasiTrend: @json($restorasiTrend),
+            degradasiTrend: @json($degradasiTrend),
+            conservation: @json($conservationList),
+            karhutlaYears: @json($defaultKarhutlaYears),
+            karhutlaList: @json($defaultKarhutlaList),
+            ajaxRoute: "{{ route('api.deforestasi-karhutla') }}"
+        };
+    </script>
     <script src="{{ asset('frontend/js/apexcharts.min.js') }}"></script>
     <script src="{{ asset('frontend/js/data-pemetaan.js') }}"></script>
 @endpush

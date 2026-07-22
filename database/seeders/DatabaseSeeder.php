@@ -30,12 +30,14 @@ class DatabaseSeeder extends Seeder
             SintangSeeder::class,
             UserSeeder::class,
             KayongUtaraSeeder::class,
+            HomePageSeeder::class,
             MdEmisiSeeder::class,
             MdKawasanHutanSeeder::class,
             MdPenyebabDeforestasiSeeder::class,
             MdSectionLandingPageSeeder::class,
             MdSektorEmisiSeeder::class,
-            MdWilayahCakupanSeeder::class
+            MdWilayahCakupanSeeder::class,
+            DataPemetaanSeeder::class
         ]);
         // // User::factory(10)->create();
 

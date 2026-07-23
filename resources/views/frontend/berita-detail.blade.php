@@ -24,50 +24,46 @@
     <main class="site-page news-detail-page">
         @include('frontend.layouts.site-header')
 
-        <section class="site-shell news-detail-container">
+        <section class="site-shell news-detail-container" style="padding-top: 8.6rem; padding-bottom: 12rem;">
+            {{-- Back Link --}}
             <div class="news-detail__back">
                 <a href="{{ route('frontend.berita-agenda') }}" class="back-link">
                     <i class="mdi mdi-arrow-left" aria-hidden="true"></i> Kembali
                 </a>
             </div>
 
-            <div class="news-detail__grid">
-                {{-- Left Column: Full Article --}}
-                <div class="news-detail__main">
-                    <header class="news-detail__header">
-                        @php
-                            $firstGambar = $berita->pivot_gambar_berita->first();
-                        @endphp
-                        <div class="news-detail__hero">
-                            @if($firstGambar && $firstGambar->image_path)
-                                <img src="{{ Storage::disk('s3')->url($firstGambar->image_path) }}" alt="{{ $berita->judul }}" loading="lazy" onerror="handleImageError(this)">
-                            @else
-                                <div class="news-placeholder" style="aspect-ratio: 1182 / 495; border-radius: 0.6rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9; width: 100%;">
-                                    <i class="mdi mdi-image-outline" style="font-size: 4rem;"></i>
-                                </div>
-                            @endif
-                        </div>
+            {{-- Full-width Hero Image --}}
+            @php
+                $firstGambar = $berita->pivot_gambar_berita->first();
+            @endphp
+            <div class="news-detail__hero">
+                @if($firstGambar && $firstGambar->image_path)
+                    <img src="{{ Storage::disk('s3')->url($firstGambar->image_path) }}" alt="{{ $berita->judul }}" loading="lazy" onerror="handleImageError(this)">
+                @else
+                    <div class="news-placeholder" style="aspect-ratio: 1182 / 495; border-radius: 0.6rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9; width: 100%;">
+                        <i class="mdi mdi-image-outline" style="font-size: 4rem;"></i>
+                    </div>
+                @endif
+            </div>
 
-                        <h1 class="news-detail__title">{{ $berita->judul }}</h1>
+            {{-- Full-width Title & Meta --}}
+            <h1 class="news-detail__title">{{ $berita->judul }}</h1>
+            <div class="article-meta">
+                <span>Berita</span>
+                <small>| {{ $berita->created_at ? $berita->created_at->diffForHumans() : '-' }} | Admin</small>
+            </div>
 
-                        <div class="article-meta" style="margin-top: 1rem;">
-                            <span>Berita</span>
-                            <small>| {{ $berita->created_at ? $berita->created_at->diffForHumans() : '-' }} | Admin</small>
-                        </div>
-                    </header>
+            {{-- Two-column: Article Content + Sidebar --}}
+            <div class="news-detail__grid" style="display: grid; grid-template-columns: 1fr 320px; gap: 3rem; align-items: start; margin-bottom: 4rem;">
+                <article class="news-detail__content">
+                    @foreach (explode("\n\n", $berita->deskripsi) as $paragraph)
+                        @if(trim($paragraph))
+                            <p>{{ $paragraph }}</p>
+                        @endif
+                    @endforeach
+                </article>
 
-                    <article class="news-detail__content">
-                        @foreach (explode("\n\n", $berita->deskripsi) as $paragraph)
-                            @if(trim($paragraph))
-                                <p>{{ $paragraph }}</p>
-                            @endif
-                        @endforeach
-                    </article>
-                </div>
-
-                {{-- Right Column: Other Berita List --}}
                 <aside class="news-detail__sidebar" aria-label="Berita Lainnya">
-                    <h2 class="news-detail__sidebar-title">Berita Lainnya</h2>
                     @foreach ($otherStories as $story)
                         @php
                             $storyGambar = $story->pivot_gambar_berita->first();
@@ -83,7 +79,7 @@
                                 @endif
                                 <h3>{{ $story->judul }}</h3>
                                 <div class="article-meta">
-                                    <span>Berita</span>
+                                    <span>{{ ['Berita', 'Pengumuman'][array_rand(['Berita', 'Pengumuman'])] }}</span>
                                     <small>| {{ $story->created_at ? $story->created_at->diffForHumans() : '-' }} | Admin</small>
                                 </div>
                             </article>

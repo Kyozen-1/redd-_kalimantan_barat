@@ -37,9 +37,9 @@ class FrontendDataPemetaanController extends Controller
 
         // Fill years or fallback to mock if completely empty
         $emisiCo2List = [];
-        $mockEmisiCo2 = [122, 131, 136, 146, 147, 182, 164, 166, 171, 176];
+        $mockEmisiCo2 = [122, 131, 136, 146, 147, 182, 164, 166, 171, 176, 180];
         foreach ($years as $index => $year) {
-            $emisiCo2List[] = isset($emisiCo2Data[$year]) ? (float)$emisiCo2Data[$year] : $mockEmisiCo2[$index];
+            $emisiCo2List[] = isset($emisiCo2Data[$year]) ? (float)$emisiCo2Data[$year] : ($mockEmisiCo2[$index] ?? 0);
         }
 
         /*
@@ -60,9 +60,9 @@ class FrontendDataPemetaanController extends Controller
         ->toArray();
 
         $serapanList = [];
-        $mockSerapan = [-78, -72, -61, -52, -42, -28, -43, -45, -44, -42];
+        $mockSerapan = [-78, -72, -61, -52, -42, -28, -43, -45, -44, -42, -40];
         foreach ($years as $index => $year) {
-            $serapanList[] = isset($serapanData[$year]) ? (float)$serapanData[$year] : $mockSerapan[$index];
+            $serapanList[] = isset($serapanData[$year]) ? (float)$serapanData[$year] : ($mockSerapan[$index] ?? 0);
         }
 
         /*
@@ -77,9 +77,9 @@ class FrontendDataPemetaanController extends Controller
             ->toArray();
 
         $deforestasiList = [];
-        $mockDeforestasi = [390, 370, 382, 412, 380, 500, 382, 360, 335, 312];
+        $mockDeforestasi = [390, 370, 382, 412, 380, 500, 382, 360, 335, 312, 295];
         foreach ($years as $index => $year) {
-            $deforestasiList[] = isset($deforestasiData[$year]) ? (float)$deforestasiData[$year] : $mockDeforestasi[$index];
+            $deforestasiList[] = isset($deforestasiData[$year]) ? (float)$deforestasiData[$year] : ($mockDeforestasi[$index] ?? 0);
         }
 
         /*
@@ -118,7 +118,7 @@ class FrontendDataPemetaanController extends Controller
 
             $yearList = [];
             foreach ($peatDonutKeys as $index => $key) {
-                $yearList[] = isset($yearData[$key]) ? $yearData[$key] : $mockYearlyDonut[$year][$index];
+                $yearList[] = isset($yearData[$key]) ? $yearData[$key] : (($mockYearlyDonut[$year] ?? [])[$index] ?? 0);
             }
             $peatDonutYearly[$year] = $yearList;
         }
@@ -152,8 +152,8 @@ class FrontendDataPemetaanController extends Controller
         $mockDegradasiTrend = [45, 54, 73, 94, 112, 128, 151, 158, 166, 174, 182];
 
         foreach ($years as $index => $year) {
-            $restorasiTrend[] = isset($restorasiTrendData[$year]) ? (float)$restorasiTrendData[$year] : $mockRestorasiTrend[$index];
-            $degradasiTrend[] = isset($degradasiTrendData[$year]) ? (float)$degradasiTrendData[$year] : $mockDegradasiTrend[$index];
+            $restorasiTrend[] = isset($restorasiTrendData[$year]) ? (float)$restorasiTrendData[$year] : ($mockRestorasiTrend[$index] ?? 0);
+            $degradasiTrend[] = isset($degradasiTrendData[$year]) ? (float)$degradasiTrendData[$year] : ($mockDegradasiTrend[$index] ?? 0);
         }
 
         /*
@@ -175,7 +175,7 @@ class FrontendDataPemetaanController extends Controller
         $conservationList = [];
         $mockConservation = [1280, 990, 800, 680, 410];
         foreach ($conservationKeys as $index => $key) {
-            $conservationList[] = isset($conservationData[$key]) ? $conservationData[$key] : $mockConservation[$index];
+            $conservationList[] = isset($conservationData[$key]) ? $conservationData[$key] : ($mockConservation[$index] ?? 0);
         }
 
         /*
@@ -225,7 +225,7 @@ class FrontendDataPemetaanController extends Controller
         $defaultKarhutlaList = [];
         $mockKarhutla = [1500, 1350, 300, 750, 2777.91, 1500, 1200, 1350];
         foreach ($defaultKarhutlaYears as $idx => $yr) {
-            $defaultKarhutlaList[] = isset($defaultKarhutlaData[$yr]) ? (float)$defaultKarhutlaData[$yr] : $mockKarhutla[$idx];
+            $defaultKarhutlaList[] = isset($defaultKarhutlaData[$yr]) ? (float)$defaultKarhutlaData[$yr] : ($mockKarhutla[$idx] ?? 0);
         }
 
         return view('frontend.data-pemetaan', compact(

@@ -4,35 +4,6 @@
 @section('meta_description', 'Sistem Informasi Safeguards REDD+ Kalimantan Barat')
 
 @section('body')
-    @php
-        $safeguards = [
-            'Keselarasan Kebijakan & Regulasi',
-            'Transparansi & Akuntabilitas Tata Kelola',
-            'Penghormatan terhadap Hak Masyarakat Adat',
-            'Partisipasi Penuh Pemangku Kepentingan',
-            'Perlindungan Hutan Alam & Keanekaragaman Hayati',
-            'Pengelolaan Risiko Pembalikan Emisi',
-            'Pengelolaan Risiko Pengalihan Emisi',
-        ];
-
-        $metrics = [
-            ['label' => 'Total Luas Hutan yang Telah Memiliki Izin Legal', 'value' => '385.420 Hektar'],
-            ['label' => 'Jumlah SK (Surat Keputusan) Perhutanan Sosial yang Terbit', 'value' => '248 SK'],
-            ['label' => 'Jumlah Kepala Keluarga (KK) yang Menerima Manfaat', 'value' => '42.150'],
-            ['label' => 'Kelompok Tani Hutan (KTH) yang Menerima Manfaat', 'value' => '185'],
-        ];
-
-        $forestRows = [
-            ['desa' => 'Desa A', 'kab' => 'Ketapang', 'skema' => 'Hutan Desa (HD)', 'lembaga' => 'Lembaga A', 'sk' => 'SK.5420/MENLHK/2021'],
-            ['desa' => 'Desa B', 'kab' => 'Kubu Raya', 'skema' => 'Hutan Desa (HD)', 'lembaga' => 'Lembaga B', 'sk' => 'SK.2214/MENLHK/2022'],
-            ['desa' => 'Desa C', 'kab' => 'Sintang', 'skema' => 'Hutan Adat (HA)', 'lembaga' => 'Lembaga C', 'sk' => 'SK.8845/MENLHK/2023'],
-            ['desa' => 'Desa D', 'kab' => 'Kapuas Hulu', 'skema' => 'Hutan Desa (HD)', 'lembaga' => 'Lembaga D', 'sk' => 'SK.1105/MENLHK/2020'],
-            ['desa' => 'Desa E', 'kab' => 'Kubu Raya', 'skema' => 'Hutan Kemasyarakatan (HKm)', 'lembaga' => 'Lembaga E', 'sk' => 'SK.3341/MENLHK/2024'],
-            ['desa' => 'Desa F', 'kab' => 'Ketapang', 'skema' => 'Hutan Tanaman Rakyat (HTR)', 'lembaga' => 'Lembaga F', 'sk' => 'SK.6572/MENLHK/2022'],
-            ['desa' => 'Desa G', 'kab' => 'Kapuas Hulu', 'skema' => 'Hutan Adat (HA)', 'lembaga' => 'Lembaga G', 'sk' => 'SK.9012/MENLHK/2023'],
-        ];
-    @endphp
-
     <main class="site-page sis-page">
         <section class="sis-hero">
             @include('frontend.layouts.site-header')
@@ -70,24 +41,35 @@
                 @endforeach
             </div>
 
-            <div class="sis-table-toolbar">
+            <form method="GET" action="{{ route('frontend.sis-redd') }}" class="sis-table-toolbar">
                 <label class="sis-search">
                     <span class="sr-only">Cari Data</span>
-                    <input type="search" placeholder="Cari Data">
+                    <input type="search" name="search" value="{{ $search }}" placeholder="Cari Data" onchange="this.form.submit()">
                     <i class="mdi mdi-magnify" aria-hidden="true"></i>
                 </label>
 
                 <div class="sis-selects">
-                    <button type="button">Kab / Kota <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
-                    <button type="button">Skema Kelola <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
+                    <select name="kabupaten" onchange="this.form.submit()" style="height: 2.08rem; padding: 0 0.8rem; border: 1px solid #cfd4cf; border-radius: 0.22rem; background: #fff; color: #555; font-size: 0.75rem; outline: none; cursor: pointer;">
+                        <option value="">-- Kab / Kota --</option>
+                        @foreach ($regencies as $reg)
+                            <option value="{{ $reg->id }}" {{ (string)$selectedKabupaten === (string)$reg->id ? 'selected' : '' }}>{{ str_replace(['Kabupaten ', 'Kota '], '', $reg->name) }}</option>
+                        @endforeach
+                    </select>
+
+                    <select name="skema" onchange="this.form.submit()" style="height: 2.08rem; padding: 0 0.8rem; border: 1px solid #cfd4cf; border-radius: 0.22rem; background: #fff; color: #555; font-size: 0.75rem; outline: none; cursor: pointer;">
+                        <option value="">-- Skema Kelola --</option>
+                        @foreach ($skemaOptions as $skema)
+                            <option value="{{ $skema }}" {{ $selectedSkema === $skema ? 'selected' : '' }}>{{ $skema }}</option>
+                        @endforeach
+                    </select>
                 </div>
-            </div>
+            </form>
 
             <div class="sis-table-wrap">
                 <table class="sis-table">
                     <thead>
                         <tr>
-                            <th>Nama Desa</th>
+                            <th>Nama Desa / LSM</th>
                             <th>Kab / Kota</th>
                             <th>Skema Kelola</th>
                             <th>Nama Lembaga Pengelola</th>
@@ -95,30 +77,36 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($forestRows as $row)
-                            <tr>
-                                <td>{{ $row['desa'] }}</td>
-                                <td>{{ $row['kab'] }}</td>
-                                <td>{{ $row['skema'] }}</td>
-                                <td>{{ $row['lembaga'] }}</td>
-                                <td>{{ $row['sk'] }}</td>
-                            </tr>
-                        @endforeach
+                        @if (count($forestData) > 0)
+                            @foreach ($forestData as $item)
+                                <tr>
+                                    <td>{{ $item->nama_desa }}</td>
+                                    <td>{{ $item->kabupaten_kota ? str_replace(['Kabupaten ', 'Kota '], '', $item->kabupaten_kota->name) : '-' }}</td>
+                                    <td>{{ $item->skema }}</td>
+                                    <td>{{ $item->nama_lembaga }}</td>
+                                    <td>{{ $item->nomor_sk }}</td>
+                                </tr>
+                            @endforeach
+                        @else
+                            @foreach ($defaultForestRows as $row)
+                                <tr>
+                                    <td>{{ $row['desa'] }}</td>
+                                    <td>{{ $row['kab'] }}</td>
+                                    <td>{{ $row['skema'] }}</td>
+                                    <td>{{ $row['lembaga'] }}</td>
+                                    <td>{{ $row['sk'] }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
             </div>
 
-            <nav class="sis-pagination" aria-label="Halaman data safeguards">
-                <a class="sis-pagination__control" href="#" aria-label="Halaman sebelumnya"><i class="mdi mdi-chevron-left" aria-hidden="true"></i></a>
-                <a href="#" aria-current="page">1</a>
-                <a href="#">2</a>
-                <span>...</span>
-                <a href="#">24</a>
-                <a href="#">25</a>
-                <a href="#">26</a>
-                <a href="#">27</a>
-                <a class="sis-pagination__control" href="#" aria-label="Halaman berikutnya"><i class="mdi mdi-chevron-right" aria-hidden="true"></i></a>
-            </nav>
+            @if ($forestData instanceof \Illuminate\Pagination\LengthAwarePaginator && $forestData->hasPages())
+                <div class="sis-pagination" style="margin-top: 2.5rem;">
+                    {{ $forestData->links() }}
+                </div>
+            @endif
         </section>
 
         <section class="site-shell sis-funding" aria-labelledby="sis-funding-heading">
@@ -129,7 +117,7 @@
 
             <div class="sis-chart-panel">
                 <div class="sis-chart-filters">
-                    <button type="button">2025 <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
+                    <button type="button">2026 <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
                     <button type="button">Kategori Kawasan <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
                 </div>
                 <div id="sisFundingChart" class="sis-chart"></div>
@@ -137,14 +125,22 @@
         </section>
 
         <section class="site-shell sis-accountability" aria-label="Akuntabilitas dan perlindungan hak masyarakat">
-            <form class="sis-report-card" action="#" method="post">
+            <form class="sis-report-card" action="{{ route('frontend.sis-redd.report') }}" method="POST">
+                @csrf
                 <h2>&bull; Akuntabilitas</h2>
                 <p>Saluran transparan bagi masyarakat untuk melaporkan ketidaksesuaian serta memastikan resolusi konflik yang adil dan inklusif</p>
+
+                @if(session('success'))
+                    <div style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: #fff; padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 1rem;">
+                        <i class="mdi mdi-check-circle" aria-hidden="true"></i> {{ session('success') }}
+                    </div>
+                @endif
+
                 <label>
                     <span class="sr-only">Laporan masyarakat</span>
-                    <textarea placeholder="Sampaikan laporan Anda..."></textarea>
+                    <textarea name="laporan" placeholder="Sampaikan laporan Anda..." required style="width: 100%; min-height: 90px; padding: 0.8rem; border-radius: 6px; border: none; font-size: 0.85rem; outline: none; margin-bottom: 1rem;"></textarea>
                 </label>
-                <button type="button">Kirim Laporan</button>
+                <button type="submit" style="background: #ffffff; color: #126d0c; border: none; padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: background 0.2s;">Kirim Laporan</button>
             </form>
 
             <article class="sis-rights">

@@ -123,9 +123,17 @@
                             $carbonDate = $event->tanggal ? \Carbon\Carbon::parse($event->tanggal) : null;
                             $day = $carbonDate ? $carbonDate->format('d') : '-';
                             $month = $carbonDate ? $carbonDate->format('M') : '-';
+                            $fullDate = $carbonDate ? $carbonDate->translatedFormat('d F Y') : '-';
                             $datetime = $carbonDate ? $carbonDate->format('Y-m-d') : '';
                         @endphp
-                        <article class="agenda-item">
+                        <article class="agenda-item js-open-agenda-modal"
+                            data-id="{{ $event->id }}"
+                            data-nama="{{ $event->nama }}"
+                            data-deskripsi="{{ $event->deskripsi }}"
+                            data-tanggal="{{ $fullDate }}"
+                            data-day="{{ $day }}"
+                            data-month="{{ $month }}"
+                            style="cursor: pointer;">
                             <time datetime="{{ $datetime }}">
                                 <strong>{{ $day }}</strong>
                                 <span>{{ $month }}</span>
@@ -146,7 +154,7 @@
                 <div class="lsm-banner__content">
                     <h2 id="lsm-heading">&bull; Ruang Kolaborasi LSM</h2>
                     <p>Platform khusus bagi Lembaga Swadaya Masyarakat untuk berbagi laporan lapangan, memantau transparansi data, dan mengajukan inisiatif pelestarian lokal</p>
-                    <a class="site-cta" href="#"><span>+</span>Akses Ruang LSM</a>
+                    <a class="site-cta js-open-lsm-modal" href="#lsm-modal"><span>+</span>Akses Ruang LSM</a>
                 </div>
             </section>
         </section>

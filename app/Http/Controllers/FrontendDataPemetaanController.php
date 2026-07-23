@@ -213,14 +213,14 @@ class FrontendDataPemetaanController extends Controller
         // Default initial data for Karhutla Deforestation (Kabupaten Bengkayang, 2019-2026)
         $bengkayang = Regency::where('name', 'like', '%Bengkayang%')->first() ?? Regency::first();
         $defaultKarhutlaYears = ['2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'];
-        $defaultKarhutlaData = DataDeforestasi::where('kabupaten_kota_id', $bengkayang->id)
+        $defaultKarhutlaData = $bengkayang ? DataDeforestasi::where('kabupaten_kota_id', $bengkayang->id)
             ->whereHas('penyebab_deforestasi', function($q) {
                 $q->where('nama', 'Karhutla');
             })
             ->whereIn('tahun', $defaultKarhutlaYears)
             ->orderBy('tahun')
             ->pluck('nilai', 'tahun')
-            ->toArray();
+            ->toArray() : [];
 
         $defaultKarhutlaList = [];
         $mockKarhutla = [1500, 1350, 300, 750, 2777.91, 1500, 1200, 1350];

@@ -72,7 +72,7 @@ class FileStorageService implements FileStorageInterface
         $encoded = $image
             ->toJpeg(60);
 
-        Storage::disk($this->disk)
+        Storage::disk('minio')
             ->put(
                 $path,
                 $encoded
@@ -95,7 +95,7 @@ class FileStorageService implements FileStorageInterface
             .'.'
             .$extension;
 
-        Storage::disk($this->disk)
+        Storage::disk('minio')
             ->putFileAs(
                 $folder,
                 $file,
@@ -109,7 +109,7 @@ class FileStorageService implements FileStorageInterface
         string $path
     ): bool {
 
-        return Storage::disk($this->disk)
+        return Storage::disk('minio')
             ->delete($path);
     }
 
@@ -117,7 +117,7 @@ class FileStorageService implements FileStorageInterface
         string $path
     ): string {
 
-        return Storage::disk($this->disk)
+        return Storage::disk('minio')
             ->url($path);
     }
 }

@@ -48,7 +48,7 @@ class ContentSecurityPolicy
             "media-src ".implode(' ', $mediaSources),
 
             "connect-src ".implode(' ', $connectSource),
-            "frame-src 'self' https://view.officeapps.live.com http://127.0.0.1:9000",
+            "frame-src 'self' https://view.officeapps.live.com http://127.0.0.1:9000 https://redd.kalbarprov.app/",
         ]);
         $response->headers->set(
             'Content-Security-Policy',

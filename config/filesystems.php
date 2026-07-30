@@ -60,6 +60,17 @@ return [
             'report' => false,
         ],
 
+        'minio' => [
+            'driver' => 's3',
+            'endpoint' => "http://".env('MINIO_HOST').":9000",
+            'use_path_style_endpoint' => true,
+            'key' => env('MINIO_ACCESS_KEY'),
+            'secret' => env('MINIO_SECRET_KEY'),
+            'region' => "pontianak",
+            'bucket' => env('MINIO_BUCKET_NAME'),
+            'url' => "http://".env('MINIO_HOST').":9000",
+        ],
+
     ],
 
     /*

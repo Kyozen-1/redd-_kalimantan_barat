@@ -4,7 +4,7 @@
         {{-- Header --}}
         <div class="lsm-modal__header">
             <div>
-                <h2 id="lsmModalTitle" class="lsm-modal__title">&bull; RUANG KOLABRASI LSM</h2>
+                <h2 id="lsmModalTitle" class="lsm-modal__title">+ RUANG KOLABORASI LSM</h2>
                 <p class="lsm-modal__subtitle">Temukan LSM dan lakukan kolaborasi</p>
             </div>
             <button type="button" class="lsm-modal__close js-close-lsm-modal" aria-label="Tutup Modal">&times;</button>

@@ -20,6 +20,6 @@ class Galeri extends Model
 
     public function getFileUrlAttribute()
     {
-        return Storage::disk('s3')->url($this->file_path);
+        return Storage::disk('minio')->url($this->file_path);
     }
 }

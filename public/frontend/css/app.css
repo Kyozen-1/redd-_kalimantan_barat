@@ -1379,21 +1379,21 @@ svg { display: block; }
 
 .news-eyebrow {
     margin: 0;
-    color: #1f7b1c;
+    color: #126b18 !important;
     text-transform: uppercase;
     font-size: 0.94rem;
     line-height: 1.3;
-    font-weight: 700;
+    font-weight: 600 !important;
 }
 
 .other-news > h2,
 .agenda-panel h2 {
     margin: 0;
-    color: #1f7b1c;
+    color: #126b18 !important;
     text-transform: uppercase;
     font-size: 0.94rem;
     line-height: 1.3;
-    font-weight: 700;
+    font-weight: 600 !important;
 }
 
 .news-featured h1 {
@@ -1714,10 +1714,10 @@ svg { display: block; }
 
 .program-eyebrow {
     margin: 0 0 0.7rem;
-    color: var(--color-green-700);
+    color: #126b18 !important;
     text-transform: uppercase;
     font-size: 0.86rem;
-    font-weight: 800;
+    font-weight: 600 !important;
 }
 
 .program-hero h1 {
@@ -1746,11 +1746,11 @@ svg { display: block; }
 .rad-panel h2,
 .mrv-panel h2 {
     margin: 0;
-    color: #2e8428;
+    color: #126b18 !important;
     text-transform: uppercase;
     font-size: 0.86rem;
     line-height: 1.35;
-    font-weight: 900;
+    font-weight: 600 !important;
 }
 
 .pillar-copy p {

@@ -38,7 +38,7 @@
             @endphp
             <div class="news-detail__hero">
                 @if($firstGambar && $firstGambar->image_path)
-                    <img src="{{ Storage::disk('s3')->url($firstGambar->image_path) }}" alt="{{ $berita->judul }}" loading="lazy" onerror="handleImageError(this)">
+                    <img src="{{ Storage::disk('minio')->url($firstGambar->image_path) }}" alt="{{ $berita->judul }}" loading="lazy" onerror="handleImageError(this)">
                 @else
                     <div class="news-placeholder" style="aspect-ratio: 1182 / 495; border-radius: 0.6rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9; width: 100%;">
                         <i class="mdi mdi-image-outline" style="font-size: 4rem;"></i>
@@ -71,7 +71,7 @@
                         <a href="{{ route('frontend.berita.detail', $story->id) }}" class="story-sidebar-link">
                             <article class="story-card">
                                 @if($storyGambar && $storyGambar->image_path)
-                                    <img src="{{ Storage::disk('s3')->url($storyGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                    <img src="{{ Storage::disk('minio')->url($storyGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
                                 @else
                                     <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9; width: 100%;">
                                         <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>

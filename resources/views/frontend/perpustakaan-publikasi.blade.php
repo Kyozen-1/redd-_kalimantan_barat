@@ -106,7 +106,7 @@
                 <div class="library-gallery">
                     @forelse ($galleryMedia as $item)
                         @php
-                            $imgSrc = $item->file_path ? Storage::disk('s3')->url($item->file_path) : asset('frontend/images/news-agenda/mangrove-news.png');
+                            $imgSrc = $item->file_path ? Storage::disk('minio')->url($item->file_path) : asset('frontend/images/news-agenda/mangrove-news.png');
                             $caption = $item->deskripsi ?: ($item->kabupaten_kota ? 'Dokumentasi ' . $item->kabupaten_kota->name : 'Dokumentasi REDD+ Kalimantan Barat');
                         @endphp
                         <a class="gallery-tile js-open-media-modal" href="#media-modal" style="cursor: pointer;">

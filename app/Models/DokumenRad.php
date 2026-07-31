@@ -15,6 +15,6 @@ class DokumenRad extends Model
 
     public function getDocumetUrlAttribute()
     {
-        return Storage::disk('s3')->url($this->document_path);
+        return Storage::disk('minio')->url($this->document_path);
     }
 }

@@ -26,13 +26,13 @@
         @include('frontend.layouts.site-header')
 
         <section class="site-shell program-hero">
-            <p class="program-eyebrow">Program & Strategi REDD+</p>
+            <p class="program-eyebrow">+ Program & Strategi REDD+</p>
             <h1>Implementasi 5 Pilar Strategi Nasional</h1>
         </section>
 
         <section class="site-shell pillar-section" aria-labelledby="pillar-heading">
             <div class="pillar-copy">
-                <h2 id="pillar-heading">&bull; 5 Pilar</h2>
+                <h2 id="pillar-heading">+ 5 Pilar</h2>
                 <p>Strategi Nasional REDD+ dijalankan melalui 5 pilar utama yang saling terintegrasi. Pilar-pilar ini dirancang untuk memperkuat tata kelola kelembagaan, hukum, dan program kerja, sekaligus mendorong perubahan budaya serta kolaborasi aktif di seluruh lapisan masyarakat.</p>
             </div>
 
@@ -48,7 +48,7 @@
 
         <section class="site-shell social-forest" aria-labelledby="social-forest-heading">
             <div class="section-center">
-                <h2 id="social-forest-heading">&bull; Perhutanan Sosial</h2>
+                <h2 id="social-forest-heading">+ Perhutanan Sosial</h2>
                 <p>Perhutanan Sosial adalah program strategis nasional yang bertujuan untuk memberikan akses kelola kawasan hutan kepada masyarakat setempat atau masyarakat hukum adat untuk meningkatkan kesejahteraan mereka dan menjaga keseimbangan lingkungan.</p>
             </div>
 
@@ -64,7 +64,7 @@
 
         <section class="site-shell program-documents">
             <aside class="rad-panel" aria-labelledby="rad-heading">
-                <h2 id="rad-heading">&bull; RAD REDD+ Kalimantan Barat</h2>
+                <h2 id="rad-heading">+ RAD REDD+ Kalimantan Barat</h2>
                 <p>Dokumen kebijakan komprehensif yang menjadi fondasi operasional penurunan emisi di tingkat provinsi</p>
 
                 <label class="search-field">
@@ -82,7 +82,7 @@
                             <div class="rad-card__body">
                                 <h3>{{ $document->nama }}</h3>
                                 @if($document->document_path)
-                                    <a href="{{ Storage::disk('s3')->url($document->document_path) }}" target="_blank">Download File</a>
+                                    <a href="{{ Storage::disk('minio')->url($document->document_path) }}" target="_blank">Download File</a>
                                 @else
                                     <a href="#">Download File</a>
                                 @endif
@@ -95,7 +95,7 @@
             </aside>
 
             <section class="mrv-panel" aria-labelledby="mrv-heading">
-                <h2 id="mrv-heading">&bull; Laporan Emisi (MRV)</h2>
+                <h2 id="mrv-heading">+ Laporan Emisi (MRV)</h2>
 
                 <label class="search-field search-field--wide">
                     <span class="sr-only">Cari Laporan</span>
@@ -111,13 +111,13 @@
                             <small>Tanggal upload: {{ $report->created_at ? $report->created_at->format('d F Y') : '-' }}</small>
                             <div class="report-links">
                                 @if($report->document_file_pdf_path)
-                                    <a href="{{ Storage::disk('s3')->url($report->document_file_pdf_path) }}" target="_blank">Download File Utama</a>
+                                    <a href="{{ Storage::disk('minio')->url($report->document_file_pdf_path) }}" target="_blank">Download File Utama</a>
                                 @else
                                     <a href="#">Download File Utama</a>
                                 @endif
 
                                 @if($report->document_file_excel_path)
-                                    <a href="{{ Storage::disk('s3')->url($report->document_file_excel_path) }}" target="_blank">Download Data Tabel</a>
+                                    <a href="{{ Storage::disk('minio')->url($report->document_file_excel_path) }}" target="_blank">Download Data Tabel</a>
                                 @else
                                     <a href="#">Download Data Tabel</a>
                                 @endif

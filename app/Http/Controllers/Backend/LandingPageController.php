@@ -58,7 +58,7 @@ class LandingPageController extends Controller
                     foreach ($data->content as $key => $value) {
                         if($key == 'image')
                         {
-                            $url = Storage::disk('s3')->url($value);
+                            $url = Storage::disk('minio')->url($value);
                             $html .= '<li><img src="'.$url.'" alt="" style="width: 5rem;"></li>';
                         } else {
                             $html .= '<li>'.$key.' =  '.$value.'</li>';
@@ -189,7 +189,7 @@ class LandingPageController extends Controller
                             | Hapus image lama
                             |--------------------------------------------------------------------------
                             */
-                            if ($oldImage && Storage::disk('s3')->exists($oldImage))
+                            if ($oldImage && Storage::disk('minio')->exists($oldImage))
                             {
                                 $storage->delete(
                                     $oldImage
@@ -236,7 +236,7 @@ class LandingPageController extends Controller
                 $oldImage = $oldContent['image'] ?? null;
                 if (
                     $oldImage &&
-                    Storage::disk('s3')->exists($oldImage)
+                    Storage::disk('minio')->exists($oldImage)
                 ) {
                     $storage->delete(
                         $oldImage

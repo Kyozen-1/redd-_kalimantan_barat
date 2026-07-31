@@ -109,25 +109,46 @@
             @endif
         </section>
 
-        <section class="site-shell sis-funding" aria-labelledby="sis-funding-heading">
-            <div class="sis-section-title">
-                <h2 id="sis-funding-heading">&bull; Transparansi Distribusi Dana</h2>
-                <p>Upaya pelaksanaan REDD+ dengan transparansi dan akuntabilitas tata kelola</p>
+        <section class="site-shell sis-funding-section" aria-labelledby="sis-funding-heading">
+            <div class="section-center">
+                <h2 id="sis-funding-heading">+ Transparansi Distribusi Dana</h2>
+                <p>Mekanisme Alokasi Insentif Finansial yang Adil, Akuntabel, dan Tepat Sasaran</p>
             </div>
 
-            <div class="sis-chart-panel">
-                <div class="sis-chart-filters">
-                    <button type="button">2026 <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
-                    <button type="button">Kategori Kawasan <i class="mdi mdi-chevron-down" aria-hidden="true"></i></button>
-                </div>
-                <div id="sisFundingChart" class="sis-chart"></div>
+            <div class="sis-funding-grid">
+                <article class="sis-funding-card">
+                    <h3>Pemerintah Daerah</h3>
+                    <p>Dukungan penganggaran program hijau dan tata kelola kawasan hutan.</p>
+                </article>
+                <article class="sis-funding-card">
+                    <h3>Masyarakat Lokal & Adat</h3>
+                    <p>Insentif langsung bagi komunitas penjaga kelestarian hutan.</p>
+                </article>
+                <article class="sis-funding-card">
+                    <h3>Lembaga Pendukung</h3>
+                    <p>Pendanaan kegiatan operasional dan pendampingan lapangan LSM.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="site-shell sis-accountability-section">
+            <div class="section-center">
+                <h2>+ Akuntabilitas</h2>
+                <p>Pelaporan Berkala dan Audit Terbuka Memastikan Tata Kelola Bebas dari Penyimpangan</p>
+            </div>
+        </section>
+
+        <section class="site-shell sis-rights-section">
+            <div class="section-center">
+                <h2>+ Perlindungan Hak Masyarakat Lokal</h2>
+                <p>Jaminan Hak Adat, Konsultasi Bebas Tanpa Paksaan (FPIC), dan Akses Informasi Publik</p>
             </div>
         </section>
 
         <section class="site-shell sis-accountability" aria-label="Akuntabilitas dan perlindungan hak masyarakat">
             <form class="sis-report-card" action="{{ route('frontend.sis-redd.report') }}" method="POST">
                 @csrf
-                <h2>&bull; Akuntabilitas</h2>
+                <h2>+ Akuntabilitas</h2>
                 <p>Saluran transparan bagi masyarakat untuk melaporkan ketidaksesuaian serta memastikan resolusi konflik yang adil dan inklusif</p>
 
                 @if(session('success'))
@@ -144,7 +165,7 @@
             </form>
 
             <article class="sis-rights">
-                <h2>&bull; Perlindungan Hak Masyarakat Lokal</h2>
+                <h2>+ Perlindungan Hak Masyarakat Lokal</h2>
                 <p>Komitmen penuh terhadap pengakuan wilayah kelola rakyat dan hak-hak tradisional adat Kalimantan Barat dalam setiap tahapan proyek karbon</p>
             </article>
         </section>

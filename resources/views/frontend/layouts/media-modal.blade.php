@@ -4,7 +4,7 @@
         {{-- Header --}}
         <div class="media-modal__header">
             <div>
-                <h2 id="mediaModalTitle" class="media-modal__title">&bull; DETAIL FOTO &amp; MEDIA</h2>
+                <h2 id="mediaModalTitle" class="media-modal__title">+ DETAIL FOTO &amp; MEDIA</h2>
                 <p class="media-modal__subtitle">Dokumentasi &amp; Galeri Publikasi REDD+ Kalimantan Barat</p>
             </div>
             <button type="button" class="media-modal__close js-close-media-modal" aria-label="Tutup Modal">&times;</button>

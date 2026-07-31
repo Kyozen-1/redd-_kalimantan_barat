@@ -15,16 +15,16 @@ class LaporanEmisi extends Model
 
     public function getExcelUrlAttribute()
     {
-        return Storage::disk('s3')->url($this->document_file_excel_path);
+        return Storage::disk('minio')->url($this->document_file_excel_path);
     }
 
     public function getPdfUrlAttribute()
     {
-        return Storage::disk('s3')->url($this->document_file_pdf_path);
+        return Storage::disk('minio')->url($this->document_file_pdf_path);
     }
 
     public function getWordUrlAttribute()
     {
-        return Storage::disk('s3')->url($this->document_file_word_path);
+        return Storage::disk('minio')->url($this->document_file_word_path);
     }
 }

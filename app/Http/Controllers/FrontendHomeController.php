@@ -81,7 +81,7 @@ class FrontendHomeController extends Controller
             'emisi'              => $statistikContent['emisi']              ?? null,
             'tahun'              => $statistikContent['tahun']              ?? null,
             'image'              => isset($statistikContent['image'])
-                                        ? Storage::disk('s3')->url($statistikContent['image'])
+                                        ? Storage::disk('minio')->url($statistikContent['image'])
                                         : null,
         ];
 
@@ -139,7 +139,7 @@ class FrontendHomeController extends Controller
             'description_1' => $mekanismeContent['description_1'] ?? $mekanismeContent['description'] ?? null,
             'description_2' => $mekanismeContent['description_2'] ?? null,
             'image'         => isset($mekanismeContent['image'])
-                                ? Storage::disk('s3')->url($mekanismeContent['image'])
+                                ? Storage::disk('minio')->url($mekanismeContent['image'])
                                 : null,
         ];
 

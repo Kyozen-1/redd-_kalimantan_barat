@@ -27,7 +27,7 @@
         <section class="site-shell news-featured" aria-labelledby="featured-news-heading">
             @if ($featuredNews)
                 <div class="news-featured__main">
-                    <p class="news-eyebrow">&bull; Berita Terbaru</p>
+                    <p class="news-eyebrow">+ Berita Terbaru</p>
                     <a href="{{ route('frontend.berita.detail', $featuredNews->id) }}" style="text-decoration: none; color: inherit;">
                         <h1 id="featured-news-heading">{{ $featuredNews->judul }}</h1>
                     </a>
@@ -38,7 +38,7 @@
                                 $firstGambar = $featuredNews->pivot_gambar_berita->first();
                             @endphp
                             @if($firstGambar && $firstGambar->image_path)
-                                <img src="{{ Storage::disk('s3')->url($firstGambar->image_path) }}" alt="{{ $featuredNews->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                <img src="{{ Storage::disk('minio')->url($firstGambar->image_path) }}" alt="{{ $featuredNews->judul }}" loading="lazy" onerror="handleImageError(this)">
                             @else
                                 <div class="news-placeholder" style="aspect-ratio: 1182 / 495; border-radius: 0.6rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
                                     <i class="mdi mdi-image-outline" style="font-size: 4rem;"></i>
@@ -53,7 +53,7 @@
                 </div>
             @else
                 <div class="news-featured__main">
-                    <p class="news-eyebrow">&bull; Berita Terbaru</p>
+                    <p class="news-eyebrow">+ Berita Terbaru</p>
                     <p>Belum ada berita terbaru.</p>
                 </div>
             @endif
@@ -66,7 +66,7 @@
                     <a href="{{ route('frontend.berita.detail', $story->id) }}" style="text-decoration: none; color: inherit; display: block;">
                         <article class="story-card story-card--side">
                             @if($storyGambar && $storyGambar->image_path)
-                                <img src="{{ Storage::disk('s3')->url($storyGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                <img src="{{ Storage::disk('minio')->url($storyGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
                             @else
                                 <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
                                     <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>
@@ -85,7 +85,7 @@
 
         @if($otherStories->count() > 0)
             <section class="site-shell other-news" aria-labelledby="other-news-heading">
-                <h2 id="other-news-heading">&bull; Berita Lainnya</h2>
+                <h2 id="other-news-heading">+ Berita Lainnya</h2>
                 <div class="story-grid">
                     @foreach ($otherStories as $story)
                         @php
@@ -94,7 +94,7 @@
                         <a href="{{ route('frontend.berita.detail', $story->id) }}" style="text-decoration: none; color: inherit; display: block;">
                             <article class="story-card">
                                 @if($otherGambar && $otherGambar->image_path)
-                                    <img src="{{ Storage::disk('s3')->url($otherGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                    <img src="{{ Storage::disk('minio')->url($otherGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
                                 @else
                                     <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
                                         <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>
@@ -114,49 +114,49 @@
 
         <section class="site-shell agenda-lsm">
             <section class="agenda-panel" aria-labelledby="agenda-heading">
-                <h2 id="agenda-heading">&bull; Update & Kalender Kegiatan</h2>
+                <h2 id="agenda-heading">+ Update & Kalender Kegiatan</h2>
                 <p class="agenda-year">{{ now()->year }}</p>
 
                 <div class="agenda-list">
                     @forelse ($agendas as $event)
                         @php
-                            $carbonDate = $event->tanggal ? \Carbon\Carbon::parse($event->tanggal) : null;
-                            $day = $carbonDate ? $carbonDate->format('d') : '-';
-                            $month = $carbonDate ? $carbonDate->format('M') : '-';
-                            $fullDate = $carbonDate ? $carbonDate->translatedFormat('d F Y') : '-';
-                            $datetime = $carbonDate ? $carbonDate->format('Y-m-d') : '';
-                        @endphp
-                        <article class="agenda-item js-open-agenda-modal"
-                            data-id="{{ $event->id }}"
-                            data-nama="{{ $event->nama }}"
-                            data-deskripsi="{{ $event->deskripsi }}"
-                            data-tanggal="{{ $fullDate }}"
-                            data-day="{{ $day }}"
-                            data-month="{{ $month }}"
-                            style="cursor: pointer;">
-                            <time datetime="{{ $datetime }}">
-                                <strong>{{ $day }}</strong>
-                                <span>{{ $month }}</span>
-                            </time>
-                            <div>
-                                <h3>{{ $event->nama }}</h3>
-                                <p>Dinas Lingkungan Hidup dan Kehutanan Provinsi Kalimantan Barat</p>
-                            </div>
-                        </article>
-                    @empty
-                        <p>Belum ada agenda kegiatan.</p>
-                    @endforelse
-                </div>
-            </section>
+        <section class="site-shell agenda-panel" aria-labelledby="agenda-heading">
+            <div class="agenda-panel__header">
+                <h2 id="agenda-heading">+ Update & Kalender Kegiatan</h2>
+                <p>Ikuti agenda kegiatan dan perkembangan program REDD+ di Kalimantan Barat.</p>
+            </div>
+            <div class="agenda-grid">
+                @forelse ($agendas as $agenda)
+                    <article class="agenda-card">
+                        <small class="agenda-card__date">
+                            <i class="mdi mdi-calendar" aria-hidden="true"></i>
+                            {{ $agenda->tanggal_kegiatan ? $agenda->tanggal_kegiatan->format('d M Y') : '-' }}
+                        </small>
+                        <h3>{{ $agenda->judul }}</h3>
+                        <p>{{ Str::limit(strip_tags($agenda->deskripsi), 100) }}</p>
+                        <a href="#agenda-modal" class="agenda-card__link js-open-agenda-modal" data-id="{{ $agenda->id }}">
+                            Lihat Detail
+                            <i class="mdi mdi-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </article>
+                @empty
+                    <div style="grid-column: 1 / -1; padding: 2.5rem 1rem; text-align: center; color: #667067;">
+                        <i class="mdi mdi-calendar-blank-outline" style="font-size: 2.5rem; color: #a0aaa1;"></i>
+                        <p style="margin-top: 0.5rem; font-size: 0.95rem;">Belum ada agenda kegiatan.</p>
+                    </div>
+                @endforelse
+            </div>
+        </section>
 
-            <section class="lsm-banner" aria-labelledby="lsm-heading">
+        <section class="site-shell lsm-section">
+            <div class="lsm-banner">
                 <img src="{{ asset('frontend/images/news-agenda/lsm-collab.png') }}" alt="Ruang kolaborasi LSM REDD+ Kalimantan Barat" loading="lazy">
                 <div class="lsm-banner__content">
-                    <h2 id="lsm-heading">&bull; Ruang Kolaborasi LSM</h2>
+                    <h2 id="lsm-heading">+ Ruang Kolaborasi LSM</h2>
                     <p>Platform khusus bagi Lembaga Swadaya Masyarakat untuk berbagi laporan lapangan, memantau transparansi data, dan mengajukan inisiatif pelestarian lokal</p>
                     <a class="site-cta js-open-lsm-modal" href="#lsm-modal"><span>+</span>Akses Ruang LSM</a>
                 </div>
-            </section>
+            </div>
         </section>
 
         @include('frontend.layouts.site-footer')

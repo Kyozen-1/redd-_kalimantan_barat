@@ -310,12 +310,16 @@
             text-align: left;
         }
 
-        .section-kicker {
+        .section-kicker,
+        .mechanism .section-kicker,
+        .dashboard-copy .section-kicker,
+        .visit .section-kicker {
             margin: 0 0 16px;
-            color: var(--green);
-            font-size: 12px;
-            font-weight: 900;
+            color: #126b18 !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .mechanism p {

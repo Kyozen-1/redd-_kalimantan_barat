@@ -4,7 +4,7 @@
         {{-- Header --}}
         <div class="agenda-modal__header">
             <div>
-                <h2 id="agendaModalTitle" class="agenda-modal__title">&bull; DETAIL AGENDA KEGIATAN</h2>
+                <h2 id="agendaModalTitle" class="agenda-modal__title">+ DETAIL AGENDA KEGIATAN</h2>
                 <p class="agenda-modal__subtitle">Informasi pelaksanaan kegiatan REDD+ Kalimantan Barat</p>
             </div>
             <button type="button" class="agenda-modal__close js-close-agenda-modal" aria-label="Tutup Modal">&times;</button>
@@ -26,7 +26,7 @@
             <h3 id="agendaModalNama" class="agenda-modal__event-title">---</h3>
 
             <div class="agenda-modal__desc-box">
-                <h4 class="agenda-modal__desc-heading">&bull; Deskripsi Kegiatan</h4>
+                <h4 class="agenda-modal__desc-heading">+ Deskripsi Kegiatan</h4>
                 <p id="agendaModalDeskripsi">Memuat deskripsi agenda...</p>
             </div>
         </div>

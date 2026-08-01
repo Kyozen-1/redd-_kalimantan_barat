@@ -120,43 +120,43 @@
                 <div class="agenda-list">
                     @forelse ($agendas as $event)
                         @php
-        <section class="site-shell agenda-panel" aria-labelledby="agenda-heading">
-            <div class="agenda-panel__header">
-                <h2 id="agenda-heading">+ Update & Kalender Kegiatan</h2>
-                <p>Ikuti agenda kegiatan dan perkembangan program REDD+ di Kalimantan Barat.</p>
-            </div>
-            <div class="agenda-grid">
-                @forelse ($agendas as $agenda)
-                    <article class="agenda-card">
-                        <small class="agenda-card__date">
-                            <i class="mdi mdi-calendar" aria-hidden="true"></i>
-                            {{ $agenda->tanggal_kegiatan ? $agenda->tanggal_kegiatan->format('d M Y') : '-' }}
-                        </small>
-                        <h3>{{ $agenda->judul }}</h3>
-                        <p>{{ Str::limit(strip_tags($agenda->deskripsi), 100) }}</p>
-                        <a href="#agenda-modal" class="agenda-card__link js-open-agenda-modal" data-id="{{ $agenda->id }}">
-                            Lihat Detail
-                            <i class="mdi mdi-arrow-right" aria-hidden="true"></i>
-                        </a>
-                    </article>
-                @empty
-                    <div style="grid-column: 1 / -1; padding: 2.5rem 1rem; text-align: center; color: #667067;">
-                        <i class="mdi mdi-calendar-blank-outline" style="font-size: 2.5rem; color: #a0aaa1;"></i>
-                        <p style="margin-top: 0.5rem; font-size: 0.95rem;">Belum ada agenda kegiatan.</p>
-                    </div>
-                @endforelse
-            </div>
-        </section>
+                            $carbonDate = $event->tanggal ? \Carbon\Carbon::parse($event->tanggal) : null;
+                            $day = $carbonDate ? $carbonDate->format('d') : '-';
+                            $month = $carbonDate ? $carbonDate->format('M') : '-';
+                            $fullDate = $carbonDate ? $carbonDate->translatedFormat('d F Y') : '-';
+                            $datetime = $carbonDate ? $carbonDate->format('Y-m-d') : '';
+                        @endphp
+                        <article class="agenda-item js-open-agenda-modal"
+                            data-id="{{ $event->id }}"
+                            data-nama="{{ $event->nama }}"
+                            data-deskripsi="{{ $event->deskripsi }}"
+                            data-tanggal="{{ $fullDate }}"
+                            data-day="{{ $day }}"
+                            data-month="{{ $month }}"
+                            style="cursor: pointer;">
+                            <time datetime="{{ $datetime }}">
+                                <strong>{{ $day }}</strong>
+                                <span>{{ $month }}</span>
+                            </time>
+                            <div>
+                                <h3>{{ $event->nama }}</h3>
+                                <p>Dinas Lingkungan Hidup dan Kehutanan Provinsi Kalimantan Barat</p>
+                            </div>
+                        </article>
+                    @empty
+                        <p>Belum ada agenda kegiatan.</p>
+                    @endforelse
+                </div>
+            </section>
 
-        <section class="site-shell lsm-section">
-            <div class="lsm-banner">
+            <section class="lsm-banner" aria-labelledby="lsm-heading">
                 <img src="{{ asset('frontend/images/news-agenda/lsm-collab.png') }}" alt="Ruang kolaborasi LSM REDD+ Kalimantan Barat" loading="lazy">
                 <div class="lsm-banner__content">
                     <h2 id="lsm-heading">+ Ruang Kolaborasi LSM</h2>
                     <p>Platform khusus bagi Lembaga Swadaya Masyarakat untuk berbagi laporan lapangan, memantau transparansi data, dan mengajukan inisiatif pelestarian lokal</p>
                     <a class="site-cta js-open-lsm-modal" href="#lsm-modal"><span>+</span>Akses Ruang LSM</a>
                 </div>
-            </div>
+            </section>
         </section>
 
         @include('frontend.layouts.site-footer')

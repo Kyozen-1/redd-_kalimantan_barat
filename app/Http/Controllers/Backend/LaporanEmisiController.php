@@ -36,11 +36,7 @@ class LaporanEmisiController extends Controller
             ->addColumn('excel', function($data){
                 if($data->document_file_excel_path)
                 {
-                    return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->excel_url.'"
-                        width="100%"
-                        height="300px">
-                    </iframe>';
+                    return '<a class="btn btn-icon btn-success waves-effect waves-light" href="'.$data->excel_url.'" title="Download Excel"><i class="fas fa-solid fa-file-excel"></i></a>';
                 } else {
                     return 'tidak ada';
                 }
@@ -58,11 +54,7 @@ class LaporanEmisiController extends Controller
             ->addColumn('word', function($data){
                 if($data->document_file_word_path)
                 {
-                    return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->word_url.'"
-                        width="100%"
-                        height="300px">
-                    </iframe>';
+                    return '<a class="btn btn-icon btn-primary waves-effect waves-light" href="'.$data->word_url.'" title="Download Excel"><i class="fas fa-solid fa-file-word"></i></a>';
                 } else {
                     return 'tidak ada';
                 }

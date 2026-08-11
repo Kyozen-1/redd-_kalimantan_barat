@@ -15,6 +15,7 @@ class DokumenRad extends Model
 
     public function getDocumetUrlAttribute()
     {
-        return Storage::disk('minio')->url($this->document_path);
+        return Storage::disk('minio')->temporaryUrl($this->document_path,
+            now()->addMinutes(30));
     }
 }

@@ -201,7 +201,6 @@
                 }
             ]
         });
-
         function reset()
         {
             $('#form_dokumen_galeri')[0].reset();

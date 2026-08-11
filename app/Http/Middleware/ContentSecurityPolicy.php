@@ -32,13 +32,14 @@ class ContentSecurityPolicy
             "'self'",
             "https://cdn.ckeditor.com",
             "https://unpkg.com",
+            "https://static.cloudflareinsights.com",
             env('AWS_ENDPOINT')
         ];
 
         $csp = implode('; ', [
             "default-src 'self'",
 
-            "script-src 'self' 'unsafe-inline' data: blob: https://cdn.ckeditor.com https://unpkg.com",
+            "script-src 'self' 'unsafe-inline' data: blob: https://cdn.ckeditor.com https://unpkg.com https://static.cloudflareinsights.com",
 
             "style-src 'self' 'unsafe-inline' https://cdn.ckeditor.com https://fonts.googleapis.com https://unpkg.com",
 

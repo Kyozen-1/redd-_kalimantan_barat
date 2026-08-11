@@ -63,11 +63,7 @@ class DokumenGaleriController extends Controller
             ->addColumn('excel', function($data){
                 if($data->document_file_excel_path)
                 {
-                    return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->excel_url.'"
-                        width="100%"
-                        height="300px">
-                    </iframe>';
+                    return '<a class="btn btn-icon btn-success waves-effect waves-light" href="'.$data->excel_url.'" title="Download Excel"><i class="fas fa-solid fa-file-excel"></i></a>';
                 } else {
                     return 'tidak ada';
                 }
@@ -85,11 +81,7 @@ class DokumenGaleriController extends Controller
             ->addColumn('word', function($data){
                 if($data->document_file_word_path)
                 {
-                    return '<iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src='.$data->word_url.'"
-                        width="100%"
-                        height="300px">
-                    </iframe>';
+                    return '<a class="btn btn-icon btn-primary waves-effect waves-light" href="'.$data->word_url.'" title="Download Excel"><i class="fas fa-solid fa-file-word"></i></a>';
                 } else {
                     return 'tidak ada';
                 }
@@ -296,9 +288,12 @@ class DokumenGaleriController extends Controller
             // Kategori Baru End
             if($request->excel)
             {
-                $storage->delete(
-                    $dokumenGaleri->document_file_excel_path
-                );
+                if($dokumenGaleri->document_file_excel_path)
+                {
+                    $storage->delete(
+                        $dokumenGaleri->document_file_excel_path
+                    );
+                }
 
                 $file = $request->file('excel');
                 $destinationPath = 'dokumen/excel';
@@ -312,9 +307,12 @@ class DokumenGaleriController extends Controller
             }
             if($request->pdf)
             {
-                $storage->delete(
-                    $dokumenGaleri->document_file_pdf_path
-                );
+                if($dokumenGaleri->document_file_pdf_path)
+                {
+                    $storage->delete(
+                        $dokumenGaleri->document_file_pdf_path
+                    );
+                }
 
                 $file = $request->file('pdf');
                 $destinationPath = 'dokumen/pdf';
@@ -329,9 +327,12 @@ class DokumenGaleriController extends Controller
 
             if($request->word)
             {
-                $storage->delete(
-                    $dokumenGaleri->document_file_word_path
-                );
+                if($dokumenGaleri->document_file_word_path)
+                {
+                    $storage->delete(
+                        $dokumenGaleri->document_file_word_path
+                    );
+                }
 
                 $file = $request->file('word');
                 $destinationPath = 'dokumen/word';

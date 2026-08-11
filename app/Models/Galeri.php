@@ -20,6 +20,7 @@ class Galeri extends Model
 
     public function getFileUrlAttribute()
     {
-        return Storage::disk('minio')->url($this->file_path);
+        return Storage::disk('minio')->temporaryUrl($this->file_path,
+            now()->addMinutes(30));
     }
 }

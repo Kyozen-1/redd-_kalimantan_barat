@@ -20,16 +20,19 @@ class DokumenGaleri extends Model
 
     public function getExcelUrlAttribute()
     {
-        return Storage::disk('minio')->url($this->document_file_excel_path);
+        return Storage::disk('minio')->temporaryUrl($this->document_file_excel_path,
+            now()->addMinutes(30));
     }
 
     public function getPdfUrlAttribute()
     {
-        return Storage::disk('minio')->url($this->document_file_pdf_path);
+        return Storage::disk('minio')->temporaryUrl($this->document_file_pdf_path,
+            now()->addMinutes(30));
     }
 
     public function getWordUrlAttribute()
     {
-        return Storage::disk('minio')->url($this->document_file_word_path);
+        return Storage::disk('minio')->temporaryUrl($this->document_file_word_path,
+            now()->addMinutes(30));
     }
 }

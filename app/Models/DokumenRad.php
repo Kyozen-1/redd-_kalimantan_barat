@@ -13,7 +13,7 @@ class DokumenRad extends Model
         return $query->where('status_aktif', '1');
     }
 
-    public function getDocumetUrlAttribute()
+    public function getDocumentUrlAttribute()
     {
         return Storage::disk('minio')->temporaryUrl($this->document_path,
             now()->addMinutes(30));

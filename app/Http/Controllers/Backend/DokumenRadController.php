@@ -135,7 +135,7 @@ class DokumenRadController extends Controller
             if($request->document)
             {
                 $storage->delete(
-                    $laporanEmisi->document_path
+                    $dokumenRad->document_path
                 );
                 $file = $request->file('document');
                 $destinationPath = 'dokumen-rad';

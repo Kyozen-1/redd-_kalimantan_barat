@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
-@section('title', 'Data Kawasan | REDD++ Kalimantan Barat')
-@section('header', 'Data Kawasan')
+@section('title', 'Data Kawasan Hutan | REDD++ Kalimantan Barat')
+@section('header', 'Data Kawasan Hutan')
 
 @section('css')
     <link href="{{ asset('/backend_template/libs/datatables/dataTables.bootstrap4.css') }}" rel="stylesheet" type="text/css" />

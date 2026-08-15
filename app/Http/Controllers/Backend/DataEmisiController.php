@@ -97,6 +97,8 @@ class DataEmisiController extends Controller
                 return $button;
             })
             ->addColumn('nilai', function($data){
+                $dataNilai = $data['data_nilai'];
+                usort($dataNilai, fn($a, $b) => (int) $a['tahun'] <=> (int) $b['tahun']);
                 $html = '<table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -106,7 +108,7 @@ class DataEmisiController extends Controller
                                 </tr>
                             </thead>
                             <tbody>';
-                            foreach ($data['data_nilai'] as $data_nilai) {
+                            foreach ($dataNilai as $data_nilai) {
                                 $button_edit = '<button type="button" id="'.$data_nilai['id'].'" class="editNilai btn btn-icon waves-effect btn-warning" title="Edit Nilai"><i class="fas fa-edit"></i></button>';
                                 $button_delete = '<button type="button" id="'.$data_nilai['id'].'" class="deleteNilai btn btn-icon waves-effect btn-danger" title="Delete Nilai"><i class="fas fa-trash"></i></button>';
                                 $button = $button_edit . ' ' . $button_delete;

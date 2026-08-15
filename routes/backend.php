@@ -91,7 +91,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/destroy/nilai/{id}',[DataEmisiController::class, 'destroyNilai'])->name('cms.data-emisi.destroy.nilai');
         });
 
-        Route::prefix('data-kawasan')->group(function(){
+        Route::prefix('data-kawasan-hutan')->group(function(){
             Route::get('/', [DataKawasanController::class, 'index'])->name('cms.data-kawasan.index');
             Route::post('/', [DataKawasanController::class, 'store'])->name('cms.data-kawasan.store');
             Route::get('/datatable', [DataKawasanController::class, 'datatable'])->name('cms.data-kawasan.datatable');

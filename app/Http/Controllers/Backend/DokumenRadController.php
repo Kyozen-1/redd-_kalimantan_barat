@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Contracts\FileStorageInterface;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Validator;
 use DataTables;
@@ -169,5 +170,21 @@ class DokumenRadController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['errors' => $th->getMessage()]);
         }
+    }
+
+    public function file($id)
+    {
+        $id = Crypt::decryptString($id);
+        $dokumenRad = DokumenRad::findOrFail($id);
+
+        if (!$dokumenRad->document_path) {
+            abort(404);
+        }
+
+        if (!Storage::disk('minio')->exists($dokumenRad->document_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('minio')->response($dokumenRad->document_path);
     }
 }

@@ -84,6 +84,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}', [DokumenRadController::class, 'edit'])->name('cms.dokumen-rad.edit');
             Route::post('/update', [DokumenRadController::class, 'update'])->name('cms.dokumen-rad.update');
             Route::get('/destroy/{id}', [DokumenRadController::class, 'destroy'])->name('cms.dokumen-rad.destroy');
+            Route::get('/file/{id}', [DokumenRadController::class, 'file'])->name('cms.dokumen-rad.file');
         });
 
         Route::prefix('data-emisi')->group(function(){

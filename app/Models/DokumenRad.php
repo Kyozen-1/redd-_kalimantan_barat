@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 class DokumenRad extends Model
 {
@@ -15,7 +15,8 @@ class DokumenRad extends Model
 
     public function getDocumentUrlAttribute()
     {
-        return Storage::disk('minio')->temporaryUrl($this->document_path,
-            now()->addMinutes(30));
+        return route('cms.dokumen-rad.file', [
+            'id' => Crypt::encryptString($this->id),
+        ]);
     }
 }

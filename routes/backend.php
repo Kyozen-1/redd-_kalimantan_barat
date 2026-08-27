@@ -74,6 +74,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}', [LaporanEmisiController::class, 'edit'])->name('cms.laporan-emisi.edit');
             Route::post('/update', [LaporanEmisiController::class, 'update'])->name('cms.laporan-emisi.update');
             Route::get('/destroy/{id}', [LaporanEmisiController::class, 'destroy'])->name('cms.laporan-emisi.destroy');
+            Route::get('/file/{id}/{type}', [LaporanEmisiController::class, 'file'])->name('cms.laporan-emisi.file');
         });
 
         Route::prefix('dokumen-rad')->group(function(){

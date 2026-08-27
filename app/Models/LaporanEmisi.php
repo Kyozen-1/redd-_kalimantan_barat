@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 class LaporanEmisi extends Model
 {
@@ -15,21 +15,37 @@ class LaporanEmisi extends Model
 
     public function getExcelUrlAttribute()
     {
-        return Storage::disk('minio')->temporaryUrl($this->document_file_excel_path,
-            now()->addMinutes(30));
+        if (!$this->document_file_excel_path) {
+            return null;
+        }
+
+        return route('cms.laporan-emisi.file', [
+            'id' => Crypt::encryptString($this->id),
+            'type' => 'excel',
+        ]);
     }
 
     public function getPdfUrlAttribute()
     {
-        return Storage::disk('minio')->temporaryUrl(
-            $this->document_file_pdf_path,
-            now()->addMinutes(30)
-        );
+        if (!$this->document_file_pdf_path) {
+            return null;
+        }
+
+        return route('cms.laporan-emisi.file', [
+            'id' => Crypt::encryptString($this->id),
+            'type' => 'pdf',
+        ]);
     }
 
     public function getWordUrlAttribute()
     {
-        return Storage::disk('minio')->temporaryUrl($this->document_file_word_path,
-            now()->addMinutes(30));
+        if (!$this->document_file_word_path) {
+            return null;
+        }
+
+        return route('cms.laporan-emisi.file', [
+            'id' => Crypt::encryptString($this->id),
+            'type' => 'word',
+        ]);
     }
 }

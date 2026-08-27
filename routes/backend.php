@@ -122,6 +122,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}', [LandingPageController::class, 'edit'])->name('cms.landing-page.edit');
             Route::post('/update/{id}', [LandingPageController::class, 'update'])->name('cms.landing-page.update');
             Route::get('/destroy/{id}', [LandingPageController::class, 'destroy'])->name('cms.landing-page.destroy');
+            Route::get('/gambar/{path}', [LandingPageController::class, 'gambar'])->name('cms.landing-page.gambar');
         });
 
         Route::prefix('master-data')->group(function(){

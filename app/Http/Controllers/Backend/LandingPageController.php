@@ -58,8 +58,17 @@ class LandingPageController extends Controller
                     foreach ($data->content as $key => $value) {
                         if($key == 'image')
                         {
-                            $url = Storage::disk('minio')->url($value);
-                            $html .= '<li><img src="'.$url.'" alt="" style="width: 5rem;"></li>';
+                            $url = route('cms.landing-page.gambar', [
+                                'path' => Crypt::encryptString($value)
+                            ]);
+
+                            $html .= '<li>
+                                <img
+                                    src="'.$url.'"
+                                    alt=""
+                                    style="width: 5rem;"
+                                >
+                            </li>';
                         } else {
                             $html .= '<li>'.$key.' =  '.$value.'</li>';
                         }
@@ -282,6 +291,26 @@ class LandingPageController extends Controller
             return response()->json(['success' => 'Berhasil menghapus']);
         } catch (\Throwable $th) {
             return response()->json(['errors' => $th->getMessage()]);
+        }
+    }
+
+    public function gambar($path)
+    {
+        try {
+            $path = Crypt::decryptString($path);
+
+            $disk = Storage::disk('minio');
+
+            if (!$disk->exists($path)) {
+                abort(404);
+            }
+
+            return $disk->response($path, basename($path), [
+                'Cache-Control' => 'public, max-age=3600',
+            ]);
+
+        } catch (\Throwable $e) {
+            abort(404);
         }
     }
 }

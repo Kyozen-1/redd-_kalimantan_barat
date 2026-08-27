@@ -21,7 +21,7 @@
                     <li>
                         <a href="{{ route('cms.data-kawasan.index') }}">
                             <i class="mdi mdi-tree"></i>
-                            <span> Data Kawasan </span>
+                            <span> Data Kawasan Hutan </span>
                         </a>
                     </li>
                     <li>

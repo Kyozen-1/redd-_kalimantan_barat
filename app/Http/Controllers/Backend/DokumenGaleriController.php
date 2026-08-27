@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use App\Contracts\FileStorageInterface;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
 use Validator;
@@ -365,5 +366,50 @@ class DokumenGaleriController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['errors' => $th->getMessage()]);
         }
+    }
+
+    public function file($id, $type)
+    {
+        $id = Crypt::decryptString($id);
+        $dokumenGaleri = DokumenGaleri::findOrFail($id);
+
+        $path = match ($type) {
+            'excel' => $dokumenGaleri->document_file_excel_path,
+            'pdf'   => $dokumenGaleri->document_file_pdf_path,
+            'word'  => $dokumenGaleri->document_file_word_path,
+            default => abort(404),
+        };
+
+        if (!$path) {
+            abort(404);
+        }
+
+        $disk = Storage::disk('minio');
+
+        if (!$disk->exists($path)) {
+            abort(404);
+        }
+
+        $mimeType = $disk->mimeType($path);
+
+        return response()->stream(
+            function () use ($disk, $path) {
+                $stream = $disk->readStream($path);
+                if ($stream === false) {
+                    abort(404);
+                }
+                while (!feof($stream)) {
+                    echo fread($stream, 8192);
+                }
+                fclose($stream);
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' =>
+                    'inline; filename="' . basename($path) . '"',
+                'Cache-Control' => 'private, max-age=300',
+            ]
+        );
     }
 }

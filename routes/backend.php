@@ -43,6 +43,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}', [DokumenGaleriController::class, 'edit'])->name('cms.dokumen-galeri.edit');
             Route::post('/update', [DokumenGaleriController::class, 'update'])->name('cms.dokumen-galeri.update');
             Route::get('/destroy/{id}', [DokumenGaleriController::class, 'destroy'])->name('cms.dokumen-galeri.destroy');
+            Route::get('/file/{id}/{type}', [DokumenGaleriController::class, 'file'])->name('cms.dokumen-galeri.file');
         });
 
         Route::prefix('agenda')->group(function(){

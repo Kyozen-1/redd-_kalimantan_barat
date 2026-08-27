@@ -9,6 +9,7 @@ use Mews\Purifier\Facades\Purifier;
 use RealRashid\SweetAlert\Facades\Alert;
 use Intervention\Image\Laravel\Facades\Image;
 use App\Contracts\FileStorageInterface;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
 use DataTables;
@@ -92,53 +93,64 @@ class BeritaController extends Controller
     {
         $id = Crypt::decryptString($id);
 
-        $getData = Berita::find($id);
+        $getData = Berita::findOrFail($id);
+
         $gambar = $getData->pivot_gambar_berita
-                    ->map(function ($item) {
-                        return [
-                            'source' => $item->gambar_url,
-                            'path'   => $item->gambar_url,
-                            'just_path' => $item->image_path
-                        ];
-                    });
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'source' => $item->gambar_url,
+                    'path' => $item->image_path,
+                ];
+            })
+            ->values();
+
         $data = [
             'judul' => $getData->judul,
             'deskripsi' => $getData->deskripsi,
-            'gambar' => $gambar
+            'gambar' => $gambar,
         ];
-        return view('backend.berita.edit',[
+
+        return view('backend.berita.edit', [
             'id' => Crypt::encryptString($id),
-            'berita' => $data
+            'berita' => $data,
         ]);
     }
 
-    public function update(Request $request, $id, FileStorageInterface $storage)
-    {
+    public function update( Request $request, $id, FileStorageInterface $storage) {
         $request->validate([
             'judul' => 'required',
             'deskripsi' => 'required',
-            'gambar.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+            'gambar.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         try {
             $id = Crypt::decryptString($id);
-            $berita = Berita::find($id);
+            $berita = Berita::findOrFail($id);
             $berita->judul = $request->judul;
-            $berita->deskripsi = Purifier::clean($request->deskripsi,'news');
+            $berita->deskripsi = Purifier::clean(
+                $request->deskripsi,
+                'news'
+            );
             $berita->save();
 
-            $existingImages = $request->existing_images ?? [];
+            $existingImages =
+                $request->input(
+                    'existing_images',
+                    []
+                );
 
             $newImages = [];
 
             if ($request->hasFile('gambar')) {
-
-                foreach ($request->file('gambar') as $file) {
+                foreach (
+                    $request->file('gambar')
+                    as $file
+                ) {
                     $path = $storage->upload(
                         $file,
                         'berita'
                     );
-
                     $newImages[] = $path;
                 }
             }
@@ -149,25 +161,27 @@ class BeritaController extends Controller
             );
 
             $oldImages = $berita
-                        ->pivot_gambar_berita
-                        ->pluck('image_path')
-                        ->toArray();
+                ->pivot_gambar_berita
+                ->pluck('image_path')
+                ->toArray();
 
             $deletedImages = array_diff(
-                                $oldImages,
-                                $finalImages
-                            );
+                $oldImages,
+                $finalImages
+            );
 
             PivotGambarBerita::where(
                 'berita_id',
                 $id
             )->delete();
 
+
             foreach ($finalImages as $image) {
                 $pivot = new PivotGambarBerita;
                 $pivot->berita_id = $berita->id;
                 $pivot->nama = basename($image);
                 $pivot->image_path = $image;
+                $pivot->status_aktif ='1';
                 $pivot->save();
             }
 
@@ -178,9 +192,15 @@ class BeritaController extends Controller
             }
 
             Alert::success('Berhasil', 'Berita berhasil diubah');
-            return redirect()->route('cms.berita.index');
+            return redirect()->route(
+                'cms.berita.index'
+            );
         } catch (\Throwable $th) {
-            return back()->with('failed', $th->getMessage());
+            return back()
+                ->with(
+                    'failed',
+                    $th->getMessage()
+                );
         }
     }
 
@@ -196,5 +216,21 @@ class BeritaController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['errors' => $th->getMessage()]);
         }
+    }
+
+    public function gambar($id)
+    {
+        $id = Crypt::decryptString($id);
+        $gambar = PivotGambarBerita::findOrFail($id);
+
+        if (!$gambar->image_path) {
+            abort(404);
+        }
+
+        if (!Storage::disk('minio')->exists($gambar->image_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('minio')->response($gambar->image_path);
     }
 }

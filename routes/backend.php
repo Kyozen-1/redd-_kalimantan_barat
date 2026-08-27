@@ -62,6 +62,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}',[BeritaController::class, 'edit'])->name('cms.berita.edit');
             Route::post('/update/{id}',[BeritaController::class, 'update'])->name('cms.berita.update');
             Route::get('/destroy/{id}',[BeritaController::class, 'destroy'])->name('cms.berita.destroy');
+            Route::get('/gambar/{id}', [BeritaController::class, 'gambar'])->name('cms.berita.gambar');
         });
 
         Route::prefix('laporan-emisi')->group(function(){

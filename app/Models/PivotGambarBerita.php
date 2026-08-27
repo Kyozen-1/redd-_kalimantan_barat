@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 class PivotGambarBerita extends Model
 {
@@ -20,7 +20,8 @@ class PivotGambarBerita extends Model
 
     public function getGambarUrlAttribute()
     {
-        return Storage::disk('minio')->temporaryUrl($this->image_path,
-            now()->addMinutes(30));
+        return route('cms.berita.gambar', [
+            'id' => Crypt::encryptString($this->id),
+        ]);
     }
 }

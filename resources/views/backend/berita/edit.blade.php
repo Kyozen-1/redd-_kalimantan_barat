@@ -1,4 +1,5 @@
 @extends('backend.layouts.app')
+
 @section('title', 'Edit | Berita | REDD++ Kalimantan Barat')
 @section('header', 'Edit | Berita')
 
@@ -20,27 +21,23 @@
             justify-content: center;
             text-align: center;
         }
-
         .select2-container .select2-selection--single {
-            height: 38px;           /* samakan dengan input/select */
+            height: 38px;
             display: flex;
-            align-items: center;    /* center vertical */
+            align-items: center;
             border: 1px solid #ced4da;
             border-radius: 4px;
         }
-
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 38px;   /* samakan dengan height */
+            line-height: 38px;
             padding-left: 10px;
         }
-
         .select2-container--default .select2-selection--single .select2-selection__arrow {
             height: 38px;
             top: 0;
         }
-
         .select2-container--default .select2-selection--multiple .select2-selection__choice {
-            background-color: #0d6efd; /* biru bootstrap */
+            background-color: #0d6efd;
             border-color: #0d6efd;
             color: white;
         }
@@ -51,6 +48,7 @@
 @endsection
 
 @section('content')
+
     <form class="form-horizontal" id="form_dokumen_galeri" method="POST" action="{{ route('cms.berita.update', ['id' => $id]) }}" enctype="multipart/form-data" data-parsley-validate novalidate>
         @csrf
         <div id="existing-images-container">
@@ -58,8 +56,10 @@
                 <input
                     type="hidden"
                     name="existing_images[]"
-                    value="{{ $gambar['just_path'] }}"
-                    data-path="{{ $gambar['path'] }}">
+                    value="{{ $gambar['path'] }}"
+                    data-id="{{ $gambar['id'] }}"
+                    data-source="{{ $gambar['source'] }}"
+                >
             @endforeach
         </div>
 
@@ -68,12 +68,12 @@
                 <div class="card-box">
                     <div class="row">
                         <div class="col-md-6">
-                            <h4 class="mt-0 header-title">Edit Berita</h4>
+                            <h4 class="mt-0 header-title">
+                                Edit Berita
+                            </h4>
                         </div>
                         <div class="col-md-6 text-right">
-                            <a class="btn btn-icon waves-effect waves-light btn-primary" href="{{ route('cms.berita.index') }}">
-                                Kembali<i class="fas fas fa-right-long"></i>
-                            </a>
+                            <a class="btn btn-icon waves-effect waves-light btn-primary" href="{{ route('cms.berita.index') }}">Kembali<i class="fas fas fa-right-long"></i></a>
                         </div>
                     </div>
                 </div>
@@ -84,41 +84,49 @@
                     <div class="row">
                         @if (session('failed'))
                             <div class="col-12">
-                                <div class="alert alert-danger">{{session('failed')}}</div>
+                                <div class="alert alert-danger">
+                                    {{ session('failed') }}
+                                </div>
                             </div>
                         @endif
                         <div class="col-12">
                             <div class="form-group">
                                 <label for="judul" class="control-label">Judul</label>
-                                <input type="text" name="judul" id="judul" value="{{ $berita['judul'] }}" parsley-trigger="change" required class="form-control">
+                                <input type="text" name="judul" id="judul" value="{{ old('judul', $berita['judul']) }}" parsley-trigger="change" required class="form-control">
                                 @error('judul')
-                                    <small class="text-danger">{{$message}}</small>
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label for="deskripsi" class="control-label">Deskripsi</label>
-                                <textarea class="form-control" name="deskripsi" id="deskripsi" rows="8" required>{{$berita['deskripsi']}}</textarea>
+                                <label for="deskripsi" class="control-label"> Deskripsi </label>
+                                <textarea class="form-control" name="deskripsi" id="deskripsi" rows="8" required >{{ old('deskripsi', $berita['deskripsi']) }}</textarea>
                                 @error('deskripsi')
-                                    <small class="text-danger">{{$message}}</small>
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
                                 @enderror
                             </div>
                             <div class="form-group">
-                                <label>Gambar Berita</label>
-                                <input
-                                    type="file"
-                                    class="filepond"
-                                    name="gambar[]"
-                                    multiple
-                                    accept="image/png,image/jpeg,image/jpg">
+                                <label>Gambar Berita </label>
+                                <input type="file" class="filepond" id="gambar-pond" multiple accept="image/png,image/jpeg,image/jpg">
+                                <div id="new-images-container"></div>
                                 @error('gambar')
-                                    <small class="text-danger">{{ $message }}</small>
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
+                                @enderror
+                                @error('gambar.*')
+                                    <small class="text-danger">
+                                        {{ $message }}
+                                    </small>
                                 @enderror
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div class="col-12">
                 <div class="card-box">
                     <div class="row">
@@ -133,7 +141,6 @@
 @endsection
 
 @section('js')
-    <!-- third party js -->
     <script src="{{ asset('/backend_template/libs/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('/backend_template/libs/datatables/dataTables.bootstrap4.js') }}"></script>
     <script src="{{ asset('/backend_template/libs/datatables/dataTables.responsive.min.js') }}"></script>
@@ -147,14 +154,8 @@
     <script src="{{ asset('/backend_template/libs/datatables/dataTables.select.min.js') }}"></script>
     <script src="{{ asset('/backend_template/libs/pdfmake/pdfmake.min.js') }}"></script>
     <script src="{{ asset('/backend_template/libs/pdfmake/vfs_fonts.js') }}"></script>
-    <!-- third party js ends -->
-
-    <!-- Datatables init -->
     <script src="{{ asset('/backend_template/js/pages/datatables.init.js') }}"></script>
-    <!-- Validation js (Parsleyjs) -->
     <script src="{{ asset('/backend_template/libs/parsleyjs/parsley.min.js') }}"></script>
-
-    <!-- validation init -->
     <script src="{{ asset('/backend_template/js/pages/form-validation.init.js') }}"></script>
     <script src="{{ asset('/backend_template/libs/dropify/dropify.min.js') }}"></script>
     <script src="{{ asset('js/sweetalert.js') }}"></script>
@@ -164,79 +165,188 @@
     <script src="https://unpkg.com/filepond-plugin-image-preview@4/dist/filepond-plugin-image-preview.min.js"></script>
     <script>
         const existingImages = @json($berita['gambar']);
+
         FilePond.registerPlugin(
             FilePondPluginImagePreview
         );
 
         const pond = FilePond.create(
-                        document.querySelector('.filepond'),
-                        {
-                            storeAsFile: true,
-
-                            files: existingImages.map(item => ({
-                                source: item.source,
-                                options: {
-                                    type: 'local'
-                                }
-                            })),
-
-                            server: {
-                                load: (source, load, error, progress, abort) => {
-
-                                    fetch(source)
-                                        .then(response => response.blob())
-                                        .then(load)
-                                        .catch(error);
-
-                                    return {
-                                        abort
-                                    };
-                                }
-                            }
+            document.querySelector('#gambar-pond'),
+            {
+                allowMultiple: true,
+                allowReorder: true,
+                maxFiles: 10,
+                acceptedFileTypes: [
+                    'image/png',
+                    'image/jpeg',
+                    'image/jpg'
+                ],
+                files: existingImages.map(item => ({
+                    source: item.source,
+                    options: {
+                        type: 'local',
+                        metadata: {
+                            existing: true,
+                            id: item.id
                         }
-                    );
-        pond.on('removefile', (error, file) => {
-            if (!file.source) {
-                return;
-            }
-            const imageUrl = file.source;
-            const hiddenInputs =
-                document.querySelectorAll(
-                    'input[name="existing_images[]"]'
-                );
-            hiddenInputs.forEach(input => {
-                const url = input.dataset.path;
-                if (url === imageUrl) {
-                    input.remove();
+                    }
+                })),
+                server: {
+                    load: (source, load, error, progress, abort) => {
+                        fetch(source)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(
+                                        'Gagal mengambil gambar'
+                                    );
+                                }
+                                return response.blob();
+                            })
+                            .then(blob => {
+                                load(blob);
+                            })
+                            .catch(err => {
+                                console.error(
+                                    'FilePond load error:',
+                                    err
+                                );
+                                error(
+                                    'Gagal memuat gambar'
+                                );
+                            });
+                        return {
+                            abort: () => {
+                                abort();
+                            }
+                        };
+                    }
                 }
-            });
-        });
+            }
+        );
+
+        pond.on(
+            'removefile',
+            (error, file) => {
+                if (error) {
+                    console.error(
+                        'FilePond remove error:',
+                        error
+                    );
+                    return;
+                }
+                if (!file) {
+                    return;
+                }
+                const isExisting =
+                    file.getMetadata('existing') === true;
+                if (!isExisting) {
+                    return;
+                }
+
+                const source = file.source;
+
+                document
+                    .querySelectorAll(
+                        'input[name="existing_images[]"]'
+                    )
+                    .forEach(input => {
+                        if (
+                            input.dataset.source === source
+                        ) {
+                            input.remove();
+                        }
+                    });
+            }
+        );
+
+        const form =
+            document.querySelector(
+                '#form_dokumen_galeri'
+            );
+
+        form.addEventListener(
+            'submit',
+            function (event) {
+                const container =
+                    document.querySelector(
+                        '#new-images-container'
+                    );
+                container.innerHTML = '';
+
+                const input =
+                    document.createElement('input');
+
+                input.type = 'file';
+
+                input.name = 'gambar[]';
+
+                input.multiple = true;
+
+                input.style.display = 'none';
+
+                const dataTransfer =
+                    new DataTransfer();
+
+                pond.getFiles().forEach(
+                    fileItem => {
+                        const isExisting =
+                            fileItem.getMetadata(
+                                'existing'
+                            ) === true;
+
+                        if (isExisting) {
+                            return;
+                        }
+
+                        if (fileItem.file) {
+                            dataTransfer.items.add(
+                                fileItem.file
+                            );
+                        }
+                    }
+                );
+
+                input.files =
+                    dataTransfer.files;
+
+                container.appendChild(
+                    input
+                );
+            }
+        );
 
         ClassicEditor
-            .create(document.querySelector('#deskripsi'), {
-                toolbar: [
-                    'heading',
-                    '|',
-                    'bold',
-                    'italic',
-                    'link',
-                    '|',
-                    'bulletedList',
-                    'numberedList',
-                    '|',
-                    'blockQuote',
-                    '|',
-                    'undo',
-                    'redo'
-                ],
-
-                link: {
-                    addTargetToExternalLinks: true,
-                    defaultProtocol: 'https://'
+            .create(
+                document.querySelector(
+                    '#deskripsi'
+                ),
+                {
+                    toolbar: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'link',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'blockQuote',
+                        '|',
+                        'undo',
+                        'redo'
+                    ],
+                    link: {
+                        addTargetToExternalLinks: true,
+                        defaultProtocol: 'https://'
+                    }
                 }
-            })
+            )
             .catch(error => {
-                console.error(error);
+                console.error(
+                    'CKEditor error:',
+                    error
+                );
             });
     </script>
 @endsection

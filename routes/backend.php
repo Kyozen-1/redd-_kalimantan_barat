@@ -33,6 +33,7 @@ Route::middleware(['auth'])->prefix('cms')->group(function(){
             Route::get('/edit/{id}',[GaleriController::class, 'edit'])->name('cms.galeri.edit');
             Route::post('/update',[GaleriController::class, 'update'])->name('cms.galeri.update');
             Route::get('/destroy/{id}',[GaleriController::class, 'destroy'])->name('cms.galeri.destroy');
+            Route::get('/file/{id}', [GaleriController::class, 'file'])->name('cms.galeri.file');
         });
 
         Route::prefix('dokumen-galeri')->group(function(){

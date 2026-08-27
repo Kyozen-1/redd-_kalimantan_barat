@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Intervention\Image\Laravel\Facades\Image;
 use App\Contracts\FileStorageInterface;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
 use Validator;
@@ -257,5 +258,21 @@ class GaleriController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['result' => $th->getMessage()]);
         }
+    }
+
+    public function file($id)
+    {
+        $id = Crypt::decryptString($id);
+        $galeri = Galeri::findOrFail($id);
+
+        if (!$galeri->file_path) {
+            abort(404);
+        }
+
+        if (!Storage::disk('minio')->exists($galeri->file_path)) {
+            abort(404);
+        }
+
+        return Storage::disk('minio')->response($galeri->file_path);
     }
 }

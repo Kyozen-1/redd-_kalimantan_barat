@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Crypt;
 
 class Galeri extends Model
 {
@@ -20,7 +20,8 @@ class Galeri extends Model
 
     public function getFileUrlAttribute()
     {
-        return Storage::disk('minio')->temporaryUrl($this->file_path,
-            now()->addMinutes(30));
+        return route('cms.galeri.file', [
+            'id' => Crypt::encryptString($this->id),
+        ]);
     }
 }

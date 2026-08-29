@@ -11,7 +11,7 @@
                 <div class="map-hero__content">
                     <p>Data dan Pemetaan</p>
                     <h1>Akses Penuh Peta Interaktif</h1>
-                    <a class="site-cta" href="#dashboard"><span>+</span>Lihat Peta</a>
+                    <a class="site-cta" href="{{ route('frontend.peta') }}"><span>+</span>Lihat Peta</a>
                 </div>
             </div>
         </section>

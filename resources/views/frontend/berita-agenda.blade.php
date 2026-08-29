@@ -38,7 +38,7 @@
                                 $firstGambar = $featuredNews->pivot_gambar_berita->first();
                             @endphp
                             @if($firstGambar && $firstGambar->image_path)
-                                <img src="{{ Storage::disk('minio')->url($firstGambar->image_path) }}" alt="{{ $featuredNews->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                <img src="{{ $firstGambar->gambar_url }}" alt="{{ $featuredNews->judul }}" loading="lazy" onerror="handleImageError(this)">
                             @else
                                 <div class="news-placeholder" style="aspect-ratio: 1182 / 495; border-radius: 0.6rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
                                     <i class="mdi mdi-image-outline" style="font-size: 4rem;"></i>
@@ -66,7 +66,7 @@
                     <a href="{{ route('frontend.berita.detail', $story->id) }}" style="text-decoration: none; color: inherit; display: block;">
                         <article class="story-card story-card--side">
                             @if($storyGambar && $storyGambar->image_path)
-                                <img src="{{ Storage::disk('minio')->url($storyGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                <img src="{{ $storyGambar->gambar_url }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
                             @else
                                 <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
                                     <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>
@@ -94,7 +94,7 @@
                         <a href="{{ route('frontend.berita.detail', $story->id) }}" style="text-decoration: none; color: inherit; display: block;">
                             <article class="story-card">
                                 @if($otherGambar && $otherGambar->image_path)
-                                    <img src="{{ Storage::disk('minio')->url($otherGambar->image_path) }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
+                                    <img src="{{ $otherGambar->gambar_url }}" alt="{{ $story->judul }}" loading="lazy" onerror="handleImageError(this)">
                                 @else
                                     <div class="news-placeholder" style="aspect-ratio: 452 / 249; border-radius: 0.55rem; background: #f0f3f1; display: grid; place-items: center; color: #a8b0a9;">
                                         <i class="mdi mdi-image-outline" style="font-size: 2.2rem;"></i>

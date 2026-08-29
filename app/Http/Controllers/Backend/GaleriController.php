@@ -262,17 +262,23 @@ class GaleriController extends Controller
 
     public function file($id)
     {
-        $id = Crypt::decryptString($id);
-        $galeri = Galeri::findOrFail($id);
+        try {
+            $id = Crypt::decryptString($id);
+            $galeri = Galeri::findOrFail($id);
 
-        if (!$galeri->file_path) {
+            if (!$galeri->file_path) {
+                abort(404);
+            }
+
+            $disk = Storage::disk('minio');
+
+            if (!$disk->exists($galeri->file_path)) {
+                abort(404);
+            }
+
+            return $disk->response($galeri->file_path);
+        } catch (\Exception $e) {
             abort(404);
         }
-
-        if (!Storage::disk('minio')->exists($galeri->file_path)) {
-            abort(404);
-        }
-
-        return Storage::disk('minio')->response($galeri->file_path);
     }
 }

@@ -370,46 +370,50 @@ class DokumenGaleriController extends Controller
 
     public function file($id, $type)
     {
-        $id = Crypt::decryptString($id);
-        $dokumenGaleri = DokumenGaleri::findOrFail($id);
+        try {
+            $id = Crypt::decryptString($id);
+            $dokumenGaleri = DokumenGaleri::findOrFail($id);
 
-        $path = match ($type) {
-            'excel' => $dokumenGaleri->document_file_excel_path,
-            'pdf'   => $dokumenGaleri->document_file_pdf_path,
-            'word'  => $dokumenGaleri->document_file_word_path,
-            default => abort(404),
-        };
+            $path = match ($type) {
+                'excel' => $dokumenGaleri->document_file_excel_path,
+                'pdf'   => $dokumenGaleri->document_file_pdf_path,
+                'word'  => $dokumenGaleri->document_file_word_path,
+                default => abort(404),
+            };
 
-        if (!$path) {
+            if (!$path) {
+                abort(404);
+            }
+
+            $disk = Storage::disk('minio');
+
+            if (!$disk->exists($path)) {
+                abort(404);
+            }
+
+            $mimeType = $disk->mimeType($path);
+
+            return response()->stream(
+                function () use ($disk, $path) {
+                    $stream = $disk->readStream($path);
+                    if ($stream === false) {
+                        abort(404);
+                    }
+                    while (!feof($stream)) {
+                        echo fread($stream, 8192);
+                    }
+                    fclose($stream);
+                },
+                200,
+                [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' =>
+                        'inline; filename="' . basename($path) . '"',
+                    'Cache-Control' => 'private, max-age=300',
+                ]
+            );
+        } catch (\Exception $e) {
             abort(404);
         }
-
-        $disk = Storage::disk('minio');
-
-        if (!$disk->exists($path)) {
-            abort(404);
-        }
-
-        $mimeType = $disk->mimeType($path);
-
-        return response()->stream(
-            function () use ($disk, $path) {
-                $stream = $disk->readStream($path);
-                if ($stream === false) {
-                    abort(404);
-                }
-                while (!feof($stream)) {
-                    echo fread($stream, 8192);
-                }
-                fclose($stream);
-            },
-            200,
-            [
-                'Content-Type' => $mimeType,
-                'Content-Disposition' =>
-                    'inline; filename="' . basename($path) . '"',
-                'Cache-Control' => 'private, max-age=300',
-            ]
-        );
     }
 }

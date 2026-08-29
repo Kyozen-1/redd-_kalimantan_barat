@@ -77,26 +77,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (count($forestData) > 0)
-                            @foreach ($forestData as $item)
+                        @if ($totalSkCount > 0)
+                            @if (count($forestData) > 0)
+                                @foreach ($forestData as $item)
+                                    <tr>
+                                        <td>{{ $item->nama_desa }}</td>
+                                        <td>{{ $item->kabupaten_kota ? str_replace(['Kabupaten ', 'Kota '], '', $item->kabupaten_kota->name) : '-' }}</td>
+                                        <td>{{ $item->skema }}</td>
+                                        <td>{{ $item->nama_lembaga }}</td>
+                                        <td>{{ $item->nomor_sk }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
                                 <tr>
-                                    <td>{{ $item->nama_desa }}</td>
-                                    <td>{{ $item->kabupaten_kota ? str_replace(['Kabupaten ', 'Kota '], '', $item->kabupaten_kota->name) : '-' }}</td>
-                                    <td>{{ $item->skema }}</td>
-                                    <td>{{ $item->nama_lembaga }}</td>
-                                    <td>{{ $item->nomor_sk }}</td>
+                                    <td colspan="5" style="text-align: center; color: #888; padding: 2rem;">
+                                        Tidak ada data perhutanan sosial yang cocok dengan pencarian atau filter Anda.
+                                    </td>
                                 </tr>
-                            @endforeach
+                            @endif
                         @else
-                            @foreach ($defaultForestRows as $row)
+                            @if (count($defaultForestRows) > 0)
+                                @foreach ($defaultForestRows as $row)
+                                    <tr>
+                                        <td>{{ $row['desa'] }}</td>
+                                        <td>{{ $row['kab'] }}</td>
+                                        <td>{{ $row['skema'] }}</td>
+                                        <td>{{ $row['lembaga'] }}</td>
+                                        <td>{{ $row['sk'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
                                 <tr>
-                                    <td>{{ $row['desa'] }}</td>
-                                    <td>{{ $row['kab'] }}</td>
-                                    <td>{{ $row['skema'] }}</td>
-                                    <td>{{ $row['lembaga'] }}</td>
-                                    <td>{{ $row['sk'] }}</td>
+                                    <td colspan="5" style="text-align: center; color: #888; padding: 2rem;">
+                                        Tidak ada data perhutanan sosial yang cocok dengan pencarian atau filter Anda.
+                                    </td>
                                 </tr>
-                            @endforeach
+                            @endif
                         @endif
                     </tbody>
                 </table>

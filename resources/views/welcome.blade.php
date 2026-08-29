@@ -861,7 +861,7 @@
                     <div class="hero-content">
                         <p class="eyebrow" data-i18n="hero.eyebrow">Portal Resmi REDD+ Kalimantan Barat</p>
                         <h1 data-i18n="hero.title">Masa Depan Hijau Kalimantan Barat</h1>
-                        <a class="primary-btn" href="#">
+                        <a class="primary-btn" href="{{ route('frontend.peta') }}">
                             <span class="dot-icon">+</span>
                             <span data-i18n="hero.cta">Jelajahi Peta Interaktif</span>
                         </a>

@@ -88,6 +88,40 @@ class FrontendSisReddController extends Controller
             ['desa' => 'Desa Batu Ampar', 'kab' => 'Kubu Raya', 'skema' => 'Hutan Kemasyarakatan (HKm)', 'lembaga' => 'KTH Batu Ampar', 'sk' => 'SK.3341/MENLHK/2024'],
         ];
 
+        if ($totalSkCount == 0) {
+            $filteredRows = $defaultForestRows;
+
+            if ($search) {
+                $filteredRows = array_filter($filteredRows, function ($row) use ($search) {
+                    return stripos($row['desa'], $search) !== false ||
+                           stripos($row['kab'], $search) !== false ||
+                           stripos($row['skema'], $search) !== false ||
+                           stripos($row['lembaga'], $search) !== false ||
+                           stripos($row['sk'], $search) !== false;
+                });
+            }
+
+            if ($selectedKabupaten) {
+                $regName = Regency::find($selectedKabupaten)?->name ?? '';
+                $regNameClean = str_replace(['Kabupaten ', 'Kota '], '', $regName);
+                if ($regNameClean) {
+                    $filteredRows = array_filter($filteredRows, function ($row) use ($regNameClean) {
+                        return stripos($row['kab'], $regNameClean) !== false;
+                    });
+                } else {
+                    $filteredRows = [];
+                }
+            }
+
+            if ($selectedSkema) {
+                $filteredRows = array_filter($filteredRows, function ($row) use ($selectedSkema) {
+                    return stripos($row['skema'], $selectedSkema) !== false;
+                });
+            }
+
+            $defaultForestRows = array_values($filteredRows);
+        }
+
         return view('frontend.sis-redd', compact(
             'safeguards',
             'metrics',
@@ -97,7 +131,8 @@ class FrontendSisReddController extends Controller
             'defaultForestRows',
             'search',
             'selectedKabupaten',
-            'selectedSkema'
+            'selectedSkema',
+            'totalSkCount'
         ));
     }
 

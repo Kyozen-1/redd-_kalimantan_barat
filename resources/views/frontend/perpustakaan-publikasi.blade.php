@@ -106,10 +106,10 @@
                 <div class="library-gallery">
                     @forelse ($galleryMedia as $item)
                         @php
-                            $imgSrc = $item->file_path ? Storage::disk('minio')->url($item->file_path) : asset('frontend/images/news-agenda/mangrove-news.png');
+                            $imgSrc = $item->file_path ? $item->file_url : asset('frontend/images/news-agenda/mangrove-news.png');
                             $caption = $item->deskripsi ?: ($item->kabupaten_kota ? 'Dokumentasi ' . $item->kabupaten_kota->name : 'Dokumentasi REDD+ Kalimantan Barat');
                         @endphp
-                        <a class="gallery-tile js-open-media-modal" href="#media-modal" style="cursor: pointer;">
+                        <a class="gallery-tile js-open-media-modal" href="#media-modal" style="cursor: pointer;" data-nama="{{ $item->nama ?: '-' }}" data-tanggal="{{ $item->tanggal ? \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') : '-' }}">
                             <img src="{{ $imgSrc }}" alt="{{ $caption }}">
                         </a>
                     @empty

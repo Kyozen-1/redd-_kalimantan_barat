@@ -62,13 +62,13 @@ return [
 
         'minio' => [
             'driver' => 's3',
-            'endpoint' => env('MINIO_ENDPOINT', "http://".env('MINIO_HOST', '127.0.0.1').":9000"),
+            'endpoint' => "http://".env('MINIO_HOST').":9000",
             'use_path_style_endpoint' => true,
             'key' => env('MINIO_ACCESS_KEY'),
             'secret' => env('MINIO_SECRET_KEY'),
             'region' => "pontianak",
             'bucket' => env('MINIO_BUCKET_NAME'),
-            'url' => env('MINIO_URL', "http://".env('MINIO_HOST', '127.0.0.1').":9000"),
+            'url' => "http://".env('MINIO_HOST').":9000",
         ],
 
     ],

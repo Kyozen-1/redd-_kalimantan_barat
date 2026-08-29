@@ -110,9 +110,9 @@ class FrontendNewsController extends Controller
     }
 
     /**
-     * Serve news image locally by streaming it from MinIO.
+     * Serve news image locally by streaming it from MinIO for the frontend.
      */
-    public function gambar($id)
+    public function gambarBerita($id)
     {
         try {
             $gambar = PivotGambarBerita::findOrFail($id);

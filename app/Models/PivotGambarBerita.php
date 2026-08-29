@@ -21,7 +21,14 @@ class PivotGambarBerita extends Model
 
     public function getGambarUrlAttribute()
     {
-        return route('gambar', [
+        return route('cms.berita.gambar', [
+            'id' => Crypt::encryptString($this->id),
+        ]);
+    }
+
+    public function getGambarFrontUrlAttribute()
+    {
+        return route('gambar.front', [
             'id' => $this->id,
         ]);
     }

@@ -173,7 +173,7 @@ class FrontendHomeController extends Controller
                     'id'          => $berita->id,
                     'judul'       => $berita->judul,
                     'deskripsi'   => $berita->deskripsi,
-                    'gambar_url'  => $firstImage ? $firstImage->gambar_url : null,
+                    'gambar_url'  => $firstImage ? $firstImage->gambar_front_url : null,
                     'tanggal'     => $berita->created_at
                                         ? Carbon::parse($berita->created_at)->diffForHumans()
                                         : null,

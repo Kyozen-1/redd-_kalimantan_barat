@@ -20,7 +20,7 @@ Route::get('/program-strategi-redd', [FrontendProgramController::class, 'index']
 Route::get('/program-strategi-redd/download-rad/{id}', [FrontendProgramController::class, 'downloadRad'])->name('frontend.program-strategi.download-rad');
 Route::get('/program-strategi-redd/download-mrv/{id}/{type}', [FrontendProgramController::class, 'downloadMrv'])->name('frontend.program-strategi.download-mrv');
 Route::get('/berita-agenda', [FrontendNewsController::class, 'index'])->name('frontend.berita-agenda');
-Route::get('/gambar/{id}', [FrontendNewsController::class, 'gambar'])->name('gambar');
+Route::get('/gambar-berita/{id}', [FrontendNewsController::class, 'gambarBerita'])->name('gambar.front');
 Route::get('/berita-agenda/{id}', [FrontendNewsController::class, 'show'])->name('frontend.berita.detail');
 Route::get('/api/lsm', [FrontendNewsController::class, 'getLsmData'])->name('api.lsm');
 Route::get('/api/agenda/{id}', [FrontendNewsController::class, 'getAgendaDetail'])->name('api.agenda.detail');

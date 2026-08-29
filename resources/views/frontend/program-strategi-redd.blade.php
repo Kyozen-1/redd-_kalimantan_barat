@@ -82,7 +82,7 @@
                             <div class="rad-card__body">
                                 <h3>{{ $document->nama }}</h3>
                                 @if($document->document_path)
-                                    <a href="{{ Storage::disk('minio')->url($document->document_path) }}" target="_blank">Download File</a>
+                                    <a href="{{ route('frontend.program-strategi.download-rad', $document->id) }}" target="_blank">Download File</a>
                                 @else
                                     <a href="#">Download File</a>
                                 @endif
@@ -111,13 +111,13 @@
                             <small>Tanggal upload: {{ $report->created_at ? $report->created_at->format('d F Y') : '-' }}</small>
                             <div class="report-links">
                                 @if($report->document_file_pdf_path)
-                                    <a href="{{ Storage::disk('minio')->url($report->document_file_pdf_path) }}" target="_blank">Download File Utama</a>
+                                    <a href="{{ route('frontend.program-strategi.download-mrv', ['id' => $report->id, 'type' => 'pdf']) }}" target="_blank">Download File Utama</a>
                                 @else
                                     <a href="#">Download File Utama</a>
                                 @endif
 
                                 @if($report->document_file_excel_path)
-                                    <a href="{{ Storage::disk('minio')->url($report->document_file_excel_path) }}" target="_blank">Download Data Tabel</a>
+                                    <a href="{{ route('frontend.program-strategi.download-mrv', ['id' => $report->id, 'type' => 'excel']) }}" target="_blank">Download Data Tabel</a>
                                 @else
                                     <a href="#">Download Data Tabel</a>
                                 @endif

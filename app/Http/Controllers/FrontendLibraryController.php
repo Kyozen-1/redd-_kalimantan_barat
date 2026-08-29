@@ -39,12 +39,8 @@ class FrontendLibraryController extends Controller
                 });
             }
 
-            if ($selectedKabupaten) {
-                $query->where('kabupaten_kota_id', $selectedKabupaten);
-            }
-
             if ($selectedTahun) {
-                $query->whereYear('tanggal', $selectedTahun);
+                $query->whereYear('created_at', $selectedTahun);
             }
 
             $documents = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();

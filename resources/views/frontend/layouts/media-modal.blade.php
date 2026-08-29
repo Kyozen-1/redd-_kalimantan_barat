@@ -25,8 +25,10 @@
             </div>
 
             <div class="media-modal__caption-box">
-                <div class="media-modal__meta">
-                    <span><i class="mdi mdi-camera" aria-hidden="true"></i> Dokumentasi Lapangan</span>
+                <div class="media-modal__meta" style="display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center;">
+                    <span><i class="mdi mdi-account" aria-hidden="true"></i> <span id="mediaModalNama">Nama</span></span>
+                    <span>&bull;</span>
+                    <span><i class="mdi mdi-calendar" aria-hidden="true"></i> <span id="mediaModalDate">Date</span></span>
                     <span>&bull;</span>
                     <span id="mediaModalCounter">Gambar 1 dari 6</span>
                 </div>
@@ -271,6 +273,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalCaption = document.getElementById('mediaModalCaption');
     const modalCounter = document.getElementById('mediaModalCounter');
     const modalDownload = document.getElementById('mediaModalDownload');
+    const modalNama = document.getElementById('mediaModalNama');
+    const modalDate = document.getElementById('mediaModalDate');
     const closeBtns = modal.querySelectorAll('.js-close-media-modal');
     const prevBtn = document.getElementById('mediaModalPrev');
     const nextBtn = document.getElementById('mediaModalNext');
@@ -288,6 +292,8 @@ document.addEventListener('DOMContentLoaded', function () {
         modalImg.alt = item.alt;
         modalCaption.textContent = item.alt || 'Dokumentasi kegiatan REDD+ Kalimantan Barat';
         modalCounter.textContent = `Gambar ${currentIndex + 1} dari ${galleryItems.length}`;
+        if (modalNama) modalNama.textContent = item.nama || '-';
+        if (modalDate) modalDate.textContent = item.tanggal || '-';
         modalDownload.href = item.src;
         modalDownload.setAttribute('download', (item.alt || 'media-redd-kalbar').toLowerCase().replace(/[^a-z0-9]/g, '-') + '.png');
     }
@@ -327,7 +333,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const img = t.querySelector('img') || t;
                 return {
                     src: img.getAttribute('src') || t.getAttribute('href') || '',
-                    alt: img.getAttribute('alt') || t.getAttribute('data-caption') || 'Dokumentasi Kegiatan'
+                    alt: img.getAttribute('alt') || t.getAttribute('data-caption') || 'Dokumentasi Kegiatan',
+                    nama: t.getAttribute('data-nama') || '',
+                    tanggal: t.getAttribute('data-tanggal') || ''
                 };
             });
 

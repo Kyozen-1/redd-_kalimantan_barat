@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Berita;
 use App\Models\Agenda;
 use App\Models\MdLsm;
+use App\Models\PivotGambarBerita;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FrontendNewsController extends Controller
 {
@@ -105,5 +107,29 @@ class FrontendNewsController extends Controller
                 'penyelenggara' => 'Dinas Lingkungan Hidup dan Kehutanan Provinsi Kalimantan Barat'
             ]
         ]);
+    }
+
+    /**
+     * Serve news image locally by streaming it from MinIO.
+     */
+    public function gambar($id)
+    {
+        try {
+            $gambar = PivotGambarBerita::findOrFail($id);
+
+            if (!$gambar->image_path) {
+                abort(404);
+            }
+
+            $disk = Storage::disk('minio');
+
+            if (!$disk->exists($gambar->image_path)) {
+                abort(404);
+            }
+
+            return $disk->response($gambar->image_path);
+        } catch (\Exception $e) {
+            abort(404);
+        }
     }
 }
